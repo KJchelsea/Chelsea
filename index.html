@@ -786,15 +786,16 @@ function loadGB(){
 }
 function saveGB(list){try{localStorage.setItem(GB_KEY,JSON.stringify(list));}catch(e){}}
 /* ============================================================
-   Supabase 云端同步（全部功能 + 留言板）
+   Supabase 云端同步（全部功能 + 留言板）—— 已加固
    - 留言板：公开读写；删除留言需输入管理密码（密码存在 Supabase site_config 表）
-   - 私人数据：lifeArchive_* 全部键，用你的「房间密码」加密后同步到 kv 表
+   - 私人数据：lifeArchive_* 全部键，用「房间密码」加密后同步到 kv 表
+   - 安全：房间密码由服务器校验（site_config.room_pass），
+     输错密码进不了私人房间、也写不进云端；kv 只能通过带密码的函数读写
    - 纯 fetch 实现，无需任何 SDK / 域名白名单
-   使用前请把下面的 SB_URL 和 SB_ANON 换成你自己的（见部署说明）
    ============================================================ */
 const SB_URL='https://dtvmrtexonfecxavbwje.supabase.co';      /* ← Supabase Project URL */
 const SB_ANON='sb_publishable_B_g_e7m7HsQLk7Ii7ZjFoA_zMUwOevI';/* ← Supabase publishable key */
-let sbOk=false, gbSynced=[], _pulling=false, _encKey=null;
+let sbOk=false, gbSynced=[], _pulling=false, _encKey=null, _roomPass=null;
 function sbConfigured(){return SB_URL.indexOf('YOUR_SUPABASE')<0&&SB_ANON.indexOf('YOUR_SUPABASE')<0;}
 function sbHdr(){return {'apikey':SB_ANON,'Authorization':'Bearer '+SB_ANON,'Content-Type':'application/json'}}
 /* ---- base64（安全处理大文件） ---- */
@@ -823,14 +824,24 @@ async function kvPullAll(){
     finally{_pulling=false;}
   }catch(e){}
 }
+/* 写入/删除都必须带上房间密码，由服务器函数校验；错误密码直接拒绝 */
 async function kvUpsert(key,val){
-  if(!sbConfigured()||!_encKey)return;
+  if(!sbConfigured()||!_encKey||!_roomPass)return;
   const ev=await encVal(val);
-  try{await fetch(SB_URL+'/rest/v1/kv',{method:'POST',headers:{...sbHdr(),'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({key:key,value:ev,updated_at:Date.now()})});}catch(e){}
+  try{await fetch(SB_URL+'/rest/v1/rpc/kv_upsert',{method:'POST',headers:sbHdr(),body:JSON.stringify({p_key:key,p_value:ev,pass:_roomPass})});}catch(e){}
 }
 async function kvRemove(key){
-  if(!sbConfigured())return;
-  try{await fetch(SB_URL+'/rest/v1/kv?key=eq.'+encodeURIComponent(key),{method:'DELETE',headers:sbHdr()});}catch(e){}
+  if(!sbConfigured()||!_roomPass)return;
+  try{await fetch(SB_URL+'/rest/v1/rpc/kv_delete',{method:'POST',headers:sbHdr(),body:JSON.stringify({p_key:key,pass:_roomPass})});}catch(e){}
+}
+/* 校验房间密码：与云端 site_config.room_pass 比对；未配置返回 null */
+async function verifyRoomPass(pass){
+  if(!sbConfigured())return null;
+  try{
+    const r=await fetch(SB_URL+'/rest/v1/rpc/check_room_password',{method:'POST',headers:sbHdr(),body:JSON.stringify({pass:pass})});
+    if(r.status===200)return (await r.json())===true;
+    return false;
+  }catch(e){return false}
 }
 /* ---- 存储补丁：lifeArchive_* 自动镜像到云端（加密） ---- */
 (function(){
@@ -849,6 +860,7 @@ async function ownerSyncStart(pass){
   if(!sbConfigured())return;
   const ok=await encInit(pass);
   if(!ok){toast('当前环境不支持加密，无法同步');return;}
+  _roomPass=pass;
   sbOk=true;
   await kvPullAll();
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf(PREFIX)===0)kvUpsert(k,localStorage.getItem(k));}
@@ -3111,14 +3123,20 @@ function enterGuest(){
 (function(){
   document.getElementById('lockOk')?.addEventListener('click',()=>{
     const p1=document.getElementById('lockPass').value;
-    if(lockMode==='setup'){
+    const doUnlock=(pass)=>{try{localStorage.setItem(PASS_KEY,pass);}catch(e){}_roomPass=pass;unlocked=true;hideLock();render();ownerSyncStart(pass);};
+    if(sbConfigured()){
+      /* 已连云端：房间密码必须与 Supabase 的 room_pass 一致，否则拒绝 */
+      verifyRoomPass(p1).then(ok=>{
+        if(ok===true){doUnlock(p1);if(lockMode==='setup')toast('已解锁，数据开始同步');}
+        else toast('密码不对哦，请用与云端一致的房间密码');
+      });
+    }else if(lockMode==='setup'){
       const p2=document.getElementById('lockPass2').value;
       if(p1.length<4){toast('密码至少 4 位');return;}
       if(p1!==p2){toast('两次输入不一致');return;}
-      try{localStorage.setItem(PASS_KEY,p1);}catch(e){}
-      unlocked=true;hideLock();toast('密码设置成功');render();ownerSyncStart(p1);
+      doUnlock(p1);toast('密码设置成功');
     }else{
-      try{if(p1===localStorage.getItem(PASS_KEY)){unlocked=true;hideLock();render();ownerSyncStart(p1);}else toast('密码不对哦，再试一次');}catch(e){toast('读取密码失败');}
+      try{if(p1===localStorage.getItem(PASS_KEY)){doUnlock(p1);}else toast('密码不对哦，再试一次');}catch(e){toast('读取密码失败');}
     }
   });
   document.getElementById('lockGuest')?.addEventListener('click',()=>{unlocked=false;hideLock();navigate('guest');});

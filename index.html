@@ -437,6 +437,8 @@ tr:hover td{background:#FEF8FB}
 .timerbox{text-align:center;padding:30px 20px}
 .timerbox .time{font-size:72px;font-weight:900;color:var(--pink);font-family:var(--pixel);letter-spacing:.05em;margin:20px 0}
 .timerbox .task{font-size:18px;color:var(--ink);margin-bottom:16px}
+.timerbox .task-input{width:100%;max-width:320px;margin:0 auto 6px;display:block;border:1.5px dashed var(--line2);border-radius:999px;background:var(--card);color:var(--ink);font-size:14.5px;padding:10px 18px;text-align:center;outline:none;transition:border .2s}
+.timerbox .task-input:focus{border-color:var(--pink);background:#FFF}
 .timerbox .controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .timerbox .controls button{padding:12px 28px;border-radius:999px;font-size:15px;font-weight:700}
 .timerbox .controls .start{background:var(--pink);color:#fff;box-shadow:0 4px 14px rgba(232,140,168,.4)}
@@ -660,10 +662,11 @@ const DATA=[
  ]},
  {id:'utility',ic:'◇',name:'实用功能',en:'UTILITY',desc:'日子、日程、习惯、备忘录、菜谱、网址收藏、番茄钟与密码',cc:'#9FB8C8',sub:[
    {id:'days',ic:'📅',name:'倒数日 / 正数日',desc:'选择目标日期，自动计算倒数或正数天数',feat:['日期选择器','倒数/正数自动计算','备注记录'],cols:['事项','日期','类型'],fields:['事项','日期','类型'],rows:[]},
-   {id:'memorial',ic:'🎈',name:'纪念日',desc:'记录与提醒每一个值得纪念的日子',feat:['自定义纪念日','可视化纪念卡','提醒'],cols:['纪念日','日期','备注'],fields:['名称','日期','备注'],rows:[['结婚纪念日','10月10日','提醒中'],['家人生日','农历 腊月二十','提醒中']]},
+   {id:'memorial',ic:'🎈',name:'重要日子',desc:'生日、纪念日、还款日…标准日期记录，到日子自动出现在今日提醒',feat:['类型分类','标准日期','自动提醒'],rows:[],special:'memorial'},
    {id:'schedule',ic:'🗓',name:'日程安排',desc:'时间轴 + 年/月视图，每项安排既有时间点也有时间段',feat:['时间轴模式','时间点+时间段','年月图视图','新增与删除'],rows:[],special:'schedule'},
    {id:'habit',ic:'✔',name:'习惯打卡',desc:'连续打卡、热力图、成就卡片，每天打卡可带照片',feat:['连续打卡天数','日历热力图','打卡照片'],cols:['习惯','记录','状态'],fields:['习惯','记录','状态'],rows:[['早睡 23:00','连续 21 天','🔥'],['阅读 30min','连续 18 天','🔥'],['每日喝水 8杯','本周 5/7','良好']],special:'habit'},
    {id:'pomodoro',ic:'⏱',name:'番茄钟',desc:'专注计时与待办，量化每一段时间',feat:['专注计时','待办清单','专注统计'],cols:['任务','完成','状态'],fields:['任务','完成','状态'],rows:[['今日专注','6 个番茄 · 150min','达标'],['本周专注','28 个番茄','+12%'],['待办完成','8 / 10 项','良好']]},
+   {id:'reminders',ic:'⏰',name:'今日提醒',desc:'每天自动汇总待办、该补的记录、习惯打卡与重要日子，提醒频率可调',feat:['自动汇总各模块','体征提醒可调','今日勾选'],rows:[],special:'reminders'},
    {id:'vault',ic:'🔐',name:'账号密码管理',desc:'加密保险库，安全存储各类账号',feat:['主密码加密','自动填充','跨设备同步'],cols:['账号','状态','安全'],fields:['账号','状态','安全'],rows:[['邮箱','已保存','安全'],['网银','已保存','安全'],['社交账号','已保存 · 12 项','安全']]},
    {id:'course',ic:'🗒',name:'课表',desc:'周一至周日 × 上午/下午/晚上的课程表',feat:['周课表','课程颜色标签','新增与删除'],rows:[],special:'course'},
    {id:'memo',ic:'📝',name:'备忘录',desc:'想法、待办、灵感，随手记下不丢失',feat:['标题+内容','按日期保存','随时回顾'],rows:[],special:'memo'},
@@ -678,6 +681,7 @@ const DATA=[
  {id:'timeline',ic:'◈',name:'人生时间轴',en:'TIMELINE',desc:'日记、职业规划与年度回顾，贯穿一切的档案主线',cc:'#F6DFA8',sub:[
    {id:'diary',ic:'✎',name:'日记',desc:'富文本日记，可插入图片记录每一天',feat:['时间轴+日历双布局','插入图片','那年今日'],cols:['日期','内容','备注'],fields:['日期','内容','备注'],rows:[['10-02 · 假期','图文 1 则','已记录'],['10-01 · 国庆','图文 2 则','已记录'],['本周记录','共 5 则','+2']],special:'image'},
    {id:'career',ic:'🎯',name:'职业规划',desc:'目标、里程碑与阶段复盘',feat:['职业目标','里程碑节点','阶段复盘'],cols:['目标','里程碑','状态'],fields:['目标','里程碑','状态'],rows:[['3 年晋升主管','里程碑 2/5','进行中'],['掌握核心技能','进度 60%','进行中'],['年度复盘 2026','待完成','Q4']]},
+   {id:'goals',ic:'🎯',name:'年度大目标',desc:'九宫格 / 进度看板 / OKR / 时间轴 / 愿景板五种款式，都能编辑与同步',feat:['九宫格','进度看板','OKR拆解','时间轴','愿景板'],rows:[],special:'goals'},
    {id:'review',ic:'📜',name:'年度 / 月度回顾',desc:'自动沉淀的全量人生回顾',feat:['月度回顾','年度总结','人生章节'],cols:['回顾','生成状态','备注'],fields:['回顾','生成状态','备注'],rows:[['2026 年度回顾','自动生成','可查看'],['2026-09 月报','自动生成','可查看'],['人生章节 · 求学','整理完成','已归档']]}
  ]}
 ];
@@ -715,6 +719,8 @@ function countRows(mid){
     if(s.special==='skill')return n+loadSkillItems(s.id==='lang'?'lang':'skill').length;
     if(s.special==='plan'){const p=loadStudyPlan();return n+Object.values(p).reduce((a,l)=>a+l.length,0);}
     if(s.special==='weekmonth'){const w=loadWeekTasks(),m=loadMonthGoals();return n+Object.values(w).reduce((a,d)=>a+Object.values(d).reduce((x,l)=>x+l.length,0),0)+Object.values(m).reduce((a,l)=>a+l.length,0);}
+    if(s.special==='memorial')return n+loadMemorial().length;
+    if(s.special==='goals'){const g=loadGoals();return n+((g.goals||[]).length);}
     return n+loadRows(mid,s.id).length;
   },0);
 }
@@ -2302,6 +2308,9 @@ function renderSub(mid,sid){
   if(sid==='period')return renderPeriod(mid,sid);
   if(s.special==='weekmonth')return renderWeekMonth(mid,sid);
   if(s.special==='bookmark')return renderBookmark(mid,sid);
+  if(s.special==='memorial')return renderMemorial(mid,sid);
+  if(s.special==='reminders')return renderReminders(mid,sid);
+  if(s.special==='goals')return renderGoals(mid,sid);
   // New enhanced functions
   if(mid==='health'&&sid==='meds')return renderMedsEnhanced(mid,sid);
   if(mid==='growth'&&sid==='media')return renderMediaEnhanced(mid,sid);
@@ -4170,7 +4179,8 @@ function renderPomodoroTimer(mid, sid) {
 };text-align:center">
         <div class="ph" style="justify-content:center"><span class="ic">⏱</span> 番茄专注计时器</div>
         <div class="timerbox">
-          <div class="task" id="pomoTask">当前任务：阅读 30 分钟</div>
+          <div class="task" id="pomoTask"></div>
+          <input type="text" class="task-input" id="pomoTaskInput" placeholder="✏️ 在这里直接输入当前任务，回车即开始计时" autocomplete="off">
           <div class="time" id="pomoDisplay">25:00</div>
           <div class="controls">
             <button class="start" id="pomoStart">开始专注</button>
@@ -4263,6 +4273,11 @@ function bindPomodoroEvents() {
     });
   });
   if (typeof renderPomoTasks === 'function') renderPomoTasks();
+  var taskInput = document.getElementById('pomoTaskInput');
+  if (taskInput) {
+    taskInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') { commitPomoTaskInput(); } });
+    taskInput.addEventListener('blur', commitPomoTaskInput);
+  }
   var minutesEl = document.getElementById('pomoMinutes');
   if (minutesEl) {
     minutesEl.addEventListener('change', function() {
@@ -4900,6 +4915,26 @@ function updatePomoDisplay() {
   const m = Math.floor(pomoSeconds / 60);
   const s = pomoSeconds % 60;
   el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+/* 在“当前任务”处直接输入并设定当前任务 */
+function commitPomoTaskInput() {
+  const el = document.getElementById('pomoTaskInput');
+  if (!el) return;
+  const name = el.value.trim();
+  el.value = '';
+  if (!name) return;
+  if (pomoRunning) return;
+  let tasks = loadPomoTasks();
+  let t = tasks.find(x => x.name === name && !x.done);
+  if (!t) {
+    const newId = tasks.length ? Math.max.apply(null, tasks.map(x => x.id)) + 1 : 1;
+    t = { id: newId, name: name, duration: '25', done: false, status: '进行中', ts: Date.now() };
+    tasks.push(t);
+    savePomoTasks(tasks);
+  }
+  pomoCurrentId = t.id;
+  updatePomoCurrentLabel();
+  if (typeof renderPomoTasks === 'function') renderPomoTasks();
 }
 function loadPomoTasks(){try{const r=localStorage.getItem(PREFIX+'pomo_tasks');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
 function savePomoTasks(t){try{localStorage.setItem(PREFIX+'pomo_tasks',JSON.stringify(t));}catch(e){}}
@@ -5694,6 +5729,427 @@ document.addEventListener('click', e => {
   }
 });
 setTimeout(()=>{ if(sbConfigured()){ gbPull(); setInterval(gbPull,20000);} },800);
+/* ============ 新增模块：重要日子 / 今日提醒 / 年度大目标 ============ */
+function injectModuleCss(){
+  if(window.__modCssInj)return;window.__modCssInj=1;
+  var st=document.createElement('style');
+  st.textContent=[
+    '.memgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:18px}',
+    '.memcard{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;position:relative}',
+    '.memhead{display:flex;align-items:center;gap:6px;flex-wrap:wrap}.memhead b{font-size:14.5px}',
+    '.memtype{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--bg2);color:var(--ink-dim)}',
+    '.memtag{font-size:11px;color:var(--coral);background:#FCE9EE;border-radius:999px;padding:2px 8px}',
+    '.memdel{position:absolute;top:8px;right:10px;color:var(--ink-faint);cursor:pointer;font-size:14px;font-weight:700}',
+    '.memdate{font-size:12.5px;color:var(--ink-dim);margin-top:6px}.mem-ok{color:#7C9470}.mem-today{color:var(--coral);font-weight:700}.mem-wait{color:#5FA98D}.mem-past{color:var(--ink-faint)}',
+    '.memnote{font-size:12.5px;color:var(--ink-dim);margin-top:4px}',
+    '.formrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}',
+    '.formrow select,.formrow input[type=text],.formrow input:not([type]){border:1.5px solid var(--line2);border-radius:10px;padding:8px 12px;font-size:13.5px;outline:none;background:#fff;color:var(--ink);flex:1;min-width:130px}',
+    '.formrow input[type=date]{border:1.5px solid var(--line2);border-radius:10px;padding:7px 10px;font-size:13px;outline:none;background:#fff;color:var(--ink)}',
+    '.chk{display:flex;align-items:center;gap:4px;font-size:12.5px;color:var(--ink-dim);white-space:nowrap}',
+    '.remitem{display:flex;align-items:flex-start;gap:10px;padding:11px 2px;border-bottom:1px dashed var(--line)}',
+    '.remitem:last-of-type{border-bottom:none}',
+    '.remck{width:20px;height:20px;border-radius:50%;border:2px solid var(--pink);flex:none;margin-top:1px;cursor:pointer;background:#fff;transition:.15s;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px}',
+    '.remitem.done .remck{background:var(--mint);border-color:var(--mint)}',
+    '.remitem.done .rti{text-decoration:line-through;color:var(--ink-faint)}',
+    '.rti{font-size:14px}.rsu{font-size:12px;color:var(--ink-dim);margin-top:1px}',
+    '.rbadge{flex:none;font-size:11px;padding:2px 9px;border-radius:999px;font-weight:700;margin-left:auto}',
+    '.rbadge.r1{background:#FCE9EE;color:#D16A8A}.rbadge.r2{background:#E5F3EC;color:#5FA98D}.rbadge.r3{background:#FBF0DA;color:#B8913A}.rbadge.r4{background:#EFE9FB;color:#8E76B8}.rbadge.r5{background:#DCEAF2;color:#6E93AC}',
+    '.setrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:var(--ink-dim)}',
+    '.setrow select{border:1.5px solid var(--line2);border-radius:10px;padding:6px 10px;font-size:13px;background:#fff;color:var(--ink);outline:none}',
+    '.gtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}',
+    '.gtab{border:1.5px solid var(--line2);background:#fff;border-radius:999px;padding:6px 16px;font-size:13.5px;color:var(--ink-dim);cursor:pointer}',
+    '.gtab.on{background:var(--pink);border-color:var(--pink);color:#fff}',
+    '.gview{display:none}.gview.show{display:block;animation:in .25s}',
+    '.gmandala{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}',
+    '.gcell{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:12px;text-align:center;position:relative;min-height:96px}',
+    '.gcell .ai{font-size:20px}.gcell .an{font-weight:700;font-size:14px;margin-top:2px}.gcell .aw{font-size:11.5px;color:var(--ink-dim);margin-top:1px}',
+    '.gcell.center{background:var(--pink);border-color:var(--pink);color:#fff;display:flex;flex-direction:column;justify-content:center;min-height:150px}',
+    '.gcell.center .an{font-size:17px;margin-top:4px}.gcell.center .aw{color:rgba(255,255,255,.9)}',
+    '.gfix{position:absolute;top:6px;right:8px;font-size:12px;color:var(--ink-faint);cursor:pointer;background:none;border:none}',
+    '.gap{height:7px;background:#F6E3EA;border-radius:999px;overflow:hidden;margin-top:8px}.gap i{display:block;height:100%;background:var(--pink);border-radius:999px}',
+    '.gapn{font-size:11px;color:var(--ink-faint);margin-top:3px}',
+    '.gcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}',
+    '.gcard{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:9px}',
+    '.gcard .gt{display:flex;justify-content:space-between;align-items:center;gap:6px}.gcard .gn{font-weight:700;font-size:15px}',
+    '.gcard .gs{font-size:11px;padding:2px 9px;border-radius:999px}',
+    '.gcard .gmeta{font-size:12px;color:var(--ink-faint);display:flex;justify-content:space-between}',
+    '.gcard .gmeta b{color:var(--ink);font-size:13px}',
+    '.geditbtn{border:1px solid var(--line2);background:#fff;color:var(--ink-dim);border-radius:8px;padding:2px 9px;font-size:12px;cursor:pointer}',
+    '.okrline{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:#FDF6F8;margin-bottom:7px;font-size:13.5px}',
+    '.okrline .okrdel{margin-left:auto;color:var(--ink-faint);cursor:pointer;font-weight:700;border:none;background:none}',
+    '.qcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}',
+    '.qcard{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:14px}',
+    '.qcard .qh{font-weight:700;font-size:14px;color:var(--pink);display:flex;align-items:center;gap:6px;margin-bottom:8px}',
+    '.qlines div{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--ink-dim);margin-bottom:6px}',
+    '.qlines input{border:none;border-bottom:1px dashed var(--line2);background:none;font-size:13px;color:var(--ink);flex:1;outline:none;padding:2px 0}',
+    '.qlines .qdel{color:var(--ink-faint);cursor:pointer;font-weight:700;border:none;background:none}',
+    '.vpost{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:12px;position:relative;transform:rotate(var(--rot,0))}',
+    '.vpost .vpmi{font-size:20px}.vpost .vpt{font-weight:700;font-size:13.5px;margin-top:2px}.vpost .vpn{font-size:12px;color:var(--ink-dim);margin-top:2px}',
+    '.vpost .vdel{position:absolute;top:6px;right:8px;color:var(--ink-faint);cursor:pointer;font-size:13px;font-weight:700;border:none;background:none}',
+    '.inp-sm{border:1.5px solid var(--line2);border-radius:9px;padding:7px 11px;font-size:13px;outline:none;background:#fff;color:var(--ink)}',
+    '.inp-sm:focus{border-color:var(--pink)}',
+    '@keyframes in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}'
+  ].join('\n');
+  document.head.appendChild(st);
+}
+/* ---------- 重要日子 ---------- */
+function loadMemorial(){try{const r=localStorage.getItem(PREFIX+'memorial');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
+function saveMemorial(a){try{localStorage.setItem(PREFIX+'memorial',JSON.stringify(a));}catch(e){}}
+const MEM_TYPES=[['🎂','生日'],['❤','纪念日'],['💳','还款日'],['📌','其他']];
+function memorialDays(date){
+  const t=new Date();const d=new Date(date+'T00:00:00');if(isNaN(d))return 0;
+  return Math.round((d.getTime()-t.getTime())/86400000);
+}
+function renderMemorial(mid,sid){
+  injectModuleCss();
+  const m=findModule(mid),s=findSub(mid,sid);
+  const rows=loadMemorial().slice().sort((a,b)=>a.date<b.date?-1:1);
+  let cards='';
+  if(rows.length){
+    cards=rows.map((r,i)=>{
+      const diff=memorialDays(r.date);
+      let txt,cls;
+      if(diff===0){txt='就是今天 🎉';cls='mem-today';}
+      else if(diff>0){txt='还有 '+diff+' 天';cls='mem-wait';}
+      else{txt='已过 '+(-diff)+' 天';cls='mem-past';}
+      return `<div class="memcard"><div class="memhead"><span class="memtype">${esc(r.type)}</span><b>${esc(r.name)}</b>${r.remind===false?'':`<span class="memtag">⏰ 提醒</span>`}<span class="memdel" data-memdel="${i}">×</span></div><div class="memdate">${esc(r.date)} · <span class="${cls}">${txt}</span></div>${r.note?`<div class="memnote">${esc(r.note)}</div>`:''}</div>`;
+    }).join('');
+  } else cards='<div class="empty">还没有重要日子，先记一个吧（生日、纪念日、还款日…）✿</div>';
+  const typesOpts=MEM_TYPES.map(t=>`<option value="${t[1]}">${t[0]} ${t[1]}</option>`).join('');
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-${m.id}">${esc(m.name)}</button><span class="sep">/</span><span class="cur">${esc(s.name)}</span></nav>
+    <div class="pagehead"><div><div class="colnum">FEATURE · ${esc(m.en)}</div><h1>${s.ic} ${esc(s.name)}</h1><p>${esc(s.desc)}</p></div><div class="stat">已记录 <b style="color:var(--cc)">${rows.length}</b> 个日子</div></div>
+    <div class="deco">✿ 重要日子 ✿</div>
+    <div class="detail"><div class="panel" style="--cc:${m.cc}">
+      <div class="toolbar"><div class="ph"><span class="ic">🎈</span> 我的重要日子</div></div>
+      <div class="pd">记下生日、纪念日、还款日…到日子那天，会自动出现在「今日提醒」里。</div>
+      <div class="memgrid">${cards}</div>
+      <div class="memform" style="background:var(--bg2);border:1px dashed var(--line2);border-radius:14px;padding:14px">
+        <b style="font-size:14px">＋ 记一个新日子</b>
+        <div class="formrow" style="margin-top:10px">
+          <select id="memType">${typesOpts}</select>
+          <input type="text" id="memName" placeholder="名称，如：妈妈生日">
+          <input type="date" id="memDate">
+          <label class="chk"><input type="checkbox" id="memRemind" checked> 提醒</label>
+        </div>
+        <input type="text" id="memNote" placeholder="备注（可选）" style="margin-top:8px;border:1.5px solid var(--line2);border-radius:10px;padding:8px 12px;font-size:13.5px;outline:none;background:#fff;color:var(--ink);width:100%">
+        <div style="margin-top:10px"><button class="addbtn" id="memSave" style="--cc:${m.cc}">＋ 保存这个日子</button></div>
+      </div>
+    </div></div>`;
+  const save=document.getElementById('memSave');
+  if(save)save.addEventListener('click',()=>{
+    const name=document.getElementById('memName').value.trim();
+    const date=document.getElementById('memDate').value;
+    if(!name||!date){toast('请填写名称和日期');return;}
+    const a=loadMemorial();
+    a.push({id:Date.now(),type:document.getElementById('memType').value,name,date,note:document.getElementById('memNote').value.trim(),remind:document.getElementById('memRemind').checked});
+    saveMemorial(a);render();toast('已保存重要日子');
+  });
+  document.querySelectorAll('[data-memdel]').forEach(el=>el.addEventListener('click',()=>{
+    if(!confirm('删除这个日子？'))return;
+    const a=loadMemorial();a.splice(+el.dataset.memdel,1);saveMemorial(a);render();
+  }));
+}
+/* ---------- 年度大目标 ---------- */
+const G_AREAS=[['学业','📚'],['健康','💪'],['财务','💰'],['兴趣','🎨'],['人际','👭'],['成长','🌱'],['旅行','🧳'],['习惯','🕐']];
+const G_STATUS=['进行中','计划中','已完成'];
+const G_VEMOJI=['✨','🎯','🏆','🌻','🏝','📚','💪','🪙','🎨','🌱'];
+function defaultGoals(){
+  const areas={};G_AREAS.forEach(a=>areas[a[0]]={word:'',goal:''});
+  return {theme:'成为更好的自己',areas,goals:[],okr:{o:'',kr:[]},
+    quarters:[['Q1','打基础'],['Q2','上台阶'],['Q3','冲一冲'],['Q4','收个尾']].map(q=>({q:q[0],title:q[1],items:['','','']})),
+    vision:[]};
+}
+function loadGoals(){try{const r=localStorage.getItem(PREFIX+'goals');if(r)return JSON.parse(r);}catch(e){}const g=defaultGoals();return g;}
+function saveGoals(g){try{localStorage.setItem(PREFIX+'goals',JSON.stringify(g));}catch(e){}}
+function gTabBar(on){
+  const tabs=[['mandala','① 九宫格'],['board','② 进度看板'],['okr','③ OKR'],['time','④ 时间轴'],['vision','⑤ 愿景板']];
+  return tabs.map(t=>`<button class="gtab ${t[0]===on?'on':''}" data-gtab="${t[0]}">${t[1]}</button>`).join('');
+}
+function renderGoals(mid,sid){
+  injectModuleCss();
+  const m=findModule(mid),s=findSub(mid,sid);
+  let tab=state.gtab||'mandala';
+  const g=loadGoals();
+  /* 九宫格 */
+  const order=[G_AREAS[0],G_AREAS[1],G_AREAS[2],G_AREAS[3],null,G_AREAS[4],G_AREAS[5],G_AREAS[6],G_AREAS[7]];
+  let man='';
+  order.forEach(a=>{
+    if(!a){man+=`<div class="gcell center"><div class="ai">✨</div><div class="an">${esc(g.theme)}</div><div class="aw">点击下方可改主题</div></div>`;return;}
+    const area=esc(a[0]);
+    const av=g.areas[a[0]]||{word:'',goal:''};
+    const agoal=g.goals.filter(x=>x.area===a[0])[0];
+    man+=`<div class="gcell" style="border-color:${agoal?G_CELLCOL[g.goals.indexOf(agoal)%6]:'var(--line)'}"><button class="gfix" data-areafix="${a[0]}">✎</button><div class="ai">${a[1]}</div><div class="an">${area}</div><div class="aw">${esc(av.word||'点 ✎ 编辑')}</div>${agoal?`<div class="gap"><i style="width:${agoal.progress}%"></i></div><div class="gapn">${esc(agoal.name)} ${agoal.progress}%</div>`:''}</div>`;
+  });
+  /* 领域编辑表单 */
+  const areaOpts=G_AREAS.map(a=>`<option value="${a[0]}" ${g._afix===a[0]?'selected':''}>${a[0]} ${a[1]}</option>`).join('');
+  const afix=g.areas[g._afix]||{word:'',goal:''};
+  const areafm=`<div class="memform" style="background:var(--bg2);border:1px dashed var(--line2);border-radius:14px;padding:14px;margin-top:14px">
+    <b style="font-size:14px">✏️ 编辑领域关键词 / 小目标</b>
+    <div class="formrow" style="margin-top:10px">
+      <select id="gAreaSel" style="max-width:110px">${areaOpts}</select>
+      <input type="text" id="gAreaWord" placeholder="领域关键词（如：稳进）" value="${esc(afix.word||'')}">
+      <input type="text" id="gAreaGoal" placeholder="领域小目标（可留空）" value="${esc(afix.goal||'')}" style="flex:1.6">
+      <button class="addbtn" id="gAreaSave" style="--cc:${m.cc}">保存</button>
+    </div></div>`;
+  /* 进度看板 goals */
+  let board='';
+  const boardAreas=G_AREAS.map(a=>a[0]).join(',');
+  if(g.goals.length){
+    board=g.goals.map((x,i)=>{
+      const cs='var(--pink)';const stCls=x.status==='已完成'?'g2':(x.status==='进行中'?'g1':'g3');
+      return `<div class="gcard"><div class="gt"><span class="gn">${esc(x.name)}</span><span class="gs ${stCls}" style="background:${x.status==='已完成'?'#E5F3EC':(x.status==='进行中'?'#FCE9EE':'#FBF0DA')};color:${x.status==='已完成'?'#5FA98D':(x.status==='进行中'?'#D16A8A':'#B8913A')}">${esc(x.status||'计划中')}</span></div>
+        <div class="gap" style="height:9px"><i style="width:${x.progress}%;background:${x.status==='已完成'?'var(--mint)':'var(--pink)'}"></i></div>
+        <div class="gmeta"><span><b>${x.progress}</b>%</span><span>${esc(x.area||'')}${x.deadline?` · ${esc(x.deadline)}`:''}</span></div>
+        ${x.target?`<div style="font-size:12.5px;color:var(--ink-dim)">目标：${esc(x.target)}</div>`:''}
+        <div style="display:flex;gap:8px"><button class="geditbtn" data-egoal="${i}">✎ 编辑</button><button class="geditbtn" data-dgoal="${i}" style="color:var(--coral);border-color:#F0C8D0">× 删除</button></div>
+      </div>`;
+    }).join('');
+  } else board='<div class="empty">还没有目标，点下方「＋ 新增目标」开始吧 ✿</div>';
+  const goalEdit=g._gedit!=null?g.goals[g._gedit]||{}:{};
+  const gfm=`<div class="memform" style="background:var(--bg2);border:1px dashed var(--line2);border-radius:14px;padding:14px;margin-top:14px">
+    <b style="font-size:14px" id="gfmTitle">＋ 新增目标</b>
+    <div class="formrow" style="margin-top:10px">
+      <input type="text" id="gName" placeholder="目标名称" value="${esc(goalEdit.name||'')}" style="flex:1.5">
+      <select id="gArea" style="max-width:110px">${G_AREAS.map(a=>`<option value="${a[0]}" ${g._gedit!=null&&goalEdit.area===a[0]?'selected':''}>${a[0]}</option>`).join('')}</select>
+    </div>
+    <div class="formrow" style="margin-top:8px">
+      <input type="text" id="gTarget" placeholder="量化目标（如：词汇到 6000）" value="${esc(goalEdit.target||'')}" style="flex:1.6">
+      <input type="number" id="gProg" min="0" max="100" placeholder="进度%" value="${goalEdit.progress!=null?goalEdit.progress:0}" style="max-width:110px;flex:none">
+      <select id="gStatus" style="max-width:120px">${G_STATUS.map(st=>`<option ${goalEdit.status===st?'selected':''}>${st}</option>`).join('')}</select>
+      <input type="date" id="gDeadline" value="${esc(goalEdit.deadline||'')}" style="flex:none">
+    </div>
+    <div style="margin-top:10px;display:flex;gap:10px"><button class="addbtn" id="gSave" style="--cc:${m.cc}">保存目标</button>${g._gedit!=null?`<button class="geditbtn" id="gCancel" style="padding:7px 14px">取消编辑</button>`:''}</div>
+  </div>`;
+  /* OKR */
+  const okr=g.okr||{o:'',kr:[]};
+  let krList=okr.kr.length?okr.kr.map((k,ki)=>`<div class="okrline"><input type="checkbox" ${k.done?'checked':''} data-krdone="${ki}" style="width:16px;height:16px;accent-color:var(--pink)"><input type="text" class="inp-sm" data-krt="${ki}" value="${esc(k.t||'')}" style="flex:1"><button class="okrdel" data-krdel="${ki}">×</button></div>`).join(''):'<div class="empty" style="padding:8px">还没有关键结果，添加一条吧</div>';
+  const okrHtml=`<div class="okrbox" style="background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:18px">
+    <div style="display:flex;gap:10px;align-items:center"><span style="background:var(--pink);color:#fff;border-radius:8px;padding:1px 9px;font-size:13px">O</span><input type="text" class="inp-sm" id="gO" placeholder="年度目标（Objective）" value="${esc(okr.o||'')}" style="flex:1"></div>
+    <div style="margin-top:14px;font-size:13px;color:var(--ink-dim)">关键结果（KR）</div>
+    <div style="margin-top:8px">${krList}</div>
+    <div style="margin-top:10px;display:flex;gap:10px"><button class="geditbtn" id="gKrAdd" style="padding:7px 14px">＋ 添加 KR</button><button class="addbtn" id="gOkrSave" style="--cc:${m.cc}">保存 OKR</button></div>
+  </div>`;
+  /* 时间轴 */
+  const qHtml=(g.quarters||[]).map((q,qi)=>{
+    const items=(q.items||[]).map((it,ii)=>`<div><input type="text" class="inp-sm" data-qitem="${qi}__${ii}" value="${esc(it||'')}" style="flex:1"><button class="qdel" data-qdel="${qi}__${ii}">×</button></div>`).join('');
+    return `<div class="qcard"><div class="qh">${esc(q.q)} <input type="text" class="inp-sm" data-qtitle="${qi}" value="${esc(q.title||'')}" style="flex:1;font-size:13px;padding:3px 8px"></div><div class="qlines">${items||'<div style="font-size:12px;color:var(--ink-faint)">暂无里程碑</div>'}</div><div style="margin-top:8px;display:flex;gap:8px"><button class="geditbtn" data-qadd="${qi}" style="padding:4px 10px">＋ 里程碑</button><button class="addbtn" data-qsave="${qi}" style="--cc:${m.cc};padding:4px 12px">保存本季</button></div></div>`;
+  }).join('');
+  const timeHtml=`<div class="qcards">${qHtml}</div>`;
+  /* 愿景板 */
+  let vision=g.vision.length?g.vision.map((v,vi)=>{
+    const cols=['#FBD9DE','#DCEFE5','#F8ECC3','#E4DAF5','#DBE9F4','#F6E2C9'];
+    return `<div class="vpost" style="background:${cols[vi%6]};--rot:${((vi%2)?1.2:-1)*.9}deg"><button class="vdel" data-vdel="${vi}">×</button><div class="vpmi">${esc(v.emoji||'✨')}</div><div class="vpt">${esc(v.title||'')}</div><div class="vpn">${esc(v.note||'')}</div></div>`;
+  }).join(''):'<div class="empty" style="grid-column:1/-1">还没有愿景贴纸，贴一张吧 ✿</div>';
+  const vEmo=G_VEMOJI.map(e=>`<option>${e}</option>`).join('');
+  const visHtml=`<div style="background:#F7E8DD;border-radius:18px;padding:22px;border:1px solid #E6D2C4;background-image:repeating-linear-gradient(45deg,rgba(180,140,110,.06) 0 1px,transparent 1px 14px)">
+    <div class="gcards" style="grid-template-columns:repeat(auto-fill,minmax(160px,1fr))">${vision}</div>
+    <div class="memform" style="background:rgba(255,255,255,.8);border:1px dashed #DDBDA2;border-radius:14px;padding:14px;margin-top:16px">
+      <b style="font-size:14px">＋ 贴一张愿景</b>
+      <div class="formrow" style="margin-top:10px">
+        <select id="vEmoji" style="max-width:80px">${vEmo}</select>
+        <input type="text" id="vTitle" placeholder="贴纸标题" style="flex:1.4">
+        <input type="text" id="vNote" placeholder="一句话（可选）" style="flex:1.6">
+        <button class="addbtn" id="vSave" style="--cc:#8A6244;background:#8A6244">保存</button>
+      </div>
+    </div>
+  </div>`;
+  /* 组装 */
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-${m.id}">${esc(m.name)}</button><span class="sep">/</span><span class="cur">${esc(s.name)}</span></nav>
+    <div class="pagehead"><div><div class="colnum">FEATURE · ${esc(m.en)}</div><h1>${s.ic} ${esc(s.name)}</h1><p>${esc(s.desc)}</p></div><div class="stat">${g.goals.length} 个目标</div></div>
+    <div class="deco">✿ 年度大目标 ✿</div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="gtabs">${gTabBar(tab)}</div>
+        <div class="gview ${tab==='mandala'?'show':''}" id="gv-mandala">
+          <div class="toolbar"><div class="ph"><span class="ic">🎯</span> 曼陀罗九宫格</div></div>
+          <div class="pd">中心是年度主题，四周 8 个领域。点每格右上角 ✎ 编辑该领域，主题在下方改。</div>
+          <div class="gmandala">${man}</div>
+          <div style="display:flex;gap:10px;align-items:center;margin-top:14px">
+            <b style="font-size:13px">年度主题：</b>
+            <input type="text" class="inp-sm" id="gTheme" value="${esc(g.theme)}" style="flex:1;max-width:360px">
+            <button class="addbtn" id="gThemeSave" style="--cc:${m.cc}">保存主题</button>
+          </div>
+          ${areafm}
+        </div>
+        <div class="gview ${tab==='board'?'show':''}" id="gv-board">
+          <div class="toolbar"><div class="ph"><span class="ic">📊</span> 进度条卡片看板</div></div>
+          <div class="pd">每个目标一张卡，进度条 + 状态一目了然。点 ✎ 编辑，可新增、删除。</div>
+          <div class="gcards">${board}</div>
+          ${gfm}
+        </div>
+        <div class="gview ${tab==='okr'?'show':''}" id="gv-okr">
+          <div class="toolbar"><div class="ph"><span class="ic">🎯</span> OKR 拆解</div></div>
+          <div class="pd">一个年度目标 + 可量化的关键结果，一行一行拆。</div>
+          ${okrHtml}
+        </div>
+        <div class="gview ${tab==='time'?'show':''}" id="gv-time">
+          <div class="toolbar"><div class="ph"><span class="ic">🗓</span> 时间轴拆解</div></div>
+          <div class="pd">四个季度，每个季度写里程碑。改完点「保存本季」。</div>
+          ${timeHtml}
+        </div>
+        <div class="gview ${tab==='vision'?'show':''}" id="gv-vision">
+          <div class="toolbar"><div class="ph"><span class="ic">🖼</span> 愿景板</div></div>
+          <div class="pd">把想要的样子贴出来，每天看看。</div>
+          ${visHtml}
+        </div>
+      </div>
+    </div>`;
+  /* 事件 */
+  document.querySelectorAll('[data-gtab]').forEach(el=>el.addEventListener('click',()=>{state.gtab=el.dataset.gtab;renderGoals(mid,sid);}));
+  /* 主题 */
+  document.getElementById('gThemeSave').addEventListener('click',()=>{const v=document.getElementById('gTheme').value.trim();if(!v)return;const g2=loadGoals();g2.theme=v;saveGoals(g2);renderGoals(mid,sid);toast('年度主题已更新');});
+  /* 领域 */
+  document.getElementById('gAreaSel').addEventListener('change',function(){const g2=loadGoals();g2._afix=this.value;saveGoals(g2);renderGoals(mid,sid);});
+  document.getElementById('gAreaSave').addEventListener('click',()=>{
+    const g2=loadGoals();const a=document.getElementById('gAreaSel').value;
+    g2.areas[a]={word:document.getElementById('gAreaWord').value.trim(),goal:document.getElementById('gAreaGoal').value.trim()};
+    delete g2._afix;saveGoals(g2);renderGoals(mid,sid);toast('领域已更新');
+  });
+  document.querySelectorAll('[data-areafix]').forEach(el=>el.addEventListener('click',()=>{const g2=loadGoals();g2._afix=el.dataset.areafix;saveGoals(g2);renderGoals(mid,sid);}));
+  /* 目标表单 */
+  const gSave=document.getElementById('gSave');
+  gSave.addEventListener('click',()=>{
+    const g2=loadGoals();const name=document.getElementById('gName').value.trim();if(!name){toast('请填写目标名称');return;}
+    const area=document.getElementById('gArea').value;
+    const obj={id:Date.now(),area,name,target:document.getElementById('gTarget').value.trim(),progress:Math.max(0,Math.min(100,parseInt(document.getElementById('gProg').value||'0'))),status:document.getElementById('gStatus').value,deadline:document.getElementById('gDeadline').value};
+    if(g2._gedit!=null&&g2.goals[g2._gedit]){g2.goals[g2._gedit]=Object.assign({},g2.goals[g2._gedit],obj);}
+    else g2.goals.push(obj);
+    delete g2._gedit;saveGoals(g2);renderGoals(mid,sid);toast('目标已保存');
+  });
+  const gCancel=document.getElementById('gCancel');if(gCancel)gCancel.addEventListener('click',()=>{const g2=loadGoals();delete g2._gedit;saveGoals(g2);renderGoals(mid,sid);});
+  document.querySelectorAll('[data-egoal]').forEach(el=>el.addEventListener('click',()=>{const g2=loadGoals();g2._gedit=+el.dataset.egoal;saveGoals(g2);renderGoals(mid,sid);}));
+  document.querySelectorAll('[data-dgoal]').forEach(el=>el.addEventListener('click',()=>{if(!confirm('删除这个目标？'))return;const g2=loadGoals();g2.goals.splice(+el.dataset.dgoal,1);saveGoals(g2);renderGoals(mid,sid);}));
+  /* OKR */
+  document.getElementById('gKrAdd').addEventListener('click',()=>{const g2=loadGoals();(g2.okr=g2.okr||{o:'',kr:[]}).kr.push({id:Date.now(),t:'',done:false});saveGoals(g2);renderGoals(mid,sid);});
+  document.getElementById('gOkrSave').addEventListener('click',()=>{
+    const g2=loadGoals();g2.okr=g2.okr||{o:'',kr:[]};
+    g2.okr.o=document.getElementById('gO').value.trim();
+    document.querySelectorAll('[data-krt]').forEach(el=>{const i=+el.dataset.krt;if(g2.okr.kr[i])g2.okr.kr[i].t=el.value;});
+    document.querySelectorAll('[data-krdone]').forEach(el=>{const i=+el.dataset.krdone;if(g2.okr.kr[i])g2.okr.kr[i].done=el.checked;});
+    saveGoals(g2);renderGoals(mid,sid);toast('OKR 已保存');
+  });
+  document.querySelectorAll('[data-krdel]').forEach(el=>el.addEventListener('click',()=>{const g2=loadGoals();g2.okr.kr.splice(+el.dataset.krdel,1);saveGoals(g2);renderGoals(mid,sid);}));
+  /* 时间轴 */
+  document.querySelectorAll('[data-qadd]').forEach(el=>el.addEventListener('click',()=>{const g2=loadGoals();const qi=+el.dataset.qadd;if(g2.quarters[qi])g2.quarters[qi].items.push('');saveGoals(g2);renderGoals(mid,sid);}));
+  document.querySelectorAll('[data-qsave]').forEach(el=>el.addEventListener('click',()=>{
+    const g2=loadGoals();const qi=+el.dataset.qsave;const q=g2.quarters[qi];if(!q)return;
+    const t=document.querySelector('[data-qtitle="'+qi+'"]');if(t)q.title=t.value;
+    document.querySelectorAll('[data-qitem="'+qi+'__"]').forEach(()=>{});
+    q.items.forEach((_,ii)=>{const inp=document.querySelector('[data-qitem="'+qi+'__'+ii+'"]');if(inp)q.items[ii]=inp.value;});
+    saveGoals(g2);renderGoals(mid,sid);toast('第 '+(qi+1)+' 季已保存');
+  }));
+  document.querySelectorAll('[data-qdel]').forEach(el=>el.addEventListener('click',()=>{const [qi,ii]=el.dataset.qdel.split('__');const g2=loadGoals();g2.quarters[+qi].items.splice(+ii,1);saveGoals(g2);renderGoals(mid,sid);}));
+  /* 愿景板 */
+  document.getElementById('vSave').addEventListener('click',()=>{
+    const g2=loadGoals();const t=document.getElementById('vTitle').value.trim();if(!t){toast('请填写贴纸标题');return;}
+    g2.vision.push({id:Date.now(),emoji:document.getElementById('vEmoji').value,title:t,note:document.getElementById('vNote').value.trim()});
+    saveGoals(g2);renderGoals(mid,sid);toast('已贴上愿景');
+  });
+  document.querySelectorAll('[data-vdel]').forEach(el=>el.addEventListener('click',()=>{if(!confirm('撕掉这张贴纸？'))return;const g2=loadGoals();g2.vision.splice(+el.dataset.vdel,1);saveGoals(g2);renderGoals(mid,sid);}));
+}
+const G_CELLCOL=['#F9C4CF','#CFE6DB','#F6E5BC','#E3D9F1','#D4E1EC','#F5D7D7'];
+
+function loadRemindSettings(){try{const r=localStorage.getItem(PREFIX+'remind_settings');if(r)return JSON.parse(r);}catch(e){}return {signDays:7};}
+function saveRemindSettings(o){try{localStorage.setItem(PREFIX+'remind_settings',JSON.stringify(o));}catch(e){}}
+function loadRemindToday(){try{const r=localStorage.getItem(PREFIX+'remind_today');if(r)return JSON.parse(r);}catch(e){}return {date:'',done:{}};}
+function saveRemindToday(o){try{localStorage.setItem(PREFIX+'remind_today',JSON.stringify(o));}catch(e){}}
+function renderReminders(mid,sid){
+  injectModuleCss();
+  const m=findModule(mid),s=findSub(mid,sid);
+  const today=nowStr();
+  const settings=loadRemindSettings();
+  const rt=loadRemindToday();
+  if(rt.date!==today){rt.date=today;rt.done={};saveRemindToday(rt);}
+  const isDone=k=>rt.done[k]===true;
+  /* 今天该做的事：番茄钟待办 + 今日学习计划 */
+  const pomo=loadPomoTasks().filter(x=>!x.done);
+  const plan=loadStudyPlan()[today]||[];
+  /* 重要日子：今天 */
+  const mems=loadMemorial().filter(r=>r.remind!==false&&r.date===today);
+  /* 该补的记录 */
+  const signs=loadRows('health','signs');
+  const lastSignTs=signs.length?Math.max.apply(null,signs.map(r=>r.ts||0)):0;
+  const signDays=Math.floor((Date.now()-lastSignTs)/86400000);
+  const flow=loadRows('money','flow');
+  const flowToday=flow.some(r=>r.vals&&r.vals[2]===today);
+  const mood=loadMood();
+  const moodToday=mood.some(r=>r.date===today);
+  const period=loadPeriod();
+  const periodToday=(period.days||[]).indexOf(today)>=0;
+  /* 习惯打卡 */
+  const habits=loadHabits();
+  const logs=loadHabitLogs();
+  const habitsToday=habits.map(h=>({h,hk:'h'+h.id,hdone:((logs[h.id]||[]).some(l=>l.date===today))}));
+  let todoHtml='',todoCnt=0,needCnt=0,memHtml='',dayCnt=0,habHtml='',habDone=0,needHtml='';
+  if(pomo.length||plan.length){
+    pomo.forEach((x,i)=>{
+      todoCnt++;const k='p'+i;const d=isDone(k);
+      todoHtml+=`<div class="remitem ${d?'done':''}"><span class="remck" data-rck="${k}">${d?'✓':''}</span><div><div class="rti">${esc(x.name)}</div><div class="rsu">番茄钟待办 · 预计 ${esc(x.duration||'25')} 分钟</div></div><span class="rbadge r1">待办</span></div>`;
+    });
+    plan.forEach((x,i)=>{
+      todoCnt++;const k='pl'+i;const d=isDone(k);
+      const nm=typeof x==='string'?x:(x.n||x.t||(x.vals&&x.vals[0])||'学习安排');
+      todoHtml+=`<div class="remitem ${d?'done':''}"><span class="remck" data-rck="${k}">${d?'✓':''}</span><div><div class="rti">${esc(nm)}</div><div class="rsu">今日学习计划</div></div><span class="rbadge r1">学习</span></div>`;
+    });
+  } else todoHtml='<div class="remitem"><div class="rti" style="color:var(--ink-faint)">今天没有待办安排，可以享受放松 ✿</div></div>';
+  if(mems.length){
+    mems.forEach((x,i)=>{dayCnt++;const k='mem'+i;const d=isDone(k);
+      memHtml+=`<div class="remitem ${d?'done':''}"><span class="remck" data-rck="${k}">${d?'✓':''}</span><div><div class="rti">${esc(x.name)} ${x.type}</div>${x.note?`<div class="rsu">${esc(x.note)}</div>`:''}</div><span class="rbadge r2">重要日子</span></div>`;
+    });
+  } else memHtml='<div class="remitem"><div class="rti" style="color:var(--ink-faint)">今天没有特别的日子</div></div>';
+  const needItems=[];
+  if(settings.signDays>0&&signs.length===0)needItems.push({k:'n_sign',t:'体征测量',su:'还没有体征记录，方便时记一次',b:'r4'});
+  else if(settings.signDays>0&&signDays>=settings.signDays)needItems.push({k:'n_sign',t:'体征测量',su:'已经 '+signDays+' 天没记体重/心率了',b:'r4'});
+  if(!flowToday)needItems.push({k:'n_flow',t:'记账',su:'今天还没记录收支',b:'r3'});
+  if(!moodToday)needItems.push({k:'n_mood',t:'心情日记',su:'今天还没记录心情',b:'r5'});
+  if(periodToday)needItems.push({k:'n_period',t:'经期记录',su:'今天是经期日，方便时标记一下',b:'r4'});
+  needItems.forEach((it)=>{needCnt++;const d=isDone(it.k);
+    needHtml+=`<div class="remitem ${d?'done':''}"><span class="remck" data-rck="${it.k}">${d?'✓':''}</span><div><div class="rti">${it.t}</div><div class="rsu">${it.su}</div></div><span class="rbadge ${it.b}">该补</span></div>`;
+  });
+  if(!needItems.length)needHtml='<div class="remitem"><div class="rti" style="color:var(--ink-faint)">该记的都记上啦，棒棒 ✿</div></div>';
+  habitsToday.forEach((h)=>{if(h.hdone)habDone++;const d=isDone(h.hk);
+    habHtml+=`<div class="remitem ${d?'done':''}"><span class="remck" data-rck="${h.hk}">${d?'✓':''}</span><div><div class="rti">${esc(h.h.name)}</div>${h.h.goal?`<div class="rsu">${esc(h.h.goal)}</div>`:''}</div><span class="rbadge r2">${h.hdone?'已打卡':'待打卡'}</span></div>`;
+  });
+  if(!habits.length)habHtml='<div class="remitem"><div class="rti" style="color:var(--ink-faint)">还没有设置习惯</div></div>';
+  const signOpts=[['7','7 天没记才提醒'],['14','14 天没记才提醒'],['30','30 天没记才提醒'],['0','不提醒体征']].map(o=>`<option value="${o[0]}" ${String(settings.signDays)===o[0]?'selected':''}>${o[1]}</option>`).join('');
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-${m.id}">${esc(m.name)}</button><span class="sep">/</span><span class="cur">${esc(s.name)}</span></nav>
+    <div class="pagehead"><div><div class="colnum">FEATURE · ${esc(m.en)}</div><h1>${s.ic} ${esc(s.name)}</h1><p>${esc(s.desc)}</p></div><div class="stat">今天 <b style="color:var(--cc)">${todoCnt+dayCnt+needCnt}</b> 件事</div></div>
+    <div class="deco">✿ 今日提醒 ✿</div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph"><span class="ic">⚙</span> 提醒设置</div></div>
+        <div class="setrow" style="padding:4px 2px 12px">
+          <span>🔔 体征提醒频率：</span>
+          <select id="signFreq">${signOpts}</select>
+          <span>（按天记的：记账、心情、经期每天都会提醒）</span>
+        </div>
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph"><span class="ic">🗓</span> 今天该做的事</div><span class="stat" style="font-size:12px;color:var(--ink-faint)">${todoCnt} 项</span></div>
+        ${todoHtml}
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph"><span class="ic">🎈</span> 重要日子</div><span class="stat" style="font-size:12px;color:var(--ink-faint)">${dayCnt} 个今天</span></div>
+        ${memHtml}
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph"><span class="ic">📝</span> 该补的记录</div><span class="stat" style="font-size:12px;color:var(--ink-faint)">${needCnt} 项</span></div>
+        ${needHtml}
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph"><span class="ic">✅</span> 习惯打卡</div><span class="stat" style="font-size:12px;color:var(--ink-faint)">${habDone} / ${habits.length}</span></div>
+        ${habHtml}
+      </div>
+    </div>`;
+  document.getElementById('signFreq').addEventListener('change',function(){settings.signDays=parseInt(this.value);saveRemindSettings(settings);toast('体征提醒频率已更新');});
+  document.querySelectorAll('[data-rck]').forEach(el=>el.addEventListener('click',()=>{
+    const rt2=loadRemindToday();rt2.done[el.dataset.rck]=!rt2.done[el.dataset.rck];saveRemindToday(rt2);renderReminders(mid,sid);
+  }));
+}
+
 </script>
 <div class="theme-picker" id="themePicker">
   <h4>选择主题色系</h4>

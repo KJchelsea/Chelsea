@@ -635,7 +635,7 @@ const DATA=[
    {id:'period',ic:'🌸',name:'经期记录',desc:'月历标记经期日，自动推算周期长度与下次预计',feat:['月历图','经期日标记','周期推算'],rows:[],special:'period'}
  ]},
  {id:'money',ic:'¥',name:'资金管理',en:'FINANCE',desc:'收支、预算、心愿账单与理财的一站式财务总账',cc:'#F09A9A',sub:[
-   {id:'flow',ic:'📒',name:'收支流水',desc:'收入支出流水记录，分类清晰、随时可查',feat:['极简 3 秒记账','自定义分类与账本','收支报表'],cols:['分类','金额','日期'],fields:['分类','金额','日期'],rows:[['餐饮','支出 ¥38.00','今天'],['工资','收入 ¥12,000','昨天'],['交通','支出 ¥12.00','昨天'],['本月结余','+ ¥3,240','正常']]},
+   {id:'flow',ic:'📒',name:'收支流水',desc:'收入支出流水记录，大分类 + 小分类 + 备注，随查随记',feat:['极简 3 秒记账','大分类 / 小分类','备注留档','收支报表'],cols:['大分类','小分类','金额','备注','日期'],fields:['大分类','小分类','金额','备注','日期'],rows:[['餐饮','午餐','支出 ¥38.00','','今天'],['工资','月度','收入 ¥12,000','','昨天'],['交通','通勤','支出 ¥12.00','','昨天']]},
    {id:'budget',ic:'📊',name:'预算规划',desc:'月度与分类预算，超支预警',feat:['月度预算','分类预算','超支预警'],cols:['类别','预算 / 已用','状态'],fields:['类别','预算 / 已用','状态'],rows:[['餐饮 预算','¥1,500 / 已用 62%','正常'],['购物 预算','¥800 / 已用 88%','偏高'],['总预算','¥6,000 / 已用 58%','正常']]},
    {id:'wish',ic:'🌟',name:'心愿账单',desc:'设定愿望目标，进度条与存钱打卡让存钱有期待',feat:['心愿目标与截止日','进度条与打卡','心愿图片解锁'],cols:['心愿','目标 / 已存','状态'],fields:['心愿','目标 / 已存','状态'],rows:[['日本旅行','¥20,000 / 已存 45%','进行中'],['新手机','¥6,000 / 已存 82%','即将达成'],['应急基金','¥10,000 / 已存 60%','进行中']]},
    {id:'invest',ic:'🏦',name:'理财与资产',desc:'资产负债与理财记录，资产动向一目了然',feat:['资产负债管理','理财记录','资产趋势'],cols:['项目','金额','涨跌'],fields:['项目','金额','涨跌'],rows:[['总资产','¥86,200','+2.1%'],['总负债','¥12,000','-'],['基金持仓','¥18,000','+1.4%']]},
@@ -879,7 +879,7 @@ async function gbPull(){
     const rows=await r.json();
     gbSynced=(rows||[]).map(x=>({id:x.id,who:x.who||'匿名',txt:x.txt||'',img:x.img||'',ts:x.ts||0}));
     saveGB(gbSynced);
-    if(state&&state.guest){const el=document.activeElement,typing=el&&(el.id==='gbTxt'||el.id==='gbWho'||el.id==='gbFile');if(!typing)render();}
+    if(state&&state.guest){const el=document.activeElement,typing=el&&(el.id==='gbTxt'||el.id==='gbWho'||el.id==='gb_file');if(!typing)render();}
   }catch(e){}
 }
 async function gbPost(msg){
@@ -1045,8 +1045,10 @@ function renderStats(mid){
   const dayDetailHTML=selDay?`
     <div style="margin-top:12px;padding:12px 14px;background:#FDF0F5;border:1px solid var(--line);border-radius:12px">
       <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px">📅 ${selDay} 收支明细（${selItems.length} 笔）</div>
-      ${selItems.length?selItems.map(it=>`<div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px dashed var(--line)">
-        <span>${esc(it.cat)||'未分类'}</span><span style="${it.type==='income'?'color:var(--mint)':'color:var(--coral)'}">${it.type==='income'?'+':'-'}¥${it.amount.toFixed(2)}</span></div>`).join('')
+      ${selItems.length?selItems.map(it=>`<div style="font-size:13px;padding:4px 0;border-bottom:1px dashed var(--line)">
+        <div style="display:flex;justify-content:space-between">
+          <span>${esc(it.cat)||'未分类'}${it.sub?`<span style="color:var(--ink-faint)"> · ${esc(it.sub)}</span>`:''}${it.remark?`<span style="color:var(--ink-faint)">（${esc(it.remark)}）</span>`:''}</span><span style="${it.type==='income'?'color:var(--mint)':'color:var(--coral)'}">${it.type==='income'?'+':'-'}¥${it.amount.toFixed(2)}</span>
+        </div></div>`).join('')
         :'<div style="font-size:12.5px;color:var(--ink-faint)">该日暂无收支记录</div>'}
       <button class="delbtn" data-stdayclear style="margin-top:8px;font-size:12px">收起</button>
     </div>`:'';
@@ -1067,6 +1069,15 @@ function renderStats(mid){
   const CAT_COLORS=['#E88CA8','#F09A9A','#B7D8C8','#F6DFA8','#CDBBE6','#9FB8C8','#F2A0C0','#A8C8E8'];
   const catData=Object.keys(catAgg).map((c,i)=>[c,Math.round(catAgg[c]/catTotal*100),CAT_COLORS[i%CAT_COLORS.length]]);
   const donutHTML=catData.length?donutChart(catData):'<div class="empty">本月暂无支出，记一笔吧</div>';
+
+  /* 本月支出：大分类 → 小分类 细分 */
+  const subAgg={};
+  Object.keys(dayMap).forEach(d=>{if(d.startsWith(prefix)){dayMap[d].items.forEach(it=>{if(it.type!=='expense')return;if(!subAgg[it.cat])subAgg[it.cat]={total:0,subs:{}};subAgg[it.cat].total+=it.amount;const sk=it.sub||'未分小类';subAgg[it.cat].subs[sk]=(subAgg[it.cat].subs[sk]||0)+it.amount;});}});
+  const catDetailHTML=Object.keys(subAgg).length?Object.keys(subAgg).map(cat=>{
+    const cg=subAgg[cat];
+    const subs=Object.keys(cg.subs).map(sk=>`<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0 3px 14px;border-bottom:1px dashed var(--line)"><span>${esc(sk)}</span><span style="color:var(--coral)">¥${cg.subs[sk].toFixed(2)}</span></div>`).join('');
+    return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)"><span>${esc(cat)}</span><span style="color:var(--coral)">¥${cg.total.toFixed(2)}</span></div>${subs}</div>`;
+  }).join(''):'<div class="empty">本月暂无支出，记一笔吧</div>';
 
   /* 年度概览 */
   let yInc=0,yExp=0;
@@ -1119,8 +1130,13 @@ function renderStats(mid){
       </div>
       <div class="panel" style="--cc:#F09A9A">
         <div class="ph"><span class="ic">🥧</span> ${fy}年${fm}月 支出分类占比</div>
-        <div class="pd">本月支出按分类的占比（环形图）。</div>
+        <div class="pd">本月支出按大分类的占比（环形图）。</div>
         ${donutHTML}
+      </div>
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="ph"><span class="ic">🧾</span> ${fy}年${fm}月 支出分类明细（大分类 → 小分类）</div>
+        <div class="pd">每个大分类下的小分类花销一览，点开月历某天还能看到备注。</div>
+        ${catDetailHTML}
       </div>
       <div class="panel" style="--cc:#F09A9A">
         <div class="ph"><span class="ic">📅</span> ${fy} 年度概览</div>
@@ -2243,7 +2259,7 @@ function renderGuest(){
           <label>署名（可留空 = 匿名）</label>
           <input id="gbWho" type="text" placeholder="你的名字" maxlength="12" autocomplete="off">
           <label>配图（可选，1 张）</label>
-          <label class="upbtn" style="margin-top:4px">📷 上传照片<input id="gbFile" type="file" accept="image/*" style="display:none"></label>
+          <label class="upbtn" style="margin-top:4px">📷 上传照片<input id="gb_file" type="file" accept="image/*" style="display:none"></label>
           <div class="attachgrid" id="gb_preview"></div>
           <button class="gbfire" id="gbFire">发送 ♡</button>
         </div>
@@ -4594,7 +4610,7 @@ function buildFlowDayMap(rows){
     if(c.type==='balance')return;
     if(!dayMap[dt])dayMap[dt]={inc:0,exp:0,items:[]};
     if(c.type==='income')dayMap[dt].inc+=c.amount;else dayMap[dt].exp+=c.amount;
-    dayMap[dt].items.push({cat:c.cat,amount:c.amount,type:c.type,date:dt});
+    dayMap[dt].items.push({cat:c.cat,sub:(r.vals[4]||''),remark:(r.vals[5]||''),amount:c.amount,type:c.type,date:dt});
   });
   return dayMap;
 }
@@ -4663,11 +4679,10 @@ function renderFlowEnhanced(mid, sid) {
         <div class="toolbar"><div class="ph"><span class="ic">📒</span> 流水明细</div><button class="addbtn" data-add="${mid}-${sid}" style="--cc:#F09A9A">＋ 新增记录</button></div>
         <div class="pd">数据自动保存在本机浏览器，刷新不丢失。</div>
         <table>
-          <thead><tr><th style="width:8%">#</th>${s.cols.map(c => `<th>${esc(c)}</th>`).join('')}<th style="width:10%">操作</th></tr></thead>
+          <thead><tr><th style="width:5%">#</th><th>大分类</th><th>小分类</th><th>金额</th><th>日期</th><th>备注</th><th style="width:9%">操作</th></tr></thead>
           <tbody>
-            ${rows.length ? rows.map((r, i) => `
-              <tr><td style="color:var(--ink-faint)">${i + 1}</td>${r.vals.map(c => `<td>${esc(c)}</td>`).join('')}<td><button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>
-            `).join('') : `<tr><td colspan="${s.cols.length + 2}"><div class="empty">暂无记录，点击「＋ 新增记录」添加第一条吧</div></td></tr>`}
+            ${rows.length ? rows.map((r, i) => { const v = r.vals || []; return `
+              <tr><td style="color:var(--ink-faint)">${i + 1}</td><td>${esc(v[0] || '')}</td><td>${esc(v[4] || '') || '—'}</td><td>${esc(v[1] || '')}</td><td>${esc(v[2] || '')}</td><td>${esc(v[5] || '') || '—'}</td><td><button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>`; }).join('') : `<tr><td colspan="7"><div class="empty">暂无记录，点击「＋ 新增记录」添加第一条吧</div></td></tr>`}
           </tbody>
         </table>
         <div class="notice">💾 数据保存在本机浏览器中，换设备或清除浏览器数据会丢失。</div>
@@ -4683,37 +4698,45 @@ function renderFlowEnhanced(mid, sid) {
     renderFlowEnhanced(mid, sid);
   });
   const addBtn = document.querySelector(`[data-add="${mid}-${sid}"]`);
-  if (addBtn) addBtn.addEventListener('click', function() { openFlowForm(mid, sid); });
+  if (addBtn) addBtn.addEventListener('click', function(e) { if (e) e.stopPropagation(); openFlowForm(mid, sid); });
 }
-/* 收支流水专用新增表单：类型 + 分类 + 金额 + 日期 */
+/* 收支流水专用新增表单：类型 + 大分类 + 小分类 + 金额 + 日期 + 备注 */
 function openFlowForm(mid, sid) {
   fmMeta = { type: 'flow', mid, sid };
   $('#fmTitle').textContent = '＋ 新增收支';
-  $('#fmDesc').textContent = '选择收支类型与分类，填写金额和日期，月历会自动标注';
-  const ic = ['工资','奖金','理财','兼职','红包','礼金','稿费','报销','其他收入'];
-  const ec = ['餐饮','交通','购物','娱乐','居住','日用','医疗','教育','水电','通讯','服饰','其他支出'];
+  $('#fmDesc').textContent = '选大分类 + 小分类，填金额和日期，可加备注；月历与月年统计自动更新';
+  const ic = ['工资','奖金','理财','兼职','红包','礼金','稿费','报销','转移收入','其他收入'];
+  const ec = ['餐饮','交通','购物','娱乐','居住','日用','医疗','教育','水电','通讯','服饰','生活基础','品质消费','其他支出'];
+  const subOpts = ['三餐基础','快乐解馋','住房水电','水果','零食','日用品','交通出行','学习用品','化妆品','服饰','医疗健康','人情往来'];
   $('#fmFields').innerHTML = `
     <label>收支类型</label>
     <select data-f="0"><option value="expense">支出</option><option value="income">收入</option></select>
-    <label>分类</label>
-    <input data-f="1" type="text" placeholder="如 餐饮 / 工资" list="flowCatList" autocomplete="off">
+    <label>大分类</label>
+    <input data-f="1" type="text" placeholder="如 生活基础 / 餐饮" list="flowCatList" autocomplete="off">
     <datalist id="flowCatList">${ic.map(c => `<option value="${c}">`).join('')}${ec.map(c => `<option value="${c}">`).join('')}</datalist>
+    <label>小分类（可选）</label>
+    <input data-f="2" type="text" placeholder="如 三餐基础 / 快乐解馋" list="flowSubList" autocomplete="off">
+    <datalist id="flowSubList">${subOpts.map(c => `<option value="${c}">`).join('')}</datalist>
     <label>金额（元）</label>
-    <input data-f="2" type="number" min="0" step="0.01" placeholder="如 38.00">
+    <input data-f="3" type="number" min="0" step="0.01" placeholder="如 38.00">
     <label>日期</label>
-    <input data-f="3" type="date" value="${nowStr()}">`;
+    <input data-f="4" type="date" value="${nowStr()}">
+    <label>备注（可选）</label>
+    <input data-f="5" type="text" placeholder="如 烧鸭饭 / 云岭茉莉" autocomplete="off">`;
   fm.classList.add('show');
 }
 function saveFlowForm() {
   if (!fmMeta || fmMeta.type !== 'flow') return;
   const type = $('[data-f="0"]').value || 'expense';
   const cat = ($('[data-f="1"]').value || '').trim();
-  const amt = parseFloat($('[data-f="2"]').value);
-  const date = ($('[data-f="3"]').value || '').trim() || nowStr();
-  if (!cat) { toast('请填写分类'); return; }
+  const sub = ($('[data-f="2"]').value || '').trim();
+  const amt = parseFloat($('[data-f="3"]').value);
+  const date = ($('[data-f="4"]').value || '').trim() || nowStr();
+  const remark = ($('[data-f="5"]').value || '').trim();
+  if (!cat) { toast('请填写大分类'); return; }
   if (!amt || isNaN(amt) || amt <= 0) { toast('请填写正确的金额'); return; }
   const rows = loadRows(fmMeta.mid, fmMeta.sid);
-  rows.push({ vals: [cat, (type === 'income' ? '收入 ' : '支出 ') + '¥' + amt.toFixed(2), date, type === 'income' ? 'income' : 'expense'], ts: Date.now() });
+  rows.push({ vals: [cat, (type === 'income' ? '收入 ' : '支出 ') + '¥' + amt.toFixed(2), date, type === 'income' ? 'income' : 'expense', sub, remark], ts: Date.now() });
   saveRows(fmMeta.mid, fmMeta.sid, rows);
   closeForm(); render();
 }

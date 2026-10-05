@@ -595,6 +595,7 @@ tr:hover td{background:#FEF8FB}
 <div id="topDate" style="font-size:13px;color:var(--ink-dim);font-family:var(--kai);white-space:nowrap"></div>
 <button id="themeBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="切换色系">🎨 切换色系</button>
 <button id="lockBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="锁定房间">🔒 锁定</button>
+<button id="syncBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="手动同步到云端">☁️ 同步</button>
 </div>
 
 <div id="app">
@@ -630,7 +631,8 @@ const DATA=[
    {id:'body',ic:'📏',name:'体围记录',desc:'上/下胸围、腰、臀、大腿、小腿围度，分日期记录变化',feat:['6 项围度记录','分日期保存','历史趋势对比'],rows:[],special:'body'},
    {id:'sleep',ic:'🌙',name:'睡眠记录',desc:'入睡/起床时间与质量，自动算出睡了多久',feat:['入睡/起床时间点','质量评分','近7天平均时长'],rows:[],special:'sleep'},
    {id:'water',ic:'💧',name:'喝水打卡',desc:'每天几杯水，一键加减，坚持补水',feat:['今日杯数','一键 +1/-1','历史记录'],rows:[],special:'water'},
-   {id:'bowel',ic:'🚻',name:'便便记录',desc:'日期、时间、次数与状态，悄悄关注肠胃健康',feat:['日期与时间','次数记录','状态选择','健康备注'],rows:[],special:'bowel'}
+   {id:'bowel',ic:'🚻',name:'便便记录',desc:'日期、时间、次数与状态，悄悄关注肠胃健康',feat:['日期与时间','次数记录','状态选择','健康备注'],rows:[],special:'bowel'},
+   {id:'period',ic:'🌸',name:'经期记录',desc:'月历标记经期日，自动推算周期长度与下次预计',feat:['月历图','经期日标记','周期推算'],rows:[],special:'period'}
  ]},
  {id:'money',ic:'¥',name:'资金管理',en:'FINANCE',desc:'收支、预算、心愿账单与理财的一站式财务总账',cc:'#F09A9A',sub:[
    {id:'flow',ic:'📒',name:'收支流水',desc:'收入支出流水记录，分类清晰、随时可查',feat:['极简 3 秒记账','自定义分类与账本','收支报表'],cols:['分类','金额','日期'],fields:['分类','金额','日期'],rows:[['餐饮','支出 ¥38.00','今天'],['工资','收入 ¥12,000','昨天'],['交通','支出 ¥12.00','昨天'],['本月结余','+ ¥3,240','正常']]},
@@ -2281,6 +2283,7 @@ function renderSub(mid,sid){
   if(mid==='growth'&&sid==='gratitude')return renderGratitude(mid,sid);
   if(s.special==='water')return renderWaterMonth(mid,sid);
   if(s.special==='bowel')return renderBowel(mid,sid);
+  if(sid==='period')return renderPeriod(mid,sid);
   if(s.special==='weekmonth')return renderWeekMonth(mid,sid);
   if(s.special==='bookmark')return renderBookmark(mid,sid);
   // New enhanced functions
@@ -3151,6 +3154,14 @@ function enterGuest(){
     localStorage.setItem(PASS_KEY,n1);toast('密码已更新');
   });
   document.getElementById('lockBtn')?.addEventListener('click',()=>{showLock('lock');});
+  document.getElementById('syncBtn')?.addEventListener('click',async()=>{
+    if(!sbConfigured()){toast('未配置云同步，先把 Project URL/Key 填好');return;}
+    if(!unlocked){toast('请先解锁房间再同步');showLock();return;}
+    const pass=_roomPass||(function(){try{return localStorage.getItem(PASS_KEY);}catch(e){return null;}})();
+    if(!pass){toast('请先解锁房间');return;}
+    toast('☁️ 正在同步…');
+    await ownerSyncStart(pass);
+  });
 })();
 search.addEventListener('input',()=>doSearch(search.value));
 search.addEventListener('focus',()=>doSearch(search.value));
@@ -4327,7 +4338,91 @@ function renderRecipePhoto(mid, sid) {
       openRecipeForm(mid, sid);
     });
   }
-}function renderCareerTimeline(mid, sid) {
+}function loadPeriod(){try{const r=localStorage.getItem(PREFIX+'period');if(r)return JSON.parse(r);}catch(e){}return {days:[]};}
+function savePeriod(p){try{localStorage.setItem(PREFIX+'period',JSON.stringify(p));}catch(e){}}
+function periodISO(y,m,d){const mm=String(m+1).padStart(2,'0'),dd=String(d).padStart(2,'0');return y+'-'+mm+'-'+dd;}
+function periodShift(iso,n){const t=new Date(iso+'T00:00:00');t.setDate(t.getDate()+n);return t.getFullYear()+'-'+String(t.getMonth()+1).padStart(2,'0')+'-'+String(t.getDate()).padStart(2,'0');}
+function periodGap(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000);}
+function renderPeriod(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);
+  if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const now=new Date();
+  if(!state.pMonth)state.pMonth={y:now.getFullYear(),m:now.getMonth()};
+  const y=state.pMonth.y,mo=state.pMonth.m;
+  const p=loadPeriod(),daySet=new Set(p.days||[]);
+  const starts=[];const sorted=(p.days||[]).slice().sort();
+  for(const d of sorted)if(!daySet.has(periodShift(d,-1)))starts.push(d);
+  const cycles=[];
+  for(let i=1;i<starts.length;i++){const g=periodGap(starts[i-1],starts[i]);if(g>=15&&g<=60)cycles.push(g);}
+  const avg=cycles.length?Math.round(cycles.reduce((a,b)=>a+b,0)/cycles.length):null;
+  const last=starts.length?starts[starts.length-1]:null;
+  const next=avg&&last?periodShift(last,avg):null;
+  const monthDays=new Date(y,mo+1,0).getDate(),firstW=new Date(y,mo,1).getDay();
+  const todayISO=periodISO(now.getFullYear(),now.getMonth(),now.getDate());
+  const prefix=y+'-'+String(mo+1).padStart(2,'0');
+  const monthPeriodDays=(p.days||[]).filter(d=>d.indexOf(prefix)===0).length;
+  let cells='';
+  for(let i=0;i<firstW;i++)cells+='<div class="pc pcx"></div>';
+  for(let d=1;d<=monthDays;d++){
+    const iso=periodISO(y,mo,d),isP=daySet.has(iso),isT=iso===todayISO,isFut=iso>todayISO;
+    let cls='pc';if(isP)cls+=' pp';if(isT)cls+=' pt';if(isFut)cls+=' pf';
+    cells+='<button class="'+cls+'" data-pday="'+iso+'" type="button">'+d+'</button>';
+  }
+  const chips=starts.length?starts.slice().reverse().map(d=>`<span class="chip" style="background:#FDECEF;color:#C2475F">${d}</span>`).join(''):'<span style="color:var(--ink-dim);font-size:13px">还没有经期记录，点月历上的日期标记即可</span>';
+  view.innerHTML=`
+    <style>
+      .pcal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:12px}
+      .pcw{text-align:center;font-size:12px;color:var(--ink-dim);font-family:var(--kai);padding:4px 0}
+      .pc{padding:11px 0;border-radius:11px;border:1px solid var(--line2);background:#fff;font-size:13px;text-align:center;cursor:pointer;transition:.15s;color:var(--ink)}
+      .pc:hover{transform:translateY(-1px);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+      .pcx{border:none;background:transparent;cursor:default}
+      .pp{background:#FDECEF;border-color:#F2B8C5;color:#C2475F;font-weight:700}
+      .pt{outline:2px solid #E88CA8;outline-offset:-2px;font-weight:700}
+      .pf{color:#cbc4c4}
+    </style>
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-health">健康管理</button><span class="sep">/</span><span class="cur">经期记录</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">HEALTH · PERIOD</div><h1>🌸 经期记录</h1><p>月历标记经期日，自动推算周期长度与下次预计。</p></div>
+      <div class="stat">本月 ${monthPeriodDays} 天<br>${avg?('平均周期 '+avg+' 天'):'记录后算周期'}</div>
+    </div>
+    <div class="deco">✿ 经期日历 ✿</div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar">
+          <div class="ph" style="margin:0"><span class="ic">📅</span> 经期月历</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="addbtn" data-pnav="prev" style="--cc:#E88CA8">‹ 上月</button>
+            <b style="font-family:var(--kai);font-size:16px;white-space:nowrap">${y} 年 ${mo+1} 月</b>
+            <button class="addbtn" data-pnav="next" style="--cc:#E88CA8">下月 ›</button>
+            <button class="addbtn" data-pnav="today" style="--cc:#B7D8C8">今天</button>
+          </div>
+        </div>
+        <div class="pd">粉色=经期日，外圈=今天。点任意日期可标记 / 取消经期。</div>
+        <div class="pcal">
+          <div class="pcw">日</div><div class="pcw">一</div><div class="pcw">二</div><div class="pcw">三</div><div class="pcw">四</div><div class="pcw">五</div><div class="pcw">六</div>
+          ${cells}
+        </div>
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">🌸</span> 经期开始日</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">${chips}</div>
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">📈</span> 周期推算</div>
+        <div class="pd">从相邻两次经期开始日之间的天数推算周期。</div>
+        ${cycles.length?`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">${cycles.map((c,i)=>`<span class="chip">第 ${i+1} 次→第 ${i+2} 次：${c} 天</span>`).join('')}</div>`:''}
+        <div style="margin-top:10px;font-size:13.5px;color:var(--ink-dim);line-height:1.9">
+          ${avg?('平均周期：<b style="color:var(--ink)">'+avg+' 天</b>'):'记录 2 次以上经期开始日即可推算周期。'}<br>
+          ${next?('预计下次经期：<b style="color:#C2475F">'+next+' 前后</b>'):''}
+        </div>
+      </div>
+    </div>`;
+  const redraw=()=>renderPeriod(mid,sid);
+  view.querySelectorAll('[data-pnav]').forEach(b=>b.onclick=()=>{const nav=b.dataset.pnav;const t=new Date(state.pMonth.y,state.pMonth.m,nav==='prev'?-1:nav==='next'?1:0);state.pMonth.y=t.getFullYear();state.pMonth.m=t.getMonth();redraw();});
+  view.querySelectorAll('[data-pday]').forEach(d=>d.onclick=()=>{const iso=d.dataset.pday;const p2=loadPeriod();const arr=p2.days||[];const i=arr.indexOf(iso);if(i>=0)arr.splice(i,1);else arr.push(iso);p2.days=arr;savePeriod(p2);redraw();});
+}
+function renderCareerTimeline(mid, sid) {
   const m = findModule(mid), s = findSub(mid, sid);
   if (!m || !s) return renderModule(mid);
   state.module = mid; state.sub = sid; state.guest = false; state.sched = null;
@@ -4356,21 +4451,10 @@ function renderRecipePhoto(mid, sid) {
         <div class="ph"><span class="ic">🗺</span> 职业时间轴</div>
         <div class="pd">你的职业发展历程。</div>
         <div class="timeline-v">
-          <div class="tlv">
-            <div class="tlv-date">2024年</div>
-            <div class="tlv-title">初入职场</div>
-            <div class="tlv-desc">开始第一份相关工作，学习行业基础知识。</div>
-          </div>
-          <div class="tlv">
-            <div class="tlv-date">2025年</div>
-            <div class="tlv-title">技能提升</div>
-            <div class="tlv-desc">掌握核心技能，承担更多项目责任。</div>
-          </div>
-          <div class="tlv">
-            <div class="tlv-date">2026年</div>
-            <div class="tlv-title">目标：晋升主管</div>
-            <div class="tlv-desc">带领团队，完成关键项目，争取晋升机会。</div>
-            <div class="tlv-attach"><a href="#">📄 个人简历.pdf</a><a href="#">📄 晋升答辩PPT.pptx</a></div>
+          <div class="tlv" style="opacity:.7">
+            <div class="tlv-date">开始记录</div>
+            <div class="tlv-title">你的职业里程碑会显示在这里</div>
+            <div class="tlv-desc">在上方新增职业记录，里程碑与阶段复盘会汇总成你的职业时间轴。</div>
           </div>
         </div>
       </div>

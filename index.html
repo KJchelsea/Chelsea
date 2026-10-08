@@ -744,6 +744,14 @@ body:not(.workbench) #petMenu{display:none}
 .fd-wbar{width:100%;max-width:34px;background:linear-gradient(180deg,var(--pink),var(--coral));border-radius:8px 8px 4px 4px;position:relative}
 .fd-wv{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--ink-dim)}
 .fd-wl{font-size:12px;color:var(--ink-dim);margin-top:6px}
+.fd-search{width:100%;box-sizing:border-box;border:1px solid var(--line2);border-radius:10px;padding:8px 12px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink)}
+.fd-foodgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:8px;max-height:182px;overflow:auto;margin-top:10px}
+.fd-food{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:13px;display:flex;flex-direction:column;gap:2px}
+.fd-food.on{border-color:var(--pink);background:var(--pink);color:#fff}
+.fd-food small{font-size:11px;opacity:.7}
+.fd-calctool{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;background:var(--bg2);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--ink)}
+.fd-calctool input{border:1px solid var(--line2);border-radius:8px;padding:4px 6px;font-family:inherit}
+.fd-sel{font-weight:700}
 </style>
 </head>
 <body>
@@ -1064,6 +1072,8 @@ async function ownerSyncStart(pass){
   _roomPass=pass;
   sbOk=true;
   await kvPullAll();
+  flowInitIfNeeded();
+  ttInitIfNeeded();
   for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf(PREFIX)===0)kvUpsert(k,localStorage.getItem(k));}
   toast('☁️ 已连接云端，全部数据开始同步');
 }
@@ -1584,6 +1594,15 @@ const TT_PERIODS=['上午','下午','晚上'];
 const TT_COLORS=['#E88CA8','#F09A9A','#B7D8C8','#F6DFA8','#CDBBE6','#9FB8C8'];
 function loadTT(){try{const r=localStorage.getItem(PREFIX+'course');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
 function saveTT(t){try{localStorage.setItem(PREFIX+'course',JSON.stringify(t));}catch(e){}}
+const SCHEDULE_INIT=[{"day": "周一", "period": "上午", "name": "大学英语读写(1)-B★", "time": "1-2节", "loc": "D317", "note": "滕超 · 3-17周", "color": "#E88CA8"}, {"day": "周一", "period": "上午", "name": "Python程序设计★", "time": "3-4节", "loc": "C108A", "note": "李冰 · 3-17周", "color": "#B7D8C8"}, {"day": "周一", "period": "下午", "name": "微积分(1)★", "time": "7-8节", "loc": "B304", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周一", "period": "晚上", "name": "大学生劳动教育★", "time": "12-13节", "loc": "C202", "note": "李竹 · 3-9周讲课/10-14周实践", "color": "#9FB8C8"}, {"day": "周二", "period": "上午", "name": "基础会计★", "time": "3-5节", "loc": "B210", "note": "朱忆琳 · 3-17周", "color": "#E88CA8"}, {"day": "周二", "period": "晚上", "name": "微积分(1)★", "time": "12-13节", "loc": "B406", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周三", "period": "上午", "name": "大学英语听说(1)-B★", "time": "3-4节", "loc": "D210", "note": "蔡小燕 · 3-17周", "color": "#E88CA8"}, {"day": "周三", "period": "下午", "name": "Python程序设计○", "time": "7-8节", "loc": "E401", "note": "李冰 · 3-17周 实验", "color": "#B7D8C8"}, {"day": "周三", "period": "晚上", "name": "习近平新时代中国特色社会主义思想概论★", "time": "12-14节", "loc": "C402", "note": "朱家明 · 3-17周", "color": "#F09A9A"}, {"day": "周四", "period": "上午", "name": "中共党史★", "time": "3-4节", "loc": "A201", "note": "侯馨茹 · 10-17周", "color": "#F09A9A"}, {"day": "周四", "period": "下午", "name": "形势与政策(1)★", "time": "7-8节", "loc": "C401", "note": "高聪颖 · 10-13周", "color": "#CDBBE6"}, {"day": "周四", "period": "晚上", "name": "人工智能导论○", "time": "9-10节", "loc": "E305", "note": "章华 · 13-16周 实验", "color": "#B7D8C8"}, {"day": "周五", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 4-17周", "color": "#9FB8C8"}, {"day": "周五", "period": "下午", "name": "人工智能导论★", "time": "7-8节", "loc": "C402(单)/在线(双)", "note": "聂佳浩 · 5-15周单/6-16周双", "color": "#CDBBE6"}, {"day": "周日", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 第1周", "color": "#9FB8C8"}];
+function ttInitIfNeeded(){
+  try{
+    if(localStorage.getItem(PREFIX+'course_init'))return;
+    const cur=loadTT();
+    if(!cur||cur.length===0){ saveTT(SCHEDULE_INIT); }
+    localStorage.setItem(PREFIX+'course_init','1');
+  }catch(e){}
+}
 function renderCourse(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
   state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
@@ -5018,6 +5037,18 @@ function saveFlowForm() {
   saveRows(fmMeta.mid, fmMeta.sid, rows);
   closeForm(); render();
 }
+const MONEY_INIT=[["品质消费", "支出 ¥17.00", "2026-09-14", "expense", "快乐解馋", "云岭茉莉"], ["生活基础", "支出 ¥15.00", "2026-09-14", "expense", "三餐基础", "烧鸭饭"], ["生活基础", "支出 ¥9.90", "2026-09-14", "expense", "住房水电", "一箱水"], ["生活基础", "支出 ¥5.00", "2026-09-15", "expense", "三餐基础", ""], ["生活基础", "支出 ¥11.00", "2026-09-15", "expense", "三餐基础", ""], ["转移收入", "收入 ¥60.00", "2026-09-15", "income", "生活费", ""], ["生活基础", "支出 ¥56.90", "2026-09-15", "expense", "服装鞋袜", "睡衣"], ["其他支出", "支出 ¥99.00", "2026-09-13", "expense", "", ""], ["生活基础", "支出 ¥3.11", "2026-09-14", "expense", "日用品", "瓶塞"], ["转移收入", "收入 ¥3000.00", "2026-09-13", "income", "生活费", ""], ["生活基础", "支出 ¥50.00", "2026-09-13", "expense", "住房水电", "饮水储蓄"], ["生活基础", "支出 ¥30.00", "2026-09-13", "expense", "住房水电", "洗澡储蓄"], ["生活基础", "支出 ¥60.00", "2026-09-13", "expense", "住房水电", "空调费"], ["生活基础", "支出 ¥50.00", "2026-09-13", "expense", "三餐基础", "食堂储蓄"], ["生活基础", "支出 ¥11.80", "2026-09-13", "expense", "住房水电", "洗衣会员费"], ["生活基础", "支出 ¥1.00", "2026-09-14", "expense", "交通出行", "浙财公交"], ["其他收入", "收入 ¥99.00", "2026-09-14", "income", "退费", ""], ["生活基础", "支出 ¥99.00", "2026-09-15", "expense", "服装鞋袜", "军训服"], ["品质消费", "支出 ¥6.73", "2026-09-15", "expense", "水果", "梨x2"], ["其他支出", "支出 ¥1.00", "2026-09-15", "expense", "", "建行信用卡还款"], ["生活基础", "支出 ¥8.62", "2026-09-16", "expense", "三餐基础", ""], ["品质消费", "支出 ¥237.31", "2026-09-16", "expense", "精致女孩", "化妆品"], ["生活基础", "支出 ¥16.00", "2026-09-16", "expense", "三餐基础", "牛肉炒面"], ["品质消费", "支出 ¥0.10", "2026-09-16", "expense", "会员", "tb省钱卡"], ["生活基础", "支出 ¥6.12", "2026-09-17", "expense", "三餐基础", ""], ["品质消费", "支出 ¥243.10", "2026-09-17", "expense", "幸福感购物", "小米手环"], ["生活基础", "支出 ¥23.00", "2026-09-17", "expense", "交通出行", "火车票"], ["生活基础", "支出 ¥10.00", "2026-09-17", "expense", "三餐基础", ""], ["其他支出", "支出 ¥10.00", "2026-09-17", "expense", "", "提现到银行卡"], ["主动收入", "收入 ¥0.00", "2026-09-17", "income", "", ""], ["其他支出", "支出 ¥10.00", "2026-09-18", "expense", "", "提现到银行卡"], ["其他支出", "支出 ¥5.00", "2026-09-18", "expense", "", "提现到银行卡"], ["生活基础", "支出 ¥15.00", "2026-09-18", "expense", "三餐基础", ""], ["生活基础", "支出 ¥5.62", "2026-09-18", "expense", "三餐基础", ""], ["品质消费", "支出 ¥30.25", "2026-09-17", "expense", "快乐解馋", ""], ["其他支出", "支出 ¥0.04", "2026-09-15", "expense", "", ""], ["生活基础", "支出 ¥2.15", "2026-09-15", "expense", "日用品", "拖把"], ["生活基础", "支出 ¥0.50", "2026-09-15", "expense", "住房水电", "洗衣费"], ["生活基础", "支出 ¥5.00", "2026-09-16", "expense", "三餐基础", ""], ["生活基础", "支出 ¥42.76", "2026-09-16", "expense", "日用品", "洗衣机"], ["生活基础", "支出 ¥0.20", "2026-09-17", "expense", "学习用品", ""], ["品质消费", "支出 ¥0.80", "2026-09-17", "expense", "水果", ""], ["生活基础", "支出 ¥5.00", "2026-09-18", "expense", "日用品", "刀"], ["生活基础", "支出 ¥20.00", "2026-09-17", "expense", "住房水电", "电费充值"], ["生活基础", "支出 ¥6.00", "2026-09-18", "expense", "学习用品", "打印"], ["生活基础", "支出 ¥6.62", "2026-09-19", "expense", "三餐基础", ""], ["生活基础", "支出 ¥13.00", "2026-09-19", "expense", "三餐基础", ""], ["品质消费", "支出 ¥65.34", "2026-09-19", "expense", "精致女孩", "面膜"], ["生活基础", "支出 ¥10.06", "2026-09-19", "expense", "日用品", "湿巾"], ["生活基础", "支出 ¥20.14", "2026-09-19", "expense", "三餐基础", "速食粥"], ["品质消费", "支出 ¥15.39", "2026-09-19", "expense", "精致女孩", "补水喷雾"], ["生活基础", "支出 ¥8.62", "2026-09-19", "expense", "三餐基础", "燕麦"], ["品质消费", "支出 ¥43.08", "2026-09-19", "expense", "精致女孩", "防晒"], ["生活基础", "支出 ¥2.93", "2026-09-19", "expense", "日用品", "挂钩"], ["生活基础", "支出 ¥4.80", "2026-09-19", "expense", "日用品", "手环膜"], ["生活基础", "支出 ¥6.73", "2026-09-19", "expense", "日用品", "干发帽"], ["生活基础", "支出 ¥7.50", "2026-09-19", "expense", "三餐基础", ""], ["品质消费", "支出 ¥6.00", "2026-09-19", "expense", "快乐解馋", "糍粑"], ["生活基础", "支出 ¥2.62", "2026-09-20", "expense", "三餐基础", ""], ["生活基础", "支出 ¥7.00", "2026-09-20", "expense", "三餐基础", ""], ["生活基础", "支出 ¥6.33", "2026-09-20", "expense", "日用品", "玻璃杯"], ["生活基础", "支出 ¥2.62", "2026-09-21", "expense", "三餐基础", ""], ["生活基础", "支出 ¥2.30", "2026-09-21", "expense", "三餐基础", "水"], ["生活基础", "支出 ¥3.00", "2026-09-21", "expense", "交通出行", ""], ["生活基础", "支出 ¥6.15", "2026-09-23", "expense", "三餐基础", ""], ["生活基础", "支出 ¥16.00", "2026-09-24", "expense", "三餐基础", ""], ["品质消费", "支出 ¥8.80", "2026-09-24", "expense", "快乐解馋", "黑糖啵啵"], ["生活基础", "支出 ¥13.00", "2026-09-25", "expense", "三餐基础", ""], ["品质消费", "支出 ¥1.99", "2026-09-21", "expense", "水果", ""], ["生活基础", "支出 ¥3.12", "2026-09-22", "expense", "学习用品", ""], ["生活基础", "支出 ¥19.12", "2026-09-22", "expense", "三餐基础", ""], ["生活基础", "支出 ¥12.30", "2026-09-23", "expense", "三餐基础", ""], ["生活基础", "支出 ¥4.85", "2026-09-24", "expense", "日用品", "化妆包"], ["生活基础", "支出 ¥25.90", "2026-09-24", "expense", "日用品", "行李包"], ["生活基础", "支出 ¥15.48", "2026-09-24", "expense", "交通出行", "火车票"], ["品质消费", "支出 ¥5.21", "2026-09-24", "expense", "水果", "阳光玫瑰"], ["生活基础", "支出 ¥2.50", "2026-09-25", "expense", "三餐基础", ""], ["生活基础", "支出 ¥0.01", "2026-09-25", "expense", "日用品", "眼镜螺丝"], ["生活基础", "支出 ¥4.22", "2026-09-24", "expense", "日用品", "纸巾"], ["生活基础", "支出 ¥20.32", "2026-09-24", "expense", "日用品", "碗"], ["生活基础", "支出 ¥16.48", "2026-09-24", "expense", "日用品", "滚轴"], ["生活基础", "支出 ¥12.20", "2026-09-25", "expense", "三餐基础", ""], ["品质消费", "支出 ¥15.00", "2026-09-25", "expense", "水果", ""], ["生活基础", "支出 ¥2.50", "2026-09-26", "expense", "三餐基础", ""], ["品质消费", "支出 ¥126.94", "2026-09-25", "expense", "精致女孩", "染发膏"], ["品质消费", "支出 ¥14.46", "2026-09-25", "expense", "快乐解馋", "糖"], ["生活基础", "支出 ¥8.55", "2026-09-25", "expense", "服装鞋袜", "防晒袖套"], ["生活基础", "支出 ¥4.10", "2026-09-25", "expense", "日用品", "吸管"], ["品质消费", "支出 ¥7.00", "2026-09-25", "expense", "快乐解馋", "零食"], ["生活基础", "支出 ¥2.44", "2026-09-26", "expense", "日用品", "锁"], ["生活基础", "支出 ¥2.20", "2026-09-27", "expense", "日用品", "垫子"], ["生活基础", "支出 ¥10.00", "2026-09-27", "expense", "三餐基础", ""], ["品质消费", "支出 ¥15.02", "2026-09-27", "expense", "精致女孩", ""], ["品质消费", "支出 ¥120.00", "2026-09-27", "expense", "精致女孩", ""], ["生活基础", "支出 ¥8.00", "2026-09-28", "expense", "三餐基础", ""], ["生活基础", "支出 ¥4.26", "2026-09-28", "expense", "三餐基础", ""], ["品质消费", "支出 ¥44.00", "2026-09-28", "expense", "精致女孩", ""], ["生活基础", "支出 ¥1.35", "2026-09-28", "expense", "学习用品", ""], ["生活基础", "支出 ¥10.90", "2026-09-28", "expense", "三餐基础", ""], ["生活基础", "支出 ¥16.50", "2026-09-28", "expense", "三餐基础", ""], ["品质消费", "支出 ¥18.00", "2026-09-28", "expense", "快乐解馋", ""], ["生活基础", "支出 ¥1.50", "2026-09-28", "expense", "学习用品", ""], ["生活基础", "支出 ¥10.90", "2026-10-09", "expense", "三餐基础", ""], ["生活基础", "支出 ¥13.00", "2026-10-10", "expense", "三餐基础", ""], ["购物", "支出 ¥73.00", "2026-10-07", "expense", "小红书", "小红书订单"], ["购物", "支出 ¥49.00", "2026-10-07", "expense", "个护", "至本舒颜修护洁面乳"], ["购物", "支出 ¥10.99", "2026-10-07", "expense", "日用", "宿舍楼梯防滑垫"], ["购物", "支出 ¥15.29", "2026-10-07", "expense", "日用", "键盘膜 + 钩子（合并支付）"], ["购物", "支出 ¥8.80", "2026-10-07", "expense", "拼多多", "拼多多订单"], ["餐饮", "支出 ¥17.60", "2026-10-07", "expense", "外卖", "食夫指·手撕烤鸭"], ["交通", "支出 ¥6.35", "2026-10-07", "expense", "打车", "高德打车"], ["交通", "支出 ¥5.80", "2026-10-07", "expense", "地铁", "地铁·文海南路"], ["家庭", "收入 ¥1000.00", "2026-10-07", "income", "转账", "爸爸转账"]];
+function flowInitIfNeeded(){
+  try{
+    if(localStorage.getItem(PREFIX+'flow_init'))return;
+    const rows=loadRows('money','flow');
+    if(!rows||rows.length===0){
+      saveRows('money','flow',MONEY_INIT.map(r=>({vals:r,ts:Date.now()})));
+    }
+    localStorage.setItem(PREFIX+'flow_init','1');
+  }catch(e){}
+}
+
 /* ===== 物品档案：按种类 / 位置分类 + 自定义种类与位置 ===== */
 function loadItemTypes(){try{const r=localStorage.getItem(PREFIX+'items_types');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
 function loadItemLocs(){try{const r=localStorage.getItem(PREFIX+'items_locs');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
@@ -5928,6 +5959,15 @@ function renderWorkArchive(mid,sid){
 /* ===== 饮食记录模块 ===== */
 let FD_date=(function(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})();
 let FD_imgs=[];
+const FOOD_CALS=[
+['白米饭',116,150],['杂粮饭',110,150],['面条(熟)',110,200],['米粉(熟)',110,200],['馒头',223,100],['包子(熟)',170,100],['粥(稀)',46,300],['燕麦片',370,50],['全麦面包',250,60],['吐司',280,50],['玉米(煮)',112,200],['红薯(煮)',90,200],['土豆(蒸)',77,200],
+['鸡蛋(煮)',144,60],['鸡胸肉',133,100],['鸡腿肉',181,100],['鸡翅',215,100],['瘦猪肉',143,100],['五花肉',370,100],['牛肉(瘦)',125,100],['羊肉(瘦)',198,100],['清蒸鱼',110,150],['虾(煮)',93,100],['豆腐',82,150],['豆浆(无糖)',31,250],['牛奶(全脂)',65,250],['酸奶',72,150],['烤鸭',337,150],['香肠',508,50],
+['青菜(绿叶)',25,200],['西兰花',36,150],['胡萝卜',39,150],['西红柿',20,200],['黄瓜',16,200],['大白菜',20,200],['菠菜',28,200],['茄子',23,200],
+['苹果',53,200],['香蕉',93,120],['橙子',48,200],['葡萄',45,200],['西瓜',30,300],['梨',51,200],['草莓',32,150],['芒果',60,150],['菠萝',44,150],
+['可乐',43,330],['奶茶(约)',70,500],['橙汁',45,300],['啤酒',43,330],
+['薯片',548,100],['饼干',435,50],['巧克力',589,30],['蛋糕',348,100],['冰淇淋',207,100],['辣条(约)',350,50],['方便面',470,100],['坚果(混合)',600,30],
+['蛋炒饭',200,300],['扬州炒饭',230,300],['黄焖鸡米饭',160,500],['汉堡',250,200],['手撕烤鸭(份)',280,320],['炸鸡',300,120],['麻辣烫',150,400]
+];
 function fdIso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fdShift(days){const p=FD_date.split('-');const d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+days);FD_date=fdIso(d);renderFoodDiary('health','food');}
 function renderFoodDiary(mid,sid){
@@ -5950,6 +5990,13 @@ function renderFoodDiary(mid,sid){
   h+='<textarea id="fd_note" rows="2" placeholder="备注：食材 / 份量 / 口味（可选）" style="width:100%;margin-top:10px;padding:10px;border:1px solid var(--line2);border-radius:12px;font-family:inherit;font-size:14px;background:var(--card);color:var(--ink)"></textarea>';
   h+='<label class="upbtn" style="margin-top:10px">📷 拍照 / 上传这顿饭<input id="fd_file" type="file" accept="image/*" style="display:none"></label><div class="attachgrid" id="fd_preview"></div>';
   h+='<button class="addbtn" id="fdSave" style="--cc:#E88CA8;margin-top:14px">保存这餐</button>';
+  h+='</div>';
+  h+='<div class="panel" style="--cc:#E88CA8"><div class="ph"><span class="ic">🍳</span> 热量速查 <span class="pd" style="display:inline">（估算参考）</span></div>';
+  h+='<div class="pd">搜一下常见食物，选吃多少克，自动换算热量并一键填到上面。</div>';
+  h+='<input id="fd_search" class="fd-search" placeholder="搜食物，如：面 / 鸡 / 苹果 / 奶茶">';
+  h+='<div class="fd-foodgrid" id="fd_foodgrid"></div>';
+  h+='<div class="fd-calctool" id="fd_calctool" style="display:none"><span class="fd-sel" id="fd_selname"></span><span class="pd">每100g <b id="fd_per100"></b> kcal · 吃</span><input id="fd_grams" type="number" style="width:66px"> g ≈ <b class="fd-k" id="fd_tot"></b> kcal <button class="minibtn" id="fdFill">填入热量栏</button></div>';
+  h+='</div>';
   h+='</div>';
   h+='<div class="panel" style="--cc:#E88CA8"><div class="ph"><span class="ic">🍽</span> '+esc(FD_date)+' 的餐食</div>';
   if(dayRows.length){
@@ -5982,6 +6029,38 @@ function renderFoodDiary(mid,sid){
     const rs=loadRows(mid,sid);
     rs.push({vals:[FD_date,meal,name||'未命名',calraw,note],imgs:FD_imgs.slice(),ts:Date.now()});
     saveRows(mid,sid,rs);FD_imgs=[];render();
+  });
+  // 热量速查事件
+  let fdSel=null;
+  const fg=document.getElementById('fd_foodgrid');
+  function fdRenderFoods(list){
+    fg.innerHTML=list.map(f=>'<div class="fd-food'+(fdSel&&fdSel[0]===f[0]?' on':'')+'" data-fdsel="'+FOOD_CALS.indexOf(f)+'">'+f[0]+'<small>'+f[1]+' kcal/100g</small></div>').join('');
+  }
+  fdRenderFoods(FOOD_CALS.slice(0,24));
+  const fdSearch=document.getElementById('fd_search');
+  if(fdSearch)fdSearch.addEventListener('input',e=>{
+    const q=e.target.value.trim();
+    fdRenderFoods(q?FOOD_CALS.filter(f=>f[0].includes(q)):FOOD_CALS.slice(0,24));
+  });
+  if(fg)fg.addEventListener('click',e=>{
+    const c=e.target.closest('[data-fdsel]');if(!c)return;
+    fdSel=FOOD_CALS[+c.dataset.fdsel];
+    document.getElementById('fd_selname').textContent=fdSel[0];
+    document.getElementById('fd_per100').textContent=fdSel[1];
+    document.getElementById('fd_grams').value=fdSel[2];
+    fdTot();
+    document.getElementById('fd_calctool').style.display='flex';
+    fg.querySelectorAll('.fd-food').forEach(x=>x.classList.remove('on'));
+    c.classList.add('on');
+  });
+  function fdTot(){const g=parseFloat(document.getElementById('fd_grams').value)||0;const t=Math.round(fdSel[1]*g/100);document.getElementById('fd_tot').textContent=t;}
+  const fdg=document.getElementById('fd_grams');
+  if(fdg)fdg.addEventListener('input',()=>{if(fdSel)fdTot();});
+  const fdFill=document.getElementById('fdFill');
+  if(fdFill)fdFill.addEventListener('click',()=>{
+    if(!fdSel)return;const g=parseFloat(document.getElementById('fd_grams').value)||0;const t=Math.round(fdSel[1]*g/100);
+    const cc=document.getElementById('fd_cal');if(cc)cc.value=t;
+    toast('已填入约 '+t+' kcal');
   });
   const fdGoal=document.getElementById('fdGoalSave');
   if(fdGoal)fdGoal.addEventListener('click',()=>{

@@ -400,6 +400,8 @@ tr:hover td{background:#FEF8FB}
 .timetable th{background:#FDF0F5;padding:8px;border-radius:8px;text-align:center;font-size:12px;color:var(--ink-dim)}
 .timetable td{background:#fff;border-radius:8px;vertical-align:top;min-height:60px;padding:4px}
 .timetable .slot{font-size:11px;color:var(--ink-faint);text-align:center;padding:6px 0}
+.timetable .slot .tttime{font-size:10px;margin-top:3px;line-height:1.35;color:var(--ink-dim)}
+.timetable .slot .tttime span{display:block;font-size:10px;opacity:.85}
 .tt-item{background:var(--cc,#E88CA8);color:#fff;border-radius:8px;padding:6px 8px;font-size:12px;margin-bottom:5px;position:relative}
 .tt-item b{display:block;font-size:13px}
 .tt-item .del{position:absolute;top:2px;right:6px;font-size:11px;color:rgba(255,255,255,.85);cursor:pointer}
@@ -721,6 +723,33 @@ body:not(.workbench) #petMenu{display:none}
 .wb-fgrid{display:flex;flex-wrap:wrap;gap:8px}
 .wb-fgrid .wb-fn{flex:1 1 auto;min-width:96px;margin:0}
 .wb-card2 .wb-petzone{background:none;border:none;padding:0;width:100%}
+/* ---- Obsidian 式工作台首页 ---- */
+.wb-banner{position:relative;border-radius:18px;overflow:hidden;margin-bottom:14px;height:152px;border:1px solid var(--line)}
+.wb-banner svg{position:absolute;inset:0;width:100%;height:100%}
+.wb-banner-txt{position:absolute;inset:0;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;pointer-events:none;z-index:2}
+.wb-banner-hi{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#fff;opacity:.92;font-family:var(--pixel)}
+.wb-banner-title{font-size:32px;font-weight:700;color:#fff;font-family:var(--kai);margin-top:3px;text-shadow:0 2px 10px rgba(170,70,100,.25);letter-spacing:.02em}
+.wb-banner-sub{font-size:13.5px;color:#fff;opacity:.95;margin-top:7px;font-family:var(--kai)}
+.wb-quickbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.wb-qbtn{padding:8px 16px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink);font-size:13.5px;cursor:pointer;transition:.15s;font-family:var(--kai)}
+.wb-qbtn:hover{background:var(--pink);color:#fff;border-color:var(--pink);transform:translateY(-1px)}
+.wb-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:14px;margin-top:10px}
+.wb-pcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+.wb-pcard-h{font-family:var(--kai);font-size:17px;color:var(--pink);font-weight:700;margin-bottom:10px;letter-spacing:.03em}
+.wb-todo-i{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink);padding:6px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.wb-todo-i:last-child{border-bottom:none}
+.wb-todo-i:hover{color:var(--pink)}
+.wb-dot2{width:6px;height:6px;border-radius:50%;background:var(--pink);flex-shrink:0}
+.wb-days{color:var(--coral);font-family:var(--pixel);margin-left:auto;font-weight:700}
+.wb-goal{margin-bottom:9px}
+.wb-goal-n{font-size:13px;color:var(--ink);margin-bottom:4px;display:flex;align-items:center}
+.wb-goal-bar{height:7px;border-radius:6px;background:var(--bg2);overflow:hidden}
+.wb-goal-bar i{display:block;height:100%;background:var(--pink);border-radius:6px}
+.wb-pcard-more{font-size:12px;color:var(--pink);cursor:pointer;margin-top:9px;text-align:right;font-family:var(--kai);font-weight:600}
+.wb-pcard-more:hover{text-decoration:underline}
+.wb-petrow .wb-petzone{margin-top:6px}
+@media (max-width:820px){.wb-banner{height:132px}.wb-banner-title{font-size:22px}.wb-banner-sub{font-size:12.5px}}
+
 .fd-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .fd-nav input[type=date]{border:1px solid var(--line2);border-radius:10px;padding:6px 10px;font-family:inherit;background:var(--card);color:var(--ink)}
 .minibtn{background:var(--bg2);border:1px solid var(--line2);border-radius:999px;padding:6px 12px;font-size:13px;color:var(--ink);cursor:pointer}
@@ -1591,15 +1620,28 @@ function renderImage(mid,sid){
 /* ---------- 课表 ---------- */
 const TT_DAYS=['周一','周二','周三','周四','周五','周六','周日'];
 const TT_PERIODS=['上午','下午','晚上'];
+const TT_ROWS=[
+ {b:'上午',t:'1-2节',tm:'08:05-09:40'},
+ {b:'上午',t:'3-4节',tm:'09:55-11:30'},
+ {b:'上午',t:'3-5节',tm:'09:55-12:20'},
+ {b:'上午',t:'5-6节',tm:'11:35-13:05'},
+ {b:'下午',t:'7-8节',tm:'13:30-15:05'},
+ {b:'晚上',t:'9-10节',tm:'15:20-16:55'},
+ {b:'晚上',t:'9-11节',tm:'15:20-17:45'},
+ {b:'晚上',t:'12-13节',tm:'18:30-20:05'},
+ {b:'晚上',t:'12-14节',tm:'18:30-20:55'},
+];
 const TT_COLORS=['#E88CA8','#F09A9A','#B7D8C8','#F6DFA8','#CDBBE6','#9FB8C8'];
 function loadTT(){try{const r=localStorage.getItem(PREFIX+'course');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
 function saveTT(t){try{localStorage.setItem(PREFIX+'course',JSON.stringify(t));}catch(e){}}
-const SCHEDULE_INIT=[{"day": "周一", "period": "上午", "name": "大学英语读写(1)-B★", "time": "1-2节", "loc": "D317", "note": "滕超 · 3-17周", "color": "#E88CA8"}, {"day": "周一", "period": "上午", "name": "Python程序设计★", "time": "3-4节", "loc": "C108A", "note": "李冰 · 3-17周", "color": "#B7D8C8"}, {"day": "周一", "period": "下午", "name": "微积分(1)★", "time": "7-8节", "loc": "B304", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周一", "period": "晚上", "name": "大学生劳动教育★", "time": "12-13节", "loc": "C202", "note": "李竹 · 3-9周讲课/10-14周实践", "color": "#9FB8C8"}, {"day": "周二", "period": "上午", "name": "基础会计★", "time": "3-5节", "loc": "B210", "note": "朱忆琳 · 3-17周", "color": "#E88CA8"}, {"day": "周二", "period": "晚上", "name": "微积分(1)★", "time": "12-13节", "loc": "B406", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周三", "period": "上午", "name": "大学英语听说(1)-B★", "time": "3-4节", "loc": "D210", "note": "蔡小燕 · 3-17周", "color": "#E88CA8"}, {"day": "周三", "period": "下午", "name": "Python程序设计○", "time": "7-8节", "loc": "E401", "note": "李冰 · 3-17周 实验", "color": "#B7D8C8"}, {"day": "周三", "period": "晚上", "name": "习近平新时代中国特色社会主义思想概论★", "time": "12-14节", "loc": "C402", "note": "朱家明 · 3-17周", "color": "#F09A9A"}, {"day": "周四", "period": "上午", "name": "中共党史★", "time": "3-4节", "loc": "A201", "note": "侯馨茹 · 10-17周", "color": "#F09A9A"}, {"day": "周四", "period": "下午", "name": "形势与政策(1)★", "time": "7-8节", "loc": "C401", "note": "高聪颖 · 10-13周", "color": "#CDBBE6"}, {"day": "周四", "period": "晚上", "name": "人工智能导论○", "time": "9-10节", "loc": "E305", "note": "章华 · 13-16周 实验", "color": "#B7D8C8"}, {"day": "周五", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 4-17周", "color": "#9FB8C8"}, {"day": "周五", "period": "下午", "name": "人工智能导论★", "time": "7-8节", "loc": "C402(单)/在线(双)", "note": "聂佳浩 · 5-15周单/6-16周双", "color": "#CDBBE6"}, {"day": "周日", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 第1周", "color": "#9FB8C8"}];
+const SCHEDULE_INIT=[{"day": "周一", "period": "上午", "name": "大学英语读写(1)-B★", "time": "1-2节", "loc": "D317", "note": "滕超 · 3-17周", "color": "#E88CA8"}, {"day": "周一", "period": "上午", "name": "Python程序设计★", "time": "3-4节", "loc": "C108A", "note": "李冰 · 3-17周", "color": "#B7D8C8"}, {"day": "周一", "period": "下午", "name": "微积分(1)★", "time": "7-8节", "loc": "B304", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周一", "period": "晚上", "name": "微观经济学★", "time": "9-11节", "loc": "C102", "note": "甄伟 · 3-17周", "color": "#9FB8C8"}, {"day": "周一", "period": "晚上", "name": "大学生劳动教育★", "time": "12-13节", "loc": "C202", "note": "李竹 · 3-9周讲课/10-14周实践", "color": "#9FB8C8"}, {"day": "周二", "period": "上午", "name": "基础会计★", "time": "3-5节", "loc": "B210", "note": "朱忆琳 · 3-17周", "color": "#E88CA8"}, {"day": "周二", "period": "晚上", "name": "微积分(1)★", "time": "12-13节", "loc": "B406", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周三", "period": "上午", "name": "大学英语听说(1)-B★", "time": "3-4节", "loc": "D210", "note": "蔡小燕 · 3-17周", "color": "#E88CA8"}, {"day": "周三", "period": "下午", "name": "Python程序设计○", "time": "7-8节", "loc": "E401", "note": "李冰 · 3-17周 实验", "color": "#B7D8C8"}, {"day": "周三", "period": "晚上", "name": "思想道德与法治★", "time": "9-11节", "loc": "B406", "note": "王亚丽 · 3-17周", "color": "#F09A9A"}, {"day": "周三", "period": "晚上", "name": "习近平新时代中国特色社会主义思想概论★", "time": "12-14节", "loc": "C402", "note": "朱家明 · 3-17周", "color": "#F09A9A"}, {"day": "周四", "period": "上午", "name": "中共党史★", "time": "3-4节", "loc": "A201", "note": "侯馨茹 · 10-17周", "color": "#F09A9A"}, {"day": "周四", "period": "下午", "name": "形势与政策(1)★", "time": "7-8节", "loc": "C401", "note": "高聪颖 · 10-13周", "color": "#CDBBE6"}, {"day": "周四", "period": "晚上", "name": "人工智能导论○", "time": "9-10节", "loc": "E305", "note": "章华 · 13-16周 实验", "color": "#B7D8C8"}, {"day": "周五", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 4-17周", "color": "#9FB8C8"}, {"day": "周五", "period": "下午", "name": "人工智能导论★", "time": "7-8节", "loc": "C402(单)/在线(双)", "note": "聂佳浩 · 5-15周单/6-16周双", "color": "#CDBBE6"}, {"day": "周日", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 第1周", "color": "#9FB8C8"}];
 function ttInitIfNeeded(){
   try{
-    if(localStorage.getItem(PREFIX+'course_init'))return;
     const cur=loadTT();
-    if(!cur||cur.length===0){ saveTT(SCHEDULE_INIT); }
+    if(!cur||cur.length===0){ saveTT(SCHEDULE_INIT); localStorage.setItem(PREFIX+'course_init','1'); return; }
+    let dirty=false;
+    SCHEDULE_INIT.forEach(c=>{ if(!cur.some(x=>x.day===c.day&&x.name===c.name)){cur.push(c);dirty=true;} });
+    if(dirty)saveTT(cur);
     localStorage.setItem(PREFIX+'course_init','1');
   }catch(e){}
 }
@@ -1621,13 +1663,13 @@ function renderCourse(mid,sid){
         <table class="timetable">
           <thead><tr><th style="width:56px">时段</th>${TT_DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead>
           <tbody>
-            ${TT_PERIODS.map(p=>`
+            ${TT_ROWS.map(r=>`
               <tr>
-                <td class="slot">${p}</td>
+                <td class="slot">${r.b}<div class="tttime">${r.t}<span>${r.tm}</span></div></td>
                 ${TT_DAYS.map(d=>{
-                  const items=tt.filter(c=>c.day===d&&c.period===p);
-                  return `<td data-ttcell="${d}__${p}" style="cursor:pointer;min-height:60px">
-                    ${items.map((c,i)=>`<div class="tt-item" style="--cc:${c.color}"><b>${esc(c.name)}</b>${c.time?esc(c.time):''}${c.loc?('<br>'+esc(c.loc)):''}${c.note?('<br><span style="font-size:10px;opacity:.85">'+esc(c.note)+'</span>'):''}<span class="del" data-ttdel="${d}__${p}__${i}">×</span></div>`).join('')}
+                  const items=tt.filter(c=>c.day===d&&c.time===r.t);
+                  return `<td data-ttcell="${d}__${r.t}" style="cursor:pointer;min-height:60px">
+                    ${items.map((c,i)=>`<div class="tt-item" style="--cc:${c.color}"><b>${esc(c.name)}</b>${c.loc?('<br>'+esc(c.loc)):''}${c.note?('<br><span style="font-size:10px;opacity:.85">'+esc(c.note)+'</span>'):''}<span class="del" data-ttdel="${d}__${r.t}__${i}">×</span></div>`).join('')}
                   </td>`;
                 }).join('')}
               </tr>`).join('')}
@@ -2722,7 +2764,7 @@ function openTTForm(day,period){
     <label>星期</label><select data-f="0">${TT_DAYS.map(d=>`<option ${d===day?'selected':''}>${d}</option>`).join('')}</select>
     <label>时段</label><select data-f="1">${TT_PERIODS.map(p=>`<option ${p===period?'selected':''}>${p}</option>`).join('')}</select>
     <label>课程名</label><input data-f="2" type="text" placeholder="如 高等数学">
-    <label>时间</label><input data-f="3" type="text" placeholder="如 08:00-09:40">
+    <label>时间</label><input data-f="3" type="text" placeholder="如 3-4节 或 08:00-09:40">
     <label>地点/教师</label><input data-f="4" type="text" placeholder="可选">
     <label>颜色</label><select data-f="5"><option value="0">蔷薇粉</option><option value="1">珊瑚</option><option value="2">薄荷</option><option value="3">杏黄</option><option value="4">雾紫</option><option value="5">雾蓝</option></select>
     <label>备注（可选）</label><input data-f="6" type="text" placeholder="如 第3周起上课">`;
@@ -3001,7 +3043,7 @@ document.addEventListener('click',e=>{
   if(ttdel2){
     const [day,period,i]=ttdel2.dataset.ttdel.split('__');
     const tt=loadTT();
-    const dayItems=tt.filter(c=>c.day===day&&c.period===period);
+    const dayItems=tt.filter(c=>c.day===day&&c.time===period);
     const item=dayItems[+i];
     if(item){
       fmMeta={type:'tt_edit',day,item};
@@ -5037,14 +5079,23 @@ function saveFlowForm() {
   saveRows(fmMeta.mid, fmMeta.sid, rows);
   closeForm(); render();
 }
-const MONEY_INIT=[["品质消费", "支出 ¥17.00", "2026-09-14", "expense", "快乐解馋", "云岭茉莉"], ["生活基础", "支出 ¥15.00", "2026-09-14", "expense", "三餐基础", "烧鸭饭"], ["生活基础", "支出 ¥9.90", "2026-09-14", "expense", "住房水电", "一箱水"], ["生活基础", "支出 ¥5.00", "2026-09-15", "expense", "三餐基础", ""], ["生活基础", "支出 ¥11.00", "2026-09-15", "expense", "三餐基础", ""], ["转移收入", "收入 ¥60.00", "2026-09-15", "income", "生活费", ""], ["生活基础", "支出 ¥56.90", "2026-09-15", "expense", "服装鞋袜", "睡衣"], ["其他支出", "支出 ¥99.00", "2026-09-13", "expense", "", ""], ["生活基础", "支出 ¥3.11", "2026-09-14", "expense", "日用品", "瓶塞"], ["转移收入", "收入 ¥3000.00", "2026-09-13", "income", "生活费", ""], ["生活基础", "支出 ¥50.00", "2026-09-13", "expense", "住房水电", "饮水储蓄"], ["生活基础", "支出 ¥30.00", "2026-09-13", "expense", "住房水电", "洗澡储蓄"], ["生活基础", "支出 ¥60.00", "2026-09-13", "expense", "住房水电", "空调费"], ["生活基础", "支出 ¥50.00", "2026-09-13", "expense", "三餐基础", "食堂储蓄"], ["生活基础", "支出 ¥11.80", "2026-09-13", "expense", "住房水电", "洗衣会员费"], ["生活基础", "支出 ¥1.00", "2026-09-14", "expense", "交通出行", "浙财公交"], ["其他收入", "收入 ¥99.00", "2026-09-14", "income", "退费", ""], ["生活基础", "支出 ¥99.00", "2026-09-15", "expense", "服装鞋袜", "军训服"], ["品质消费", "支出 ¥6.73", "2026-09-15", "expense", "水果", "梨x2"], ["其他支出", "支出 ¥1.00", "2026-09-15", "expense", "", "建行信用卡还款"], ["生活基础", "支出 ¥8.62", "2026-09-16", "expense", "三餐基础", ""], ["品质消费", "支出 ¥237.31", "2026-09-16", "expense", "精致女孩", "化妆品"], ["生活基础", "支出 ¥16.00", "2026-09-16", "expense", "三餐基础", "牛肉炒面"], ["品质消费", "支出 ¥0.10", "2026-09-16", "expense", "会员", "tb省钱卡"], ["生活基础", "支出 ¥6.12", "2026-09-17", "expense", "三餐基础", ""], ["品质消费", "支出 ¥243.10", "2026-09-17", "expense", "幸福感购物", "小米手环"], ["生活基础", "支出 ¥23.00", "2026-09-17", "expense", "交通出行", "火车票"], ["生活基础", "支出 ¥10.00", "2026-09-17", "expense", "三餐基础", ""], ["其他支出", "支出 ¥10.00", "2026-09-17", "expense", "", "提现到银行卡"], ["主动收入", "收入 ¥0.00", "2026-09-17", "income", "", ""], ["其他支出", "支出 ¥10.00", "2026-09-18", "expense", "", "提现到银行卡"], ["其他支出", "支出 ¥5.00", "2026-09-18", "expense", "", "提现到银行卡"], ["生活基础", "支出 ¥15.00", "2026-09-18", "expense", "三餐基础", ""], ["生活基础", "支出 ¥5.62", "2026-09-18", "expense", "三餐基础", ""], ["品质消费", "支出 ¥30.25", "2026-09-17", "expense", "快乐解馋", ""], ["其他支出", "支出 ¥0.04", "2026-09-15", "expense", "", ""], ["生活基础", "支出 ¥2.15", "2026-09-15", "expense", "日用品", "拖把"], ["生活基础", "支出 ¥0.50", "2026-09-15", "expense", "住房水电", "洗衣费"], ["生活基础", "支出 ¥5.00", "2026-09-16", "expense", "三餐基础", ""], ["生活基础", "支出 ¥42.76", "2026-09-16", "expense", "日用品", "洗衣机"], ["生活基础", "支出 ¥0.20", "2026-09-17", "expense", "学习用品", ""], ["品质消费", "支出 ¥0.80", "2026-09-17", "expense", "水果", ""], ["生活基础", "支出 ¥5.00", "2026-09-18", "expense", "日用品", "刀"], ["生活基础", "支出 ¥20.00", "2026-09-17", "expense", "住房水电", "电费充值"], ["生活基础", "支出 ¥6.00", "2026-09-18", "expense", "学习用品", "打印"], ["生活基础", "支出 ¥6.62", "2026-09-19", "expense", "三餐基础", ""], ["生活基础", "支出 ¥13.00", "2026-09-19", "expense", "三餐基础", ""], ["品质消费", "支出 ¥65.34", "2026-09-19", "expense", "精致女孩", "面膜"], ["生活基础", "支出 ¥10.06", "2026-09-19", "expense", "日用品", "湿巾"], ["生活基础", "支出 ¥20.14", "2026-09-19", "expense", "三餐基础", "速食粥"], ["品质消费", "支出 ¥15.39", "2026-09-19", "expense", "精致女孩", "补水喷雾"], ["生活基础", "支出 ¥8.62", "2026-09-19", "expense", "三餐基础", "燕麦"], ["品质消费", "支出 ¥43.08", "2026-09-19", "expense", "精致女孩", "防晒"], ["生活基础", "支出 ¥2.93", "2026-09-19", "expense", "日用品", "挂钩"], ["生活基础", "支出 ¥4.80", "2026-09-19", "expense", "日用品", "手环膜"], ["生活基础", "支出 ¥6.73", "2026-09-19", "expense", "日用品", "干发帽"], ["生活基础", "支出 ¥7.50", "2026-09-19", "expense", "三餐基础", ""], ["品质消费", "支出 ¥6.00", "2026-09-19", "expense", "快乐解馋", "糍粑"], ["生活基础", "支出 ¥2.62", "2026-09-20", "expense", "三餐基础", ""], ["生活基础", "支出 ¥7.00", "2026-09-20", "expense", "三餐基础", ""], ["生活基础", "支出 ¥6.33", "2026-09-20", "expense", "日用品", "玻璃杯"], ["生活基础", "支出 ¥2.62", "2026-09-21", "expense", "三餐基础", ""], ["生活基础", "支出 ¥2.30", "2026-09-21", "expense", "三餐基础", "水"], ["生活基础", "支出 ¥3.00", "2026-09-21", "expense", "交通出行", ""], ["生活基础", "支出 ¥6.15", "2026-09-23", "expense", "三餐基础", ""], ["生活基础", "支出 ¥16.00", "2026-09-24", "expense", "三餐基础", ""], ["品质消费", "支出 ¥8.80", "2026-09-24", "expense", "快乐解馋", "黑糖啵啵"], ["生活基础", "支出 ¥13.00", "2026-09-25", "expense", "三餐基础", ""], ["品质消费", "支出 ¥1.99", "2026-09-21", "expense", "水果", ""], ["生活基础", "支出 ¥3.12", "2026-09-22", "expense", "学习用品", ""], ["生活基础", "支出 ¥19.12", "2026-09-22", "expense", "三餐基础", ""], ["生活基础", "支出 ¥12.30", "2026-09-23", "expense", "三餐基础", ""], ["生活基础", "支出 ¥4.85", "2026-09-24", "expense", "日用品", "化妆包"], ["生活基础", "支出 ¥25.90", "2026-09-24", "expense", "日用品", "行李包"], ["生活基础", "支出 ¥15.48", "2026-09-24", "expense", "交通出行", "火车票"], ["品质消费", "支出 ¥5.21", "2026-09-24", "expense", "水果", "阳光玫瑰"], ["生活基础", "支出 ¥2.50", "2026-09-25", "expense", "三餐基础", ""], ["生活基础", "支出 ¥0.01", "2026-09-25", "expense", "日用品", "眼镜螺丝"], ["生活基础", "支出 ¥4.22", "2026-09-24", "expense", "日用品", "纸巾"], ["生活基础", "支出 ¥20.32", "2026-09-24", "expense", "日用品", "碗"], ["生活基础", "支出 ¥16.48", "2026-09-24", "expense", "日用品", "滚轴"], ["生活基础", "支出 ¥12.20", "2026-09-25", "expense", "三餐基础", ""], ["品质消费", "支出 ¥15.00", "2026-09-25", "expense", "水果", ""], ["生活基础", "支出 ¥2.50", "2026-09-26", "expense", "三餐基础", ""], ["品质消费", "支出 ¥126.94", "2026-09-25", "expense", "精致女孩", "染发膏"], ["品质消费", "支出 ¥14.46", "2026-09-25", "expense", "快乐解馋", "糖"], ["生活基础", "支出 ¥8.55", "2026-09-25", "expense", "服装鞋袜", "防晒袖套"], ["生活基础", "支出 ¥4.10", "2026-09-25", "expense", "日用品", "吸管"], ["品质消费", "支出 ¥7.00", "2026-09-25", "expense", "快乐解馋", "零食"], ["生活基础", "支出 ¥2.44", "2026-09-26", "expense", "日用品", "锁"], ["生活基础", "支出 ¥2.20", "2026-09-27", "expense", "日用品", "垫子"], ["生活基础", "支出 ¥10.00", "2026-09-27", "expense", "三餐基础", ""], ["品质消费", "支出 ¥15.02", "2026-09-27", "expense", "精致女孩", ""], ["品质消费", "支出 ¥120.00", "2026-09-27", "expense", "精致女孩", ""], ["生活基础", "支出 ¥8.00", "2026-09-28", "expense", "三餐基础", ""], ["生活基础", "支出 ¥4.26", "2026-09-28", "expense", "三餐基础", ""], ["品质消费", "支出 ¥44.00", "2026-09-28", "expense", "精致女孩", ""], ["生活基础", "支出 ¥1.35", "2026-09-28", "expense", "学习用品", ""], ["生活基础", "支出 ¥10.90", "2026-09-28", "expense", "三餐基础", ""], ["生活基础", "支出 ¥16.50", "2026-09-28", "expense", "三餐基础", ""], ["品质消费", "支出 ¥18.00", "2026-09-28", "expense", "快乐解馋", ""], ["生活基础", "支出 ¥1.50", "2026-09-28", "expense", "学习用品", ""], ["生活基础", "支出 ¥10.90", "2026-10-09", "expense", "三餐基础", ""], ["生活基础", "支出 ¥13.00", "2026-10-10", "expense", "三餐基础", ""], ["购物", "支出 ¥73.00", "2026-10-07", "expense", "小红书", "小红书订单"], ["购物", "支出 ¥49.00", "2026-10-07", "expense", "个护", "至本舒颜修护洁面乳"], ["购物", "支出 ¥10.99", "2026-10-07", "expense", "日用", "宿舍楼梯防滑垫"], ["购物", "支出 ¥15.29", "2026-10-07", "expense", "日用", "键盘膜 + 钩子（合并支付）"], ["购物", "支出 ¥8.80", "2026-10-07", "expense", "拼多多", "拼多多订单"], ["餐饮", "支出 ¥17.60", "2026-10-07", "expense", "外卖", "食夫指·手撕烤鸭"], ["交通", "支出 ¥6.35", "2026-10-07", "expense", "打车", "高德打车"], ["交通", "支出 ¥5.80", "2026-10-07", "expense", "地铁", "地铁·文海南路"], ["家庭", "收入 ¥1000.00", "2026-10-07", "income", "转账", "爸爸转账"]];
+const MONEY_INIT=[["品质消费", "支出 ¥17.00", "2026-09-14", "expense", "快乐解馋", "云岭茉莉"], ["生活基础", "支出 ¥15.00", "2026-09-14", "expense", "三餐基础", "烧鸭饭"], ["生活基础", "支出 ¥9.90", "2026-09-14", "expense", "住房水电", "一箱水"], ["生活基础", "支出 ¥5.00", "2026-09-15", "expense", "三餐基础", ""], ["生活基础", "支出 ¥11.00", "2026-09-15", "expense", "三餐基础", ""], ["转移收入", "收入 ¥60.00", "2026-09-15", "income", "生活费", ""], ["生活基础", "支出 ¥56.90", "2026-09-15", "expense", "服装鞋袜", "睡衣"], ["其他支出", "支出 ¥99.00", "2026-09-13", "expense", "", ""], ["生活基础", "支出 ¥3.11", "2026-09-14", "expense", "日用品", "瓶塞"], ["转移收入", "收入 ¥3000.00", "2026-09-13", "income", "生活费", ""], ["生活基础", "支出 ¥50.00", "2026-09-13", "expense", "住房水电", "饮水储蓄"], ["生活基础", "支出 ¥30.00", "2026-09-13", "expense", "住房水电", "洗澡储蓄"], ["生活基础", "支出 ¥60.00", "2026-09-13", "expense", "住房水电", "空调费"], ["生活基础", "支出 ¥50.00", "2026-09-13", "expense", "三餐基础", "食堂储蓄"], ["生活基础", "支出 ¥11.80", "2026-09-13", "expense", "住房水电", "洗衣会员费"], ["生活基础", "支出 ¥1.00", "2026-09-14", "expense", "交通出行", "浙财公交"], ["其他收入", "收入 ¥99.00", "2026-09-14", "income", "退费", ""], ["生活基础", "支出 ¥99.00", "2026-09-15", "expense", "服装鞋袜", "军训服"], ["品质消费", "支出 ¥6.73", "2026-09-15", "expense", "水果", "梨x2"], ["其他支出", "支出 ¥1.00", "2026-09-15", "expense", "", "建行信用卡还款"], ["生活基础", "支出 ¥8.62", "2026-09-16", "expense", "三餐基础", ""], ["品质消费", "支出 ¥237.31", "2026-09-16", "expense", "精致女孩", "化妆品"], ["生活基础", "支出 ¥16.00", "2026-09-16", "expense", "三餐基础", "牛肉炒面"], ["品质消费", "支出 ¥0.10", "2026-09-16", "expense", "会员", "tb省钱卡"], ["生活基础", "支出 ¥6.12", "2026-09-17", "expense", "三餐基础", ""], ["品质消费", "支出 ¥243.10", "2026-09-17", "expense", "幸福感购物", "小米手环"], ["生活基础", "支出 ¥23.00", "2026-09-17", "expense", "交通出行", "火车票"], ["生活基础", "支出 ¥10.00", "2026-09-17", "expense", "三餐基础", ""], ["其他支出", "支出 ¥10.00", "2026-09-17", "expense", "", "提现到银行卡"], ["主动收入", "收入 ¥0.00", "2026-09-17", "income", "", ""], ["其他支出", "支出 ¥10.00", "2026-09-18", "expense", "", "提现到银行卡"], ["其他支出", "支出 ¥5.00", "2026-09-18", "expense", "", "提现到银行卡"], ["生活基础", "支出 ¥15.00", "2026-09-18", "expense", "三餐基础", ""], ["生活基础", "支出 ¥5.62", "2026-09-18", "expense", "三餐基础", ""], ["品质消费", "支出 ¥30.25", "2026-09-17", "expense", "快乐解馋", ""], ["其他支出", "支出 ¥0.04", "2026-09-15", "expense", "", ""], ["生活基础", "支出 ¥2.15", "2026-09-15", "expense", "日用品", "拖把"], ["生活基础", "支出 ¥0.50", "2026-09-15", "expense", "住房水电", "洗衣费"], ["生活基础", "支出 ¥5.00", "2026-09-16", "expense", "三餐基础", ""], ["生活基础", "支出 ¥42.76", "2026-09-16", "expense", "日用品", "洗衣机"], ["生活基础", "支出 ¥0.20", "2026-09-17", "expense", "学习用品", ""], ["品质消费", "支出 ¥0.80", "2026-09-17", "expense", "水果", ""], ["生活基础", "支出 ¥5.00", "2026-09-18", "expense", "日用品", "刀"], ["生活基础", "支出 ¥20.00", "2026-09-17", "expense", "住房水电", "电费充值"], ["生活基础", "支出 ¥6.00", "2026-09-18", "expense", "学习用品", "打印"], ["生活基础", "支出 ¥6.62", "2026-09-19", "expense", "三餐基础", ""], ["生活基础", "支出 ¥13.00", "2026-09-19", "expense", "三餐基础", ""], ["品质消费", "支出 ¥65.34", "2026-09-19", "expense", "精致女孩", "面膜"], ["生活基础", "支出 ¥10.06", "2026-09-19", "expense", "日用品", "湿巾"], ["生活基础", "支出 ¥20.14", "2026-09-19", "expense", "三餐基础", "速食粥"], ["品质消费", "支出 ¥15.39", "2026-09-19", "expense", "精致女孩", "补水喷雾"], ["生活基础", "支出 ¥8.62", "2026-09-19", "expense", "三餐基础", "燕麦"], ["品质消费", "支出 ¥43.08", "2026-09-19", "expense", "精致女孩", "防晒"], ["生活基础", "支出 ¥2.93", "2026-09-19", "expense", "日用品", "挂钩"], ["生活基础", "支出 ¥4.80", "2026-09-19", "expense", "日用品", "手环膜"], ["生活基础", "支出 ¥6.73", "2026-09-19", "expense", "日用品", "干发帽"], ["生活基础", "支出 ¥7.50", "2026-09-19", "expense", "三餐基础", ""], ["品质消费", "支出 ¥6.00", "2026-09-19", "expense", "快乐解馋", "糍粑"], ["生活基础", "支出 ¥2.62", "2026-09-20", "expense", "三餐基础", ""], ["生活基础", "支出 ¥7.00", "2026-09-20", "expense", "三餐基础", ""], ["生活基础", "支出 ¥6.33", "2026-09-20", "expense", "日用品", "玻璃杯"], ["生活基础", "支出 ¥2.62", "2026-09-21", "expense", "三餐基础", ""], ["生活基础", "支出 ¥2.30", "2026-09-21", "expense", "三餐基础", "水"], ["生活基础", "支出 ¥3.00", "2026-09-21", "expense", "交通出行", ""], ["生活基础", "支出 ¥6.15", "2026-09-23", "expense", "三餐基础", ""], ["生活基础", "支出 ¥16.00", "2026-09-24", "expense", "三餐基础", ""], ["品质消费", "支出 ¥8.80", "2026-09-24", "expense", "快乐解馋", "黑糖啵啵"], ["生活基础", "支出 ¥13.00", "2026-09-25", "expense", "三餐基础", ""], ["品质消费", "支出 ¥1.99", "2026-09-21", "expense", "水果", ""], ["生活基础", "支出 ¥3.12", "2026-09-22", "expense", "学习用品", ""], ["生活基础", "支出 ¥19.12", "2026-09-22", "expense", "三餐基础", ""], ["生活基础", "支出 ¥12.30", "2026-09-23", "expense", "三餐基础", ""], ["生活基础", "支出 ¥4.85", "2026-09-24", "expense", "日用品", "化妆包"], ["生活基础", "支出 ¥25.90", "2026-09-24", "expense", "日用品", "行李包"], ["生活基础", "支出 ¥15.48", "2026-09-24", "expense", "交通出行", "火车票"], ["品质消费", "支出 ¥5.21", "2026-09-24", "expense", "水果", "阳光玫瑰"], ["生活基础", "支出 ¥2.50", "2026-09-25", "expense", "三餐基础", ""], ["生活基础", "支出 ¥0.01", "2026-09-25", "expense", "日用品", "眼镜螺丝"], ["生活基础", "支出 ¥4.22", "2026-09-24", "expense", "日用品", "纸巾"], ["生活基础", "支出 ¥20.32", "2026-09-24", "expense", "日用品", "碗"], ["生活基础", "支出 ¥16.48", "2026-09-24", "expense", "日用品", "滚轴"], ["生活基础", "支出 ¥12.20", "2026-09-25", "expense", "三餐基础", ""], ["品质消费", "支出 ¥15.00", "2026-09-25", "expense", "水果", ""], ["生活基础", "支出 ¥2.50", "2026-09-26", "expense", "三餐基础", ""], ["品质消费", "支出 ¥126.94", "2026-09-25", "expense", "精致女孩", "染发膏"], ["品质消费", "支出 ¥14.46", "2026-09-25", "expense", "快乐解馋", "糖"], ["生活基础", "支出 ¥8.55", "2026-09-25", "expense", "服装鞋袜", "防晒袖套"], ["生活基础", "支出 ¥4.10", "2026-09-25", "expense", "日用品", "吸管"], ["品质消费", "支出 ¥7.00", "2026-09-25", "expense", "快乐解馋", "零食"], ["生活基础", "支出 ¥2.44", "2026-09-26", "expense", "日用品", "锁"], ["生活基础", "支出 ¥2.20", "2026-09-27", "expense", "日用品", "垫子"], ["生活基础", "支出 ¥10.00", "2026-09-27", "expense", "三餐基础", ""], ["品质消费", "支出 ¥15.02", "2026-09-27", "expense", "精致女孩", ""], ["品质消费", "支出 ¥120.00", "2026-09-27", "expense", "精致女孩", ""], ["生活基础", "支出 ¥8.00", "2026-09-28", "expense", "三餐基础", ""], ["生活基础", "支出 ¥4.26", "2026-09-28", "expense", "三餐基础", ""], ["品质消费", "支出 ¥44.00", "2026-09-28", "expense", "精致女孩", ""], ["生活基础", "支出 ¥1.35", "2026-09-28", "expense", "学习用品", ""], ["生活基础", "支出 ¥10.90", "2026-09-28", "expense", "三餐基础", ""], ["生活基础", "支出 ¥16.50", "2026-09-28", "expense", "三餐基础", ""], ["品质消费", "支出 ¥18.00", "2026-09-28", "expense", "快乐解馋", ""], ["生活基础", "支出 ¥1.50", "2026-09-28", "expense", "学习用品", ""], ["购物", "支出 ¥73.00", "2026-10-07", "expense", "小红书", "小红书订单"], ["购物", "支出 ¥49.00", "2026-10-07", "expense", "个护", "至本舒颜修护洁面乳"], ["购物", "支出 ¥10.99", "2026-10-07", "expense", "日用", "宿舍楼梯防滑垫"], ["购物", "支出 ¥15.29", "2026-10-07", "expense", "日用", "键盘膜 + 钩子（合并支付）"], ["购物", "支出 ¥8.80", "2026-10-07", "expense", "拼多多", "拼多多订单"], ["餐饮", "支出 ¥17.60", "2026-10-07", "expense", "外卖", "食夫指·手撕烤鸭"], ["交通", "支出 ¥6.35", "2026-10-07", "expense", "打车", "高德打车"], ["交通", "支出 ¥5.80", "2026-10-07", "expense", "地铁", "地铁·文海南路"], ["家庭", "收入 ¥1000.00", "2026-10-07", "income", "转账", "爸爸转账"]];
 function flowInitIfNeeded(){
   try{
-    if(localStorage.getItem(PREFIX+'flow_init'))return;
-    const rows=loadRows('money','flow');
-    if(!rows||rows.length===0){
-      saveRows('money','flow',MONEY_INIT.map(r=>({vals:r,ts:Date.now()})));
+    const future=['2026-10-09','2026-10-10'];
+    let cur=loadRows('money','flow')||[];
+    let dirty=false;
+    const before=cur.length;
+    cur=cur.filter(x=>{const d=(x.vals||[])[2];return !future.includes(d);});
+    if(cur.length!==before)dirty=true;
+    const keys={};
+    for(let i=0;i<cur.length;i++){const v=cur[i].vals||[];keys[[v[2],v[1],(v[5]||'')].join('|')]=1;}
+    for(let i=0;i<MONEY_INIT.length;i++){
+      const r=MONEY_INIT[i];
+      const key=[r[2],r[1],(r[5]||'')].join('|');
+      if(!keys[key]){cur.push({vals:r,ts:Date.now()});keys[key]=1;dirty=true;}
     }
+    if(dirty)saveRows('money','flow',cur);
     localStorage.setItem(PREFIX+'flow_init','1');
   }catch(e){}
 }
@@ -6782,32 +6833,53 @@ function wbHomeHtml(){
   const monthFlows=flows.filter(r=>r.vals&&r.vals[2]&&String(r.vals[2]).indexOf(iso.slice(0,7))===0);
   let income=0,expense=0;monthFlows.forEach(r=>{const amt=parseFloat(r.vals[1]);if(!isNaN(amt)){if(String(r.vals[0]).indexOf('收')>=0)income+=amt;else expense+=amt;}});
   const reminders=wbToday();
-  let h='<div class="wb-grid">';
+  const WKZ=['周日','周一','周二','周三','周四','周五','周六'];
+  const wd=WKZ[new Date().getDay()];
+  // ---- Obsidian 看板数据 ----
+  let wkCards='<div class="wb-empty2">本周还没有计划</div>',wkDone=0,wkTotal=0;
+  try{const wk=loadWeekTasks();const mon=mondayOf(nowStr());
+    for(let i=0;i<7;i++){const k=addDay(mon,i);const l=(wk[mon]||{})[k]||[];wkTotal+=l.length;wkDone+=l.filter(t=>t.done).length;}
+    const show=Object.values(wk[mon]||{}).flat().filter(t=>!t.done).slice(0,5);
+    if(show.length)wkCards=show.map(t=>'<div class="wb-todo-i"><span class="wb-dot2"></span>'+esc(t.x)+'</div>').join('');
+    else wkCards='<div class="wb-todo-i"><span class="wb-dot2"></span>本周 '+wkDone+'/'+wkTotal+' 已完成</div>';
+  }catch(e){}
+  let memCards='<div class="wb-empty2">暂无倒计时日子</div>';
+  try{const m=loadMemorial().filter(x=>x.date>=iso).sort((a,b)=>a.date<b.date?-1:1).slice(0,3);
+    if(m.length)memCards=m.map(x=>'<div class="wb-todo-i"><span class="wb-dot2"></span>'+esc(x.type)+' · '+esc(x.name)+'<b class="wb-days">'+memorialDays(x.date)+'天</b></div>').join('');
+  }catch(e){}
+  let goalCards='<div class="wb-empty2">还没定年度目标</div>',goalTheme='成为更好的自己';
+  try{const g=loadGoals();goalTheme=g.theme||goalTheme;const gs=(g.goals||[]).slice(0,3);
+    if(gs.length)goalCards=gs.map(x=>'<div class="wb-goal"><div class="wb-goal-n">'+esc(x.name||x.area)+' <b class="wb-days">'+(x.progress||0)+'%</b></div><div class="wb-goal-bar"><i style="width:'+(x.progress||0)+'%"></i></div></div>').join('');
+  }catch(e){}
+  let pomoCard='';
+  try{const pts=loadPomoTasks();pomoCard='<div class="wb-todo-i"><span class="wb-dot2"></span>今日待办 <b class="wb-days">'+tasks.length+'</b></div><div class="wb-todo-i"><span class="wb-dot2"></span>已完成 <b class="wb-days">'+pts.filter(x=>x.done).length+'</b></div>';
+  }catch(e){}
+  let remCard=reminders.length?reminders.slice(0,4).map((l,i)=>'<div class="wb-todo-i" data-wbhgo="'+l.go+'"><span class="wb-dot2"></span>'+esc(l.t)+' · '+esc(l.txt)+'</div>').join(''):'<div class="wb-empty2">今天没有待办和提醒，好好休息</div>';
+  let h='';
+  // 1) Banner（粉色山景 + 英文引言）
+  h+='<div class="wb-banner"><svg viewBox="0 0 1440 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="skyp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDEFF4"/><stop offset=".55" stop-color="#FBD8E4"/><stop offset="1" stop-color="#F6C4D6"/></linearGradient></defs><rect width="1440" height="150" fill="url(#skyp)"/><circle cx="1240" cy="42" r="24" fill="#FFD9A0" opacity=".95"/><ellipse cx="190" cy="36" rx="44" ry="13" fill="#fff" opacity=".6"/><ellipse cx="214" cy="30" rx="28" ry="9" fill="#fff" opacity=".75"/><ellipse cx="920" cy="54" rx="40" ry="12" fill="#fff" opacity=".5"/><path d="M0,150 L0,106 Q180,50 380,98 Q560,138 760,94 Q980,50 1200,108 L1440,76 L1440,150 Z" fill="#F4AFC6" opacity=".85"/><path d="M0,150 L0,120 Q260,72 520,118 Q760,158 1020,116 Q1260,80 1440,122 L1440,150 Z" fill="#EE9CB8"/><path d="M0,150 L0,140 Q300,100 640,138 Q960,176 1200,140 L1440,150 Z" fill="#E88CA8"/></svg><div class="wb-banner-txt"><div class="wb-banner-hi">'+wd+' · '+iso.slice(5).replace('-','/')+'</div><div class="wb-banner-title">Welcome to my cozy room</div><div class="wb-banner-sub">当下 · 今日 · 计划 · 记录 · 我的小世界 ✿</div></div></div>';
+  // 2) 快捷新建横栏
+  h+='<div class="wb-quickbar">'+[['sub-money-flow','✎ 记一笔'],['sub-timeline-diary','📝 写日记'],['sub-utility-pomodoro','☑ 加待办'],['sub-utility-habit','✔ 打卡习惯'],['sub-utility-memorial','🎈 加日子'],['sub-study-classnotes','📚 课堂笔记']].map(a=>'<button class="wb-qbtn" data-wbhgo="'+a[0]+'">'+a[1]+'</button>').join('')+'</div>';
+  // 3) 统计
+  h+='<div class="wb-grid">';
   h+='<div class="wb-stat"><div class="wb-stat-label">本地数据</div><div class="wb-stat-num">'+total+'</div><div class="wb-stat-sub">全站记录 · 云端同步</div></div>';
   h+='<div class="wb-stat"><div class="wb-stat-label">待办积压</div><div class="wb-stat-num">'+tasks.length+'</div><div class="wb-stat-sub">未完成任务</div></div>';
   h+='<div class="wb-stat"><div class="wb-stat-label">本月收支</div><div class="wb-stat-num">'+(income-expense>=0?'+':'')+(income-expense).toFixed(0)+'</div><div class="wb-stat-sub">收 '+income.toFixed(0)+' · 支 '+expense.toFixed(0)+'</div></div>';
   h+='<div class="wb-stat"><div class="wb-stat-label">今日提醒</div><div class="wb-stat-num">'+reminders.length+'</div><div class="wb-stat-sub">条待办 / 提醒</div></div>';
   h+='</div>';
-  h+='<div class="wb-cols">';
-  h+='<div class="wb-col">';
-  h+='<div class="wb-card2"><div class="wb-h">内部功能</div><div class="wb-fgrid">';
-  [['sub-health-signs','体征测量'],['sub-health-period','经期记录'],['sub-money-flow','记账流水'],['sub-utility-habit','习惯打卡'],['sub-utility-pomodoro','番茄钟'],['sub-utility-work','工作留档'],['sub-timeline-diary','日记本']].forEach(p=>{h+='<button class="wb-fn" data-wbhgo="'+p[0]+'">'+p[1]+'</button>';});
-  h+='</div></div>';
-  h+='<div class="wb-card2"><div class="wb-h">外部功能</div><div class="wb-fgrid">';
-  [['guest','留言板'],['sub-timeline-goals','年度目标'],['sub-utility-reminders','今日提醒'],['sub-utility-memorial','重要日子'],['sub-growth-mood','心情'],['sub-growth-reading','阅读']].forEach(p=>{h+='<button class="wb-fn" data-wbhgo="'+p[0]+'">'+p[1]+'</button>';});
-  h+='</div></div>';
+  // 4) Obsidian 多栏看板
+  h+='<div class="wb-board">';
+  h+='<div class="wb-pcard"><div class="wb-pcard-h">今日待办</div>'+(tasks.length?tasks.slice(0,5).map(x=>'<div class="wb-todo-i" data-wbhgo="sub-utility-pomodoro"><span class="wb-dot2"></span>'+esc(x.name||x.x)+'</div>').join(''):'<div class="wb-empty2">今天没有待办，轻松的一天 ✿</div>')+'<div class="wb-pcard-more" data-wbhgo="sub-utility-pomodoro">去待办 →</div></div>';
+  h+='<div class="wb-pcard"><div class="wb-pcard-h">周计划</div>'+wkCards+'<div class="wb-pcard-more" data-wbhgo="sub-study-weeks">查看周月计划 →</div></div>';
+  h+='<div class="wb-pcard"><div class="wb-pcard-h">当下 · 年度目标</div>'+goalCards+'<div class="wb-pcard-more" data-wbhgo="sub-timeline-goals">打开年度大目标 →</div></div>';
+  h+='<div class="wb-pcard"><div class="wb-pcard-h">倒计时 · 重要日子</div>'+memCards+'<div class="wb-pcard-more" data-wbhgo="sub-utility-memorial">记个日子 →</div></div>';
+  h+='<div class="wb-pcard"><div class="wb-pcard-h">习惯打卡</div>'+wbHabitsHtml()+'<div class="wb-pcard-more" data-wbhgo="sub-utility-habit">全部习惯 →</div></div>';
+  h+='<div class="wb-pcard"><div class="wb-pcard-h">今日提醒</div>'+remCard+'</div>';
   h+='</div>';
-  h+='<div class="wb-col">';
-  h+='<div class="wb-card2"><div class="wb-h">今日重要</div>';
-  if(reminders.length){h+=reminders.map((l,i)=>'<div class="wb-imp" data-wbhgo="'+l.go+'"><span class="wb-imp-n">'+(i+1)+'</span><div><div class="wb-imp-t">'+l.t+'</div><div class="wb-imp-x">'+esc(l.txt)+'</div></div></div>').join('');}
-  else h+='<div class="wb-empty2">今天没有待办和提醒，好好休息</div>';
-  h+='</div>';
-  h+='<div class="wb-card2"><div class="wb-h">宠物角</div>'+PETZONE_HTML+'</div>';
-  h+='</div>';
-  h+='</div>';
+  // 5) 宠物角
+  h+='<div class="wb-card2 wb-petrow"><div class="wb-h">宠物角</div>'+PETZONE_HTML+'</div>';
   return h;
 }
-
 function wbBuildNav(){
   let h='';
   h+='<div class="wb-home" data-wbh="home">♡ Back to Room</div>';

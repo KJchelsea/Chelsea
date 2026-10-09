@@ -173,6 +173,34 @@ tr:hover td{background:#FEF8FB}
 .addbtn{padding:9px 20px;border-radius:999px;background:var(--cc);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 4px 14px rgba(200,140,165,.25);transition:.2s}
 .addbtn:hover{transform:translateY(-2px)}
 .delbtn{color:var(--coral);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid #F0C8D0;transition:.2s}
+.editbtn{color:var(--pink);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid #E8A8BC;transition:.2s}
+.editbtn:hover{background:var(--bg)}
+/* 体征趋势 */
+.sigpick{margin-left:auto}
+.sigpick select{padding:6px 10px;border:1px solid var(--line);border-radius:10px;font-size:13px;color:var(--ink);background:#fff;outline:none}
+.sigtrend{display:flex;align-items:flex-end;gap:6px;height:96px;padding:8px 2px 0;overflow-x:auto}
+.sigbar{flex:1;min-width:26px;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.sigbar i{width:70%;background:linear-gradient(180deg,var(--pink),#EE9CB8);border-radius:5px 5px 2px 2px;min-height:4px}
+.sigbar span{font-size:10.5px;color:var(--ink-dim);font-family:var(--pixel)}
+.sigbar em{font-size:9.5px;color:var(--ink-faint);font-style:normal;white-space:nowrap}
+/* 运动总和 */
+.sportgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.sportsum{background:#FDF0F5;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.sportsum b{font-size:13px;color:var(--ink);display:block;margin-bottom:6px}
+.sportsum .sportnum{font-size:24px;font-weight:700;color:var(--pink);font-family:var(--pixel)}
+.sportsum .sportcnt{font-size:11px;color:var(--ink-faint);margin-left:6px}
+/* 心愿 */
+.wishgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.wishcard{background:#FDF0F5;border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.wishhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.wishhead b{font-size:15px;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wishdate{font-size:11px;color:var(--ink-faint);font-family:var(--pixel)}
+.wishbar{height:9px;border-radius:7px;background:#fff;border:1px solid var(--line);overflow:hidden}
+.wishbar i{display:block;height:100%;background:linear-gradient(90deg,var(--coral),var(--pink));border-radius:7px;transition:width .3s}
+.wishmeta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-dim);margin:8px 0}
+.wishnote{font-size:12px;color:var(--ink-faint);margin-bottom:8px}
+.wishsave{width:100%}
+
 .delbtn:hover{background:#FDF0F5}
 
 /* ===== 留言板（飘字留言） ===== */
@@ -1330,6 +1358,15 @@ function renderStats(mid){
     yearCells+=`<div class="ym"><b>${i}月</b><div class="bar"><i style="width:${Math.min(100,tot/yTotal*100)}%"></i></div><div style="font-size:11px;color:var(--ink-faint);margin-top:4px">收${st.inc.toFixed(0)}/支${st.exp.toFixed(0)}</div></div>`;
   }
 
+  /* 收支月度表（每日明细+累计） */
+  let rtRunning=0, rtRows='';
+  for(let d=1; d<=daysInMonth; d++){
+    const ds=`${fy}-${String(fm).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dm=dayMap[ds]||{inc:0,exp:0};
+    rtRunning += dm.inc - dm.exp;
+    rtRows += `<tr><td style="color:var(--ink-faint)">${fm}月${d}日</td><td style="color:var(--mint)">${dm.inc?'+'+dm.inc.toFixed(2):'—'}</td><td style="color:var(--coral)">${dm.exp?'-'+dm.exp.toFixed(2):'—'}</td><td>${rtRunning.toFixed(2)}</td></tr>`;
+  }
+
   view.innerHTML=`
     <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-money">资金管理</button><span class="sep">/</span><span class="cur">月年统计</span></nav>
     <div class="pagehead">
@@ -1360,6 +1397,11 @@ function renderStats(mid){
         <div class="monthview">${cells}</div>
         <div class="flowlegend"><span><i style="background:var(--mint)"></i>收入</span><span><i style="background:var(--coral)"></i>支出</span></div>
         ${dayDetailHTML}
+      </div>
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="ph"><span class="ic">📋</span> ${fy}年${fm}月 收支月度表</div>
+        <div class="pd">本月每日收入与支出明细，累计结余逐日滚动。</div>
+        <table style="font-size:12px"><thead><tr><th>日期</th><th style="color:var(--mint)">收入</th><th style="color:var(--coral)">支出</th><th>累计结余</th></tr></thead><tbody>${rtRows}</tbody></table>
       </div>
       <div class="panel" style="--cc:#F09A9A">
         <div class="ph"><span class="ic">📊</span> 近 6 个月收支柱状图</div>
@@ -2559,6 +2601,9 @@ function renderSub(mid,sid){
   if(mid==='growth'&&sid==='gratitude')return renderGratitude(mid,sid);
   if(s.special==='water')return renderWaterMonth(mid,sid);
   if(s.special==='bowel')return renderBowel(mid,sid);
+  if(mid==='health'&&sid==='signs')return renderSignsEnhanced(mid,sid);
+  if(mid==='health'&&sid==='sport')return renderSportEnhanced(mid,sid);
+  if(mid==='money'&&sid==='wish')return renderWishEnhanced(mid,sid);
   if(sid==='period')return renderPeriod(mid,sid);
   if(s.special==='weekmonth')return renderWeekMonth(mid,sid);
   if(s.special==='bookmark')return renderBookmark(mid,sid);
@@ -3092,6 +3137,9 @@ $('#fmSave').addEventListener('click',()=>{
   else if(fmMeta&&fmMeta.type==='weektask')saveWeekTaskForm();
   else if(fmMeta&&fmMeta.type==='monthgoal')saveMonthGoalForm();
   else if(fmMeta&&fmMeta.type==='flow')saveFlowForm();
+  else if(fmMeta&&fmMeta.type==='sign')saveSignForm();
+  else if(fmMeta&&fmMeta.type==='sport')saveSportForm();
+  else if(fmMeta&&fmMeta.type==='wish')saveWishForm();
   else if(fmMeta&&fmMeta.type==='skcheck')saveSkillCheckForm();
   else if(fmMeta&&fmMeta.type==='memofolder')saveMemoFolderForm();
   else saveForm();
@@ -4972,14 +5020,6 @@ function renderFlowEnhanced(mid, sid) {
   const monthStat = flowMonthStat(dayMap, prefix);
   const monthInc = monthStat.inc, monthExp = monthStat.exp, monthCnt = monthStat.cnt;
 
-  const daysInMonth = new Date(fy, fm, 0).getDate();
-  let running = 0, tableRows = '';
-  for (let d = 1; d <= daysInMonth; d++) {
-    const ds = `${fy}-${String(fm).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    const dm = dayMap[ds] || { inc: 0, exp: 0 };
-    running += dm.inc - dm.exp;
-    tableRows += `<tr><td style="color:var(--ink-faint)">${fm}月${d}日</td><td style="color:var(--mint)">${dm.inc ? '+' + dm.inc.toFixed(2) : '—'}</td><td style="color:var(--coral)">${dm.exp ? '-' + dm.exp.toFixed(2) : '—'}</td><td>${running.toFixed(2)}</td></tr>`;
-  }
 
   view.innerHTML = `
     <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-money">资金管理</button><span class="sep">/</span><span class="cur">收支流水</span></nav>
@@ -5007,21 +5047,13 @@ function renderFlowEnhanced(mid, sid) {
         <div class="pd" style="margin-top:6px">想按月历查看每日收支？去「月年统计」吧，那里有完整的月历与图表。</div>
       </div>
       <div class="panel" style="--cc:#F09A9A">
-        <div class="ph"><span class="ic">📋</span> ${fy}年${fm}月 收支月度表</div>
-        <div class="pd">本月每日收入与支出明细，累计结余逐日滚动。</div>
-        <table style="font-size:12px">
-          <thead><tr><th>日期</th><th style="color:var(--mint)">收入</th><th style="color:var(--coral)">支出</th><th>累计结余</th></tr></thead>
-          <tbody>${tableRows}</tbody>
-        </table>
-      </div>
-      <div class="panel" style="--cc:#F09A9A">
         <div class="toolbar"><div class="ph"><span class="ic">📒</span> 流水明细</div><button class="addbtn" data-add="${mid}-${sid}" style="--cc:#F09A9A">＋ 新增记录</button></div>
         <div class="pd">数据自动保存在本机浏览器，刷新不丢失。</div>
         <table>
           <thead><tr><th style="width:5%">#</th><th>大分类</th><th>小分类</th><th>金额</th><th>日期</th><th>备注</th><th style="width:9%">操作</th></tr></thead>
           <tbody>
             ${rows.length ? rows.map((r, i) => { const v = r.vals || []; return `
-              <tr><td style="color:var(--ink-faint)">${i + 1}</td><td>${esc(v[0] || '')}</td><td>${esc(v[4] || '') || '—'}</td><td>${esc(v[1] || '')}</td><td>${esc(v[2] || '')}</td><td>${esc(v[5] || '') || '—'}</td><td><button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>`; }).join('') : `<tr><td colspan="7"><div class="empty">暂无记录，点击「＋ 新增记录」添加第一条吧</div></td></tr>`}
+              <tr><td style="color:var(--ink-faint)">${i + 1}</td><td>${esc(v[0] || '')}</td><td>${esc(v[4] || '') || '—'}</td><td>${esc(v[1] || '')}</td><td>${esc(v[2] || '')}</td><td>${esc(v[5] || '') || '—'}</td><td><button class="editbtn" data-flowedit="${i}">编辑</button> <button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>`; }).join('') : `<tr><td colspan="7"><div class="empty">暂无记录，点击「＋ 新增记录」添加第一条吧</div></td></tr>`}
           </tbody>
         </table>
         <div class="notice">💾 数据保存在本机浏览器中，换设备或清除浏览器数据会丢失。</div>
@@ -5039,9 +5071,200 @@ function renderFlowEnhanced(mid, sid) {
   const addBtn = document.querySelector(`[data-add="${mid}-${sid}"]`);
   if (addBtn) addBtn.addEventListener('click', function(e) { if (e) e.stopPropagation(); openFlowForm(mid, sid); });
 }
+/* ============ 体征测量：趋势 + 专门记录 ============ */
+function numOf(str){const m=String(str||'').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):0;}
+function renderSignsEnhanced(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const rows=loadRows(mid,sid);
+  const projAll=[];rows.forEach(r=>{const p=String((r.vals||[])[0]||'');if(p&&projAll.indexOf(p)<0)projAll.push(p);});
+  ['体重','体脂率','血压','静息心率','体温'].forEach(b=>{if(projAll.indexOf(b)<0)projAll.push(b);});
+  if(!state.signProj||projAll.indexOf(state.signProj)<0)state.signProj=projAll[0];
+  const cur=state.signProj;
+  const recs=rows.filter(r=>String((r.vals||[])[0]||'')===cur);
+  const sorted=recs.slice().sort((a,b)=>String((a.vals||[])[3]||'').localeCompare(String((b.vals||[])[3]||'')));
+  const latest=recs.length?recs[recs.length-1]:null;
+  const vals=sorted.map(r=>numOf((r.vals||[])[1])).filter(x=>!isNaN(x)&&isFinite(x));
+  const mx=vals.length?Math.max.apply(null,vals):null;
+  const mn=vals.length?Math.min.apply(null,vals):null;
+  let trend='';
+  if(vals.length){
+    const maxv=Math.max.apply(null,vals)||1;
+    const lastN=vals.slice(-14);
+    const bars=lastN.map((val,i)=>{const hgt=Math.max(6,Math.round(val/maxv*64));const lbl=(sorted[sorted.length-lastN.length+i]||{vals:[]}).vals[3]||'';return `<div class="sigbar"><i style="height:${hgt}px"></i><span>${val}</span><em>${lbl.slice(5)}</em></div>`;}).join('');
+    trend=`<div class="sigtrend">${bars}</div>`;
+  } else trend='<div class="empty">这个项目还没有记录，添加一条吧</div>';
+  const projOpts=projAll.map(p=>`<option value="${esc(p)}" ${p===cur?'selected':''}>${esc(p)}</option>`).join('');
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-health">健康管理</button><span class="sep">/</span><span class="cur">体征测量</span></nav>
+    <div class="pagehead"><div><div class="colnum">HEALTH · SIGNS</div><h1>🩺 体征测量</h1><p>多维体征记录与趋势，选中一个项目查看它的变化。</p></div><div class="stat">${rows.length} 条记录</div></div>
+    <div class="deco">✦ 看见身体的变化 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:#B7D8C8">
+        <div class="toolbar"><div class="ph"><span class="ic">📈</span> ${esc(cur)} · 趋势</div><div class="sigpick"><select id="signProjSel">${projOpts}</select></div></div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">${recs.length}</div><div class="l">记录次数</div></div>
+          <div class="kpi"><div class="v">${latest?esc(latest.vals[1]):'—'}</div><div class="l">最新记录</div></div>
+          <div class="kpi"><div class="v">${mx===null?'—':mx}</div><div class="l">最高</div></div>
+          <div class="kpi"><div class="v">${mn===null?'—':mn}</div><div class="l">最低</div></div>
+        </div>
+        ${trend}
+        <div class="pd" style="margin-top:8px">记录时带日期，就能在这里看到该项目随时间的趋势。</div>
+      </div>
+      <div class="panel" style="--cc:#B7D8C8">
+        <div class="toolbar"><div class="ph"><span class="ic">📒</span> 记录明细</div><button class="addbtn" data-add="${mid}-${sid}" style="--cc:#B7D8C8">＋ 新增记录</button></div>
+        <table><thead><tr><th style="width:5%">#</th><th>项目</th><th>数值</th><th>状态</th><th>日期</th><th style="width:10%">操作</th></tr></thead>
+        <tbody>${rows.length?rows.map((r,i)=>{const v=r.vals||[];return `<tr><td style="color:var(--ink-faint)">${i+1}</td><td>${esc(v[0]||'')}</td><td>${esc(v[1]||'')}</td><td>${esc(v[2]||'—')}</td><td>${esc(v[3]||'—')}</td><td><button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>`;}).join(''):`<tr><td colspan="6"><div class="empty">暂无记录，添加第一条吧</div></td></tr>`}</tbody></table>
+      </div>
+    </div>`;
+  document.getElementById('signProjSel')?.addEventListener('change',e=>{state.signProj=e.target.value;renderSignsEnhanced(mid,sid);});
+  const addBtn=document.querySelector(`[data-add="${mid}-${sid}"]`);
+  if(addBtn)addBtn.addEventListener('click',function(e){if(e)e.stopPropagation();openSignForm(mid,sid);});
+}
+function openSignForm(mid,sid){
+  fmMeta={type:'sign',mid,sid};
+  $('#fmTitle').textContent='＋ 记录体征';
+  $('#fmDesc').textContent='选项目 + 数值，日期默认今天，可看趋势';
+  const proj=['体重','体脂率','血压','静息心率','体温'].map(p=>`<option value="${p}">${p}</option>`).join('');
+  $('#fmFields').innerHTML=`
+    <label>项目</label><select data-f="0">${proj}</select>
+    <label>数值</label><input data-f="1" type="text" placeholder="如 62.4 或 118/76" autocomplete="off">
+    <label>状态（可选）</label><input data-f="2" type="text" placeholder="如 正常 / 偏高" autocomplete="off">
+    <label>日期</label><input data-f="3" type="date" value="${nowStr()}">`;
+  fm.classList.add('show');
+}
+function saveSignForm(){
+  if(!fmMeta||fmMeta.type!=='sign')return;
+  const proj=($('[data-f="0"]').value||'').trim();
+  const val=($('[data-f="1"]').value||'').trim();
+  const st=($('[data-f="2"]').value||'').trim();
+  const date=($('[data-f="3"]').value||'').trim()||nowStr();
+  if(!proj||!val){toast('请填写项目和数值');return;}
+  const rows=loadRows(fmMeta.mid,fmMeta.sid);
+  rows.push({vals:[proj,val,st||'—',date],ts:Date.now()});
+  saveRows(fmMeta.mid,fmMeta.sid,rows);
+  closeForm();render();
+}
+/* ============ 运动健康：按运动汇总总和 ============ */
+function renderSportEnhanced(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const rows=loadRows(mid,sid);
+  const agg={};
+  rows.forEach(r=>{const v=r.vals||[];const p=String(v[0]||'未分类');const n=numOf(v[1]);if(!agg[p])agg[p]={sum:0,cnt:0};agg[p].sum+=n;agg[p].cnt++;});
+  let sumHTML=Object.keys(agg).length?Object.keys(agg).map(p=>{const a=agg[p];return `<div class="sportsum"><b>${esc(p)}</b><span class="sportnum">${a.sum}</span><span class="sportcnt">${a.cnt} 次记录</span></div>`;}).join(''):'<div class="empty">还没有运动记录，去添加吧</div>';
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-health">健康管理</button><span class="sep">/</span><span class="cur">运动健康</span></nav>
+    <div class="pagehead"><div><div class="colnum">HEALTH · SPORT</div><h1>🏃 运动健康</h1><p>记录每次运动，自动汇总某个运动的总和。</p></div><div class="stat">${rows.length} 条记录</div></div>
+    <div class="deco">✦ 动起来 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:#B7D8C8">
+        <div class="ph"><span class="ic">🏆</span> 运动总和</div>
+        <div class="pd">按运动项目汇总：每次记录的数值自动累加（时长 / 距离 / 次数）。</div>
+        <div class="sportgrid">${sumHTML}</div>
+      </div>
+      <div class="panel" style="--cc:#B7D8C8">
+        <div class="toolbar"><div class="ph"><span class="ic">📒</span> 记录明细</div><button class="addbtn" data-add="${mid}-${sid}" style="--cc:#B7D8C8">＋ 新增记录</button></div>
+        <table><thead><tr><th style="width:5%">#</th><th>运动项目</th><th>数值</th><th>状态</th><th>日期</th><th style="width:10%">操作</th></tr></thead>
+        <tbody>${rows.length?rows.map((r,i)=>{const v=r.vals||[];return `<tr><td style="color:var(--ink-faint)">${i+1}</td><td>${esc(v[0]||'')}</td><td>${esc(v[1]||'')}</td><td>${esc(v[2]||'—')}</td><td>${esc(v[3]||'—')}</td><td><button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>`;}).join(''):`<tr><td colspan="6"><div class="empty">暂无记录</div></td></tr>`}</tbody></table>
+      </div>
+    </div>`;
+  const addBtn=document.querySelector(`[data-add="${mid}-${sid}"]`);
+  if(addBtn)addBtn.addEventListener('click',function(e){if(e)e.stopPropagation();openSportForm(mid,sid);});
+}
+function openSportForm(mid,sid){
+  fmMeta={type:'sport',mid,sid};
+  $('#fmTitle').textContent='＋ 记录运动';
+  $('#fmDesc').textContent='项目 + 数值（如 30分钟 / 5km），自动汇总总和';
+  $('#fmFields').innerHTML=`
+    <label>运动项目</label><input data-f="0" type="text" placeholder="如 跑步 / 跳绳 / 瑜伽" autocomplete="off">
+    <label>数值（带单位）</label><input data-f="1" type="text" placeholder="如 30分钟 / 5公里 / 500个" autocomplete="off">
+    <label>状态（可选）</label><input data-f="2" type="text" placeholder="如 达标 / 轻松" autocomplete="off">
+    <label>日期</label><input data-f="3" type="date" value="${nowStr()}">`;
+  fm.classList.add('show');
+}
+function saveSportForm(){
+  if(!fmMeta||fmMeta.type!=='sport')return;
+  const proj=($('[data-f="0"]').value||'').trim();
+  const val=($('[data-f="1"]').value||'').trim();
+  const st=($('[data-f="2"]').value||'').trim();
+  const date=($('[data-f="3"]').value||'').trim()||nowStr();
+  if(!proj||!val){toast('请填写项目和数值');return;}
+  const rows=loadRows(fmMeta.mid,fmMeta.sid);
+  rows.push({vals:[proj,val,st||'—',date],ts:Date.now()});
+  saveRows(fmMeta.mid,fmMeta.sid,rows);
+  closeForm();render();
+}
+/* ============ 心愿账单：存钱功能 ============ */
+function renderWishEnhanced(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const rows=loadRows(mid,sid);
+  function normWish(v){
+    const raw=String(v[1]||'');const nums=raw.match(/\d+(\.\d+)?/g)||[];
+    let target=parseFloat(nums[0])||0;
+    let saved=parseFloat(v[2])||0;
+    const pct=String(v[2]||'').match(/(\d+)%/);
+    if(pct&&!saved&&target)saved=target*(+pct[1])/100;
+    return {name:String(v[0]||'未命名'),target,saved,date:String(v[3]||''),note:String(v[4]||'')};
+  }
+  let cards='';
+  if(rows.length){
+    cards=rows.map((r,i)=>{const w=normWish(r.vals||[]);const pct=w.target?Math.min(100,Math.round(w.saved/w.target*100)):0;
+      return `<div class="wishcard"><div class="wishhead"><b>${esc(w.name)}</b>${w.date?`<span class="wishdate">${esc(w.date)}</span>`:''}<button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></div>
+      <div class="wishbar"><i style="width:${pct}%"></i></div>
+      <div class="wishmeta"><span>已存 <b style="color:var(--coral)">¥${w.saved.toFixed(0)}</b></span><span>目标 ¥${w.target.toFixed(0)}</span><span>${pct}%</span></div>
+      ${w.note?`<div class="wishnote">${esc(w.note)}</div>`:''}
+      <button class="addbtn wishsave" data-wishsave="${i}" style="--cc:#F09A9A">💰 存钱</button></div>`;}).join('');
+  } else cards='<div class="empty">还没有心愿，设一个目标吧 ✿</div>';
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-money">资金管理</button><span class="sep">/</span><span class="cur">心愿账单</span></nav>
+    <div class="pagehead"><div><div class="colnum">FINANCE · WISH</div><h1>🌟 心愿账单</h1><p>设定愿望目标，随时存钱打卡，看着进度一点点靠近。</p></div><div class="stat">${rows.length} 个心愿</div></div>
+    <div class="deco">✦ 为想要的生活攒钱 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="toolbar"><div class="ph"><span class="ic">🎯</span> 我的心愿</div><button class="addbtn" data-add="${mid}-${sid}" style="--cc:#F09A9A">＋ 新增心愿</button></div>
+        <div class="wishgrid">${cards}</div>
+      </div>
+    </div>`;
+  document.querySelectorAll('[data-wishsave]').forEach(b=>b.addEventListener('click',()=>{
+    const i=+b.dataset.wishsave;
+    const inp=prompt('存多少钱？（输入金额）');if(inp===null)return;
+    const amt=parseFloat(inp);if(isNaN(amt)||amt<=0){toast('金额不对，重输一次');return;}
+    const rows2=loadRows(mid,sid);const r=rows2[i];if(!r)return;const v=r.vals||[];
+    v[2]=((parseFloat(v[2])||0)+amt).toFixed(2);
+    r.vals=v;saveRows(mid,sid,rows2);toast('已存 ¥'+amt.toFixed(2));render();
+  }));
+  const addBtn=document.querySelector(`[data-add="${mid}-${sid}"]`);
+  if(addBtn)addBtn.addEventListener('click',function(e){if(e)e.stopPropagation();openWishForm(mid,sid);});
+}
+function openWishForm(mid,sid){
+  fmMeta={type:'wish',mid,sid};
+  $('#fmTitle').textContent='＋ 新增心愿';
+  $('#fmDesc').textContent='设定目标金额，随时存钱打卡';
+  $('#fmFields').innerHTML=`
+    <label>心愿名称</label><input data-f="0" type="text" placeholder="如 日本旅行 / 新手机" autocomplete="off">
+    <label>目标金额（元）</label><input data-f="1" type="number" min="0" step="0.01" placeholder="如 20000">
+    <label>截止日期（可选）</label><input data-f="2" type="date">
+    <label>备注（可选）</label><input data-f="3" type="text" placeholder="可写愿望小清单" autocomplete="off">`;
+  fm.classList.add('show');
+}
+function saveWishForm(){
+  if(!fmMeta||fmMeta.type!=='wish')return;
+  const name=($('[data-f="0"]').value||'').trim();
+  const target=parseFloat($('[data-f="1"]').value);
+  const date=($('[data-f="2"]').value||'').trim();
+  const note=($('[data-f="3"]').value||'').trim();
+  if(!name||!target||isNaN(target)||target<=0){toast('请填写名称和正确的目标金额');return;}
+  const rows=loadRows(fmMeta.mid,fmMeta.sid);
+  rows.push({vals:[name,String(target),'0',date,note],ts:Date.now()});
+  saveRows(fmMeta.mid,fmMeta.sid,rows);
+  closeForm();render();
+}
+
 /* 收支流水专用新增表单：类型 + 大分类 + 小分类 + 金额 + 日期 + 备注 */
-function openFlowForm(mid, sid) {
-  fmMeta = { type: 'flow', mid, sid };
+function openFlowForm(mid, sid, idx) {
+  fmMeta = { type: 'flow', mid, sid, edit: idx };
   $('#fmTitle').textContent = '＋ 新增收支';
   $('#fmDesc').textContent = '选大分类 + 小分类，填金额和日期，可加备注；月历与月年统计自动更新';
   const ic = ['工资','奖金','理财','兼职','红包','礼金','稿费','报销','转移收入','其他收入'];
@@ -5062,6 +5285,21 @@ function openFlowForm(mid, sid) {
     <input data-f="4" type="date" value="${nowStr()}">
     <label>备注（可选）</label>
     <input data-f="5" type="text" placeholder="如 烧鸭饭 / 云岭茉莉" autocomplete="off">`;
+  if (idx !== undefined) {
+    const r = (loadRows(mid,sid)||[])[idx];
+    if (r) {
+      const v=r.vals||[];
+      const amt=parseFloat(String(v[1]||'').replace(/[^0-9.]/g,''));
+      const f=Array.from(fm.querySelectorAll('[data-f]'));
+      if(f[0])f[0].value=v[3]==='income'?'income':'expense';
+      if(f[1])f[1].value=v[0]||'';
+      if(f[2])f[2].value=v[4]||'';
+      if(f[3])f[3].value=isNaN(amt)?'':amt;
+      if(f[4])f[4].value=v[2]||'';
+      if(f[5])f[5].value=v[5]||'';
+      $('#fmTitle').textContent='✎ 编辑收支';
+    }
+  }
   fm.classList.add('show');
 }
 function saveFlowForm() {
@@ -5075,7 +5313,9 @@ function saveFlowForm() {
   if (!cat) { toast('请填写大分类'); return; }
   if (!amt || isNaN(amt) || amt <= 0) { toast('请填写正确的金额'); return; }
   const rows = loadRows(fmMeta.mid, fmMeta.sid);
-  rows.push({ vals: [cat, (type === 'income' ? '收入 ' : '支出 ') + '¥' + amt.toFixed(2), date, type === 'income' ? 'income' : 'expense', sub, remark], ts: Date.now() });
+  const rec={ vals: [cat, (type === 'income' ? '收入 ' : '支出 ') + '¥' + amt.toFixed(2), date, type === 'income' ? 'income' : 'expense', sub, remark], ts: Date.now() };
+  if (fmMeta.edit !== undefined && fmMeta.edit < rows.length) rows[fmMeta.edit]=rec;
+  else rows.push(rec);
   saveRows(fmMeta.mid, fmMeta.sid, rows);
   closeForm(); render();
 }
@@ -6856,8 +7096,6 @@ function wbHomeHtml(){
   }catch(e){}
   let remCard=reminders.length?reminders.slice(0,4).map((l,i)=>'<div class="wb-todo-i" data-wbhgo="'+l.go+'"><span class="wb-dot2"></span>'+esc(l.t)+' · '+esc(l.txt)+'</div>').join(''):'<div class="wb-empty2">今天没有待办和提醒，好好休息</div>';
   let h='';
-  // 1) Banner（粉色山景 + 英文引言）
-  h+='<div class="wb-banner"><svg viewBox="0 0 1440 150" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="skyp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FDEFF4"/><stop offset=".55" stop-color="#FBD8E4"/><stop offset="1" stop-color="#F6C4D6"/></linearGradient></defs><rect width="1440" height="150" fill="url(#skyp)"/><circle cx="1240" cy="42" r="24" fill="#FFD9A0" opacity=".95"/><ellipse cx="190" cy="36" rx="44" ry="13" fill="#fff" opacity=".6"/><ellipse cx="214" cy="30" rx="28" ry="9" fill="#fff" opacity=".75"/><ellipse cx="920" cy="54" rx="40" ry="12" fill="#fff" opacity=".5"/><path d="M0,150 L0,106 Q180,50 380,98 Q560,138 760,94 Q980,50 1200,108 L1440,76 L1440,150 Z" fill="#F4AFC6" opacity=".85"/><path d="M0,150 L0,120 Q260,72 520,118 Q760,158 1020,116 Q1260,80 1440,122 L1440,150 Z" fill="#EE9CB8"/><path d="M0,150 L0,140 Q300,100 640,138 Q960,176 1200,140 L1440,150 Z" fill="#E88CA8"/></svg><div class="wb-banner-txt"><div class="wb-banner-hi">'+wd+' · '+iso.slice(5).replace('-','/')+'</div><div class="wb-banner-title">Welcome to my cozy room</div><div class="wb-banner-sub">当下 · 今日 · 计划 · 记录 · 我的小世界 ✿</div></div></div>';
   // 2) 快捷新建横栏
   h+='<div class="wb-quickbar">'+[['sub-money-flow','✎ 记一笔'],['sub-timeline-diary','📝 写日记'],['sub-utility-pomodoro','☑ 加待办'],['sub-utility-habit','✔ 打卡习惯'],['sub-utility-memorial','🎈 加日子'],['sub-study-classnotes','📚 课堂笔记']].map(a=>'<button class="wb-qbtn" data-wbhgo="'+a[0]+'">'+a[1]+'</button>').join('')+'</div>';
   // 3) 统计

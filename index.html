@@ -200,6 +200,47 @@ tr:hover td{background:#FEF8FB}
 .wishmeta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-dim);margin:8px 0}
 .wishnote{font-size:12px;color:var(--ink-faint);margin-bottom:8px}
 .wishsave{width:100%}
+/* 心情：一天多条 + 时间线 */
+.d.sel{background:#FDE4EC;border:2px solid var(--pink)}
+.mn{position:absolute;top:2px;right:3px;background:var(--coral);color:#fff;font-size:9.5px;font-weight:700;border-radius:8px;padding:0 4px;line-height:14px}
+
+/* 待办事项 */
+.todocards{display:flex;flex-direction:column;gap:18px}
+.tdaddrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
+.tdaddrow input[type=text]{flex:1 1 200px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:14px;color:var(--ink);background:#fff;outline:none}
+.tdaddrow select,.tdaddrow input[type=date]{padding:9px 10px;border:1px solid var(--line);border-radius:12px;font-size:13px;color:var(--ink);background:#fff;outline:none}
+.tdtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.tdtab{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid var(--line);border-radius:20px;background:#fff;color:var(--ink-dim);font-size:13px;cursor:pointer}
+.tdtab.on{background:var(--pink);border-color:var(--pink);color:#fff;font-weight:700}
+.tdtab span{background:rgba(0,0,0,.12);border-radius:9px;padding:0 6px;font-size:11px}
+.tdlist{display:flex;flex-direction:column;gap:9px}
+.tdrow{display:flex;align-items:center;gap:12px;background:#FFFDFE;border:1px solid var(--line);border-left:4px solid var(--tc);border-radius:12px;padding:10px 14px}
+.tdrow.done{opacity:.5}
+.tdrow.done .tdtxt{text-decoration:line-through}
+.tdbox{width:24px;height:24px;flex:none;border-radius:8px;border:2px solid var(--pink);background:#fff;color:var(--pink);font-size:15px;line-height:20px;cursor:pointer;text-align:center}
+.tdbox.on{background:var(--pink);color:#fff}
+.tdmain{flex:1;min-width:0}
+.tdtxt{font-size:14.5px;color:var(--ink);font-weight:600}
+.tdmeta{display:flex;gap:8px;align-items:center;margin-top:3px}
+.tdpri{font-size:11px;padding:1px 8px;border-radius:9px;font-weight:700}
+.tdpri.important{background:#FDE4E4;color:#D66}
+.tdpri.easy{background:#DFF0E9;color:#4A8}
+.tdpri.normal{background:#FBE4EE;color:#D77AA8}
+.tddue{font-size:11.5px;color:var(--ink-faint)}
+.tddue.late{color:#E27171;font-weight:700}
+.tdops{display:flex;gap:6px;flex:none}
+.minibtn{padding:5px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink-dim);font-size:12px;cursor:pointer}
+.minibtn:hover{background:var(--pink);color:#fff;border-color:var(--pink)}
+.minibtn.danger:hover{background:var(--coral);border-color:var(--coral)}
+.moodline-select{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;color:var(--ink-dim)}
+.moodline-select input{padding:6px 10px;border:1px solid var(--line);border-radius:10px;font-size:13px;color:var(--ink);background:#fff;outline:none}
+.moodline{display:flex;flex-direction:column;gap:8px}
+.mline{display:flex;align-items:center;gap:8px;background:#FDF0F5;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.mline .mt{font-family:var(--pixel);font-size:12px;color:var(--pink);min-width:44px}
+.mline b{font-size:13px;color:var(--ink)}
+.mline .mn2{font-size:12px;color:var(--ink-faint);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mline .delbtn{margin-left:auto;flex:none}
+
 
 .delbtn:hover{background:#FDF0F5}
 
@@ -880,6 +921,9 @@ body:not(.workbench) #petMenu{display:none}
 <script>
 /* ============ 七大模块（含学习计划、新功能视图） ============ */
 const DATA=[
+ {id:'todo',ic:'☑',name:'待办事项',en:'TODO',desc:'把今天和未来的事都记下来，勾掉一件是一件，跨设备同步',cc:'#E88CA8',sub:[
+   {id:'todo',ic:'☑',name:'待办清单',desc:'添加、勾选、按截止日期与优先级管理待办，可跨设备同步',feat:['一键快速添加','优先级标记','按状态 / 截止日筛选','已完成自动折叠'],rows:[],special:'todo'}
+ ]},
  {id:'health',ic:'♥',name:'健康管理',en:'HEALTH',desc:'体征、体检、用药、运动、睡眠、喝水与便便的全量健康档案',cc:'#B7D8C8',sub:[
    {id:'signs',ic:'🩺',name:'体征测量',desc:'体重、体脂、血压、心率、体温等多维体征记录与趋势',feat:['体重/体脂/血压/心率/体温','手动或设备同步录入','周/月/年趋势曲线'],cols:['项目','数值','状态'],fields:['项目','数值','状态'],rows:[['体重','62.4 kg','正常'],['体脂率','18.6%','正常'],['血压','118 / 76 mmHg','正常'],['静息心率','64 bpm','正常']]},
    {id:'checkup',ic:'📋',name:'体检报告',desc:'体检单拍照识别归档，可上传照片与文档附件',feat:['拍照/PDF识别归档','上传照片与文档','指标自动提取'],cols:['名称','备注','状态'],fields:['体检名称','备注','状态'],rows:[['2026-09 年度体检','已归档','已完成'],['2025-09 年度体检','已归档','已完成'],['血常规(近3年)','对比完成','稳定']],special:'attach'},
@@ -1184,7 +1228,8 @@ function tagCls(c){
   if(/偏高|3 天内|即将达成/.test(c))return 'mid';
   return '';
 }
-function nowStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function nowStr(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+function nowTime(){const n=new Date();return String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0');}
 function todayCN(){const d=new Date();return `${d.getMonth()+1}月${d.getDate()}日`;}
 function showLB(src){const el=document.getElementById('lbImg');if(el){el.src=src;document.getElementById('lightbox').classList.add('show');}}
 function hideLB(){document.getElementById('lightbox').classList.remove('show');}
@@ -1447,6 +1492,97 @@ function renderStats(mid){
 }
 
 /* 日程安排：时间点 + 时间段 */
+
+function loadTodo(){try{const raw=localStorage.getItem(PREFIX+'todo');if(raw!==null)return JSON.parse(raw);}catch(e){}return [];}
+function saveTodo(t){try{localStorage.setItem(PREFIX+'todo',JSON.stringify(t));}catch(e){}}
+function priColor(p){return p==='important'?'#F09A9A':p==='easy'?'#9FC8B8':'#E8B4CC';}
+function openTodoForm(id){
+  const t=loadTodo();
+  const it=t.find(x=>String(x.id)===String(id));
+  fmMeta={type:'todo',id:String(id)};
+  $('#fmTitle').textContent=it?'✎ 编辑待办':'＋ 新增待办';
+  $('#fmDesc').textContent='事项 + 优先级 + 截止日期';
+  $('#fmFields').innerHTML=`
+    <label>事项</label><input data-f="0" type="text" value="${it?esc(it.txt):''}" placeholder="要做什么？" autocomplete="off">
+    <label>优先级</label><select data-f="1"><option value="normal" ${it&&it.pri==='normal'?'selected':''}>一般</option><option value="important" ${it&&it.pri==='important'?'selected':''}>重要</option><option value="easy" ${it&&it.pri==='easy'?'selected':''}>轻松</option></select>
+    <label>截止日期（可选）</label><input data-f="2" type="date" value="${it?(it.due||''):''}">`;
+  fm.classList.add('show');
+}
+function saveTodoForm(){
+  if(!fmMeta||fmMeta.type!=='todo')return;
+  const txt=$('[data-f="0"]').value.trim();
+  if(!txt){closeForm();return;}
+  const pri=$('[data-f="1"]').value||'normal';
+  const due=$('[data-f="2"]').value||'';
+  const t=loadTodo();
+  if(fmMeta.id&&fmMeta.id!=='undefined'){
+    const it=t.find(x=>String(x.id)===String(fmMeta.id));
+    if(it){it.txt=txt;it.pri=pri;it.due=due;}
+  }else{
+    t.push({id:String(Date.now()),txt,pri,due,done:0,ts:Date.now()});
+  }
+  saveTodo(t);closeForm();render();
+}
+function renderTodo(mid){
+  const m=findModule(mid);if(!m)return renderModule(mid);
+  const s=m.sub.find(x=>x.special==='todo');
+  state.module=mid;state.sub=s?s.id:null;state.guest=false;state.sched=null;
+  if(!state.todoF)state.todoF='all';
+  const t=loadTodo();
+  const today=nowStr();
+  let list=t.slice();
+  const F=state.todoF;
+  if(F==='doing')list=list.filter(x=>!x.done);
+  else if(F==='done')list=list.filter(x=>x.done);
+  else if(F==='today')list=list.filter(x=>!x.done&&x.due&&x.due<=today);
+  list.sort((a,b)=>{if(a.done!==b.done)return a.done?1:-1;const da=a.due||'9999',db=b.due||'9999';return da.localeCompare(db)||((b.ts||0)-(a.ts||0));});
+  const doing=t.filter(x=>!x.done).length,done=t.filter(x=>x.done).length;
+  const todayN=t.filter(x=>!x.done&&x.due&&x.due<=today).length;
+  function tab(k,lab,n){return `<button class="tdtab ${F===k?'on':''}" data-todofilter="${k}">${lab}${n!=null?` <span>${n}</span>`:''}</button>`;}
+  function row(it){
+    const overdue=!it.done&&it.due&&it.due<today;
+    return `<div class="tdrow ${it.done?'done':''}" style="--tc:${priColor(it.pri)}">
+      <button class="tdbox ${it.done?'on':''}" data-tododone="${it.id}">${it.done?'✓':''}</button>
+      <div class="tdmain">
+        <div class="tdtxt">${esc(it.txt)}</div>
+        <div class="tdmeta"><span class="tdpri ${priCls(it.pri)||'normal'}">${it.pri==='important'?'重要':it.pri==='easy'?'轻松':'一般'}</span>${it.due?`<span class="tddue ${overdue?'late':''}">${esc(it.due)}${overdue?' · 已到期':''}</span>`:''}</div>
+      </div>
+      <div class="tdops"><button class="minibtn" data-todoedit="${it.id}">编辑</button><button class="minibtn danger" data-tododel="${it.id}">删除</button></div>
+    </div>`;
+  }
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><span class="cur">待办事项</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">TODO</div><h1>☑ 待办事项</h1><p>把要做的事记下来，勾掉一件是一件 ✿</p></div>
+      <div class="stat">进行中 ${doing} · 已完成 ${done}</div>
+    </div>
+    <div class="deco">✦ 待办清单 ✦</div>
+    <div class="todocards">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">➕</span> 快速添加</div>
+        <div class="tdaddrow">
+          <input id="tdTxt" type="text" placeholder="要做什么？" autocomplete="off">
+          <select id="tdPri"><option value="normal">一般</option><option value="important">重要</option><option value="easy">轻松</option></select>
+          <input id="tdDue" type="date">
+          <button class="addbtn" id="tdAdd" style="--cc:${m.cc}">添加</button>
+        </div>
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">🗂</span> 我的待办</div>
+        <div class="tdtabs">${tab('all','全部')}${tab('doing','进行中',doing)}${tab('today','今日到期',todayN)}${tab('done','已完成',done)}</div>
+        <div class="tdlist">${list.length?list.map(row).join(''):`<div class="empty">这里还空着，加一条待办吧 ✿</div>`}</div>
+      </div>
+    </div>`;
+  const b=document.getElementById('tdAdd');
+  if(b)b.addEventListener('click',()=>{
+    const txt=(document.getElementById('tdTxt').value||'').trim();
+    if(!txt){toast('写点内容再添加吧');return;}
+    const pri=document.getElementById('tdPri').value;
+    const due=document.getElementById('tdDue').value||'';
+    const tl=loadTodo();tl.push({id:String(Date.now()),txt,pri,due,done:0,ts:Date.now()});saveTodo(tl);
+    document.getElementById('tdTxt').value='';render();
+  });
+}
 function renderSchedule(mid){
   const sched=loadSched();
   const today=nowStr();
@@ -1484,8 +1620,8 @@ function renderSchedule(mid){
   // Show items for selected day in time slots
   if(items.length){
     items.forEach(it=>{
-      icalHTML+=`<div class="ic-event" style="border-left-color:${priCls(it.pri)||'var(--pink)'}">
-        <div class="et">${esc(it.n)}</div>
+      icalHTML+=`<div class="ic-event" style="border-left-color:${priCls(it.p||it.pri)||'var(--pink)'}">
+        <div class="et">${esc(it.x||it.n||'')}</div>
         <div class="eh">${esc(it.t)}${it.e?' - '+esc(it.e):''}</div>
         <div class="ed">${esc(it.d||'')}</div>
       </div>`;
@@ -1521,7 +1657,7 @@ function renderSchedule(mid){
   });
   // Bind openSchedForm
   document.getElementById('openSchedForm')?.addEventListener('click',function(){
-    openSchedForm();
+    openSchedForm(state.sched||nowStr());
   });
 }const BODY_FIELDS = ["上胸围","下胸围","腰","臀","大腿","小腿"];
 function renderBody(mid,sid){
@@ -1572,7 +1708,7 @@ function renderBody(mid,sid){
 }
 
 /* ---------- 附件（体检报告传照片/文档） ---------- */
-function readFileAsDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file);});}
+function readFileAsDataURL(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const t=(file&&file.type)||'';if(t.startsWith('image/')){try{cnImgDown(r.result,1280).then(res).catch(()=>res(r.result));}catch(e){res(r.result);}}else{res(r.result);}};r.onerror=rej;r.readAsDataURL(file);});}
 function renderAttach(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
   state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
@@ -1734,31 +1870,49 @@ function renderMood(mid,sid){
   const now=new Date(),y=now.getFullYear(),mo=now.getMonth();
   const first=new Date(y,mo,1).getDay();
   const days=new Date(y,mo+1,0).getDate();
-  const byDate={};moods.forEach(me=>byDate[me.date]=me);
+  const byDate={};moods.forEach(me=>{(byDate[me.date]=byDate[me.date]||[]).push(me);});
+  function mkey(me){return (me.time||'00:00');}
+  function sortList(list){return list.slice().sort((a,b)=>{const ka=mkey(a)+String(a.ts||0),kb=mkey(b)+String(b.ts||0);return ka.localeCompare(kb)||(a.ts-b.ts);});}
+  const today=nowStr();
+  if(!state.moodDay||!byDate[state.moodDay])state.moodDay=today;
   let cells='';for(let i=0;i<first;i++)cells+=`<div class="d blank"></div>`;
   for(let d=1;d<=days;d++){
     const ds=`${y}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const me=byDate[ds];
-    cells+=`<div class="d" data-moodday="${ds}">${me?`<span class="em">${me.em}</span><div style="font-size:10px;color:var(--ink-faint)">${d}日</div>`:`<div style="color:var(--ink-faint);font-size:13px;line-height:1.4">${d}</div>`}</div>`;
+    const list=sortList(byDate[ds]||[]);
+    const last=list.length?list[list.length-1]:null;
+    cells+=`<div class="d ${ds===state.moodDay?'sel':''}" data-moodday="${ds}">${last?`<span class="em">${last.em}</span>${list.length>1?`<span class="mn">×${list.length}</span>`:''}<div style="font-size:10px;color:var(--ink-faint)">${d}日</div>`:`<div style="color:var(--ink-faint);font-size:13px;line-height:1.4">${d}</div>`}</div>`;
   }
   const count={};moods.forEach(me=>count[me.mood]=(count[me.mood]||0)+1);
   const total=moods.length||1;
   const dist=MOODS.map((moD,i)=>({name:moD[0],em:moD[1],c:moodColor(i),n:count[moD[0]]||0,frac:(count[moD[0]]||0)/total}));
   let acc=0,segs='';const R=70,CX=90,CY=90,circ=2*Math.PI*R;
   dist.filter(d=>d.n>0).forEach(d=>{const len=d.frac*circ;const off=acc*circ;acc+=d.frac;segs+=`<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${d.c}" stroke-width="22" stroke-dasharray="${len} ${circ-len}" stroke-dashoffset="${-off}" transform="rotate(-90 ${CX} ${CY})"><title>${d.name} ${d.n}</title></circle>`;});
+  const dayList=sortList(byDate[state.moodDay]||[]);
+  const lineHTML=dayList.length?dayList.map(me=>{
+    const gi=moods.findIndex(x=>x===me);
+    return `<div class="mline"><span class="mt">${esc(me.time||'')}</span><span class="em">${me.em}</span><b>${esc(me.mood)}</b>${me.note?`<span class="mn2">${esc(me.note)}</span>`:''}<button class="delbtn" data-mooddel="${gi}">删除</button></div>`;
+  }).join(''):'<div class="empty">这天还没有心情，点日历或点下方按钮记一条吧 ✿</div>';
+  const wall=sortedWall(moods);
   view.innerHTML=`
     <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-growth">个人成长</button><span class="sep">/</span><span class="cur">心情手帐</span></nav>
     <div class="pagehead">
-      <div><div class="colnum">GROWTH · MOOD</div><h1>🌈 心情手帐</h1><p>每天记录一个心情，看看这个月的心情变化。写幸福日记，真的会更幸福 ✿</p></div>
+      <div><div class="colnum">GROWTH · MOOD</div><h1>🌈 心情手帐</h1><p>一天可以记多种心情，按先后顺序排好，回看这一路的心情变化 ✿</p></div>
       <div class="stat">本月 ${moods.length} 次记录</div>
     </div>
     <div class="deco">✦ 情绪记录 ✦</div>
     <div class="detail">
       <div class="panel" style="--cc:${m.cc}">
         <div class="ph"><span class="ic">📅</span> ${y}年${mo+1}月情绪打卡</div>
-        <div class="pd">点击某一天记录或修改心情。</div>
+        <div class="pd">一天可记多种心情，点某一天记录；当天多条会标出 ×N。</div>
         <div class="moodgrid">${cells}</div>
         <div class="featlist">${MOODS.map((mD,i)=>`<div class="feat" style="display:flex;align-items:center;gap:8px"><span style="font-size:20px">${mD[1]}</span><b style="margin:0">${mD[0]}</b></div>`).join('')}</div>
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">🕒</span> ${esc(state.moodDay)} · 心情时间线</div>
+        <div class="pd">同一天的心情按先后顺序排列。</div>
+        <div class="moodline-select"><label>查看日期</label><input type="date" id="moodDaySel" value="${esc(state.moodDay)}"></div>
+        <div class="moodline">${lineHTML}</div>
+        <button class="addbtn" data-moodadd style="--cc:${m.cc};margin-top:12px">＋ 在这天加一条心情</button>
       </div>
       <div class="panel" style="--cc:${m.cc}">
         <div class="ph"><span class="ic">🥧</span> 月份情绪占比</div>
@@ -1769,16 +1923,24 @@ function renderMood(mid,sid){
       <div class="panel" style="--cc:${m.cc}">
         <div class="ph"><span class="ic">📖</span> 最近心情</div>
         <div class="pd">最近记录的心情与短句。</div>
-        <div class="moodwall">${moods.slice().reverse().slice(0,9).map((me,i)=>{
-          const idx=moods.length-1-i;
-          return `<div class="moodcard" style="border-top:3px solid ${moodColor(MOODS.findIndex(m=>m[0]===me.mood))}"><span class="em">${me.em}</span><div class="mood">${esc(me.mood)}</div><div class="dt">${esc(me.date)}</div>${me.note?`<div class="note">${esc(me.note)}</div>`:''}${(me.files&&me.files.length)?`<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center">${me.files.map((f,fi)=>f.type&&f.type.startsWith('image/')?`<div class="attachimg" style="width:56px;height:56px"><img src="${f.data}" data-lb><span class="del" data-mdimgdel="${idx}__${fi}">×</span></div>`:`<div class="photothumb" style="margin:0;max-width:100%">📄 ${esc(f.name)}<span class="del" data-mdimgdel="${idx}__${fi}">×</span></div>`).join('')}</div>`:''}<span class="del" data-mooddel="${idx}">×</span></div>`;
-        }).join('')||`<div class="empty">本月还没有心情记录，点日历打卡吧 ✿</div>`}</div>
-        <div class="notice">💾 情绪记录保存在本机浏览器中。</div>
+        <div class="moodwall">${wall||`<div class="empty">还没有心情记录，点日历打卡吧 ✿</div>`}</div>
+        <div class="notice">💾 情绪记录保存在本机浏览器中，可跨设备同步。</div>
       </div>
     </div>`;
+  const mds=document.getElementById('moodDaySel');
+  if(mds)mds.addEventListener('change',()=>{state.moodDay=mds.value||today;render();});
+  const ma=document.querySelector('[data-moodadd]');
+  if(ma)ma.addEventListener('click',()=>{openMoodForm(state.moodDay);});
 }
-/* ============ 阅读记录：书单 / 摘抄 / 感悟（可插图） ============ */
-const READ_ROTS=['-1.2deg','1deg','-0.6deg','1.4deg','-1.8deg'];
+function sortedWall(moods){
+  const wall=moods.slice().sort((a,b)=>{const ka=(a.date||'')+(a.time||'00'),kb=(b.date||'')+(b.time||'00');return kb.localeCompare(ka)||((b.ts||0)-(a.ts||0));}).slice(0,9);
+  if(!wall.length)return '';
+  return wall.map(me=>{
+    const idx=moods.findIndex(x=>x===me);
+    return `<div class="moodcard" style="border-top:3px solid ${moodColor(MOODS.findIndex(m=>m[0]===me.mood))}"><span class="em">${me.em}</span><div class="mood">${esc(me.mood)}</div><div class="dt">${esc(me.date)}${me.time?` ${esc(me.time)}`:''}</div>${me.note?`<div class="note">${esc(me.note)}</div>`:''}${(me.files&&me.files.length)?`<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center">${me.files.map((f,fi)=>f.type&&f.type.startsWith('image/')?`<div class="attachimg" style="width:56px;height:56px"><img src="${f.data}" data-lb><span class="del" data-mdimgdel="${idx}__${fi}">×</span></div>`:`<div class="photothumb" style="margin:0;max-width:100%">📄 ${esc(f.name)}<span class="del" data-mdimgdel="${idx}__${fi}">×</span></div>`).join('')}</div>`:''}<span class="del" data-mooddel="${idx}">×</span></div>`;
+  }).join('');
+}
+
 function renderReading(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
   state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
@@ -2583,6 +2745,7 @@ function renderGuest(){
 function renderSub(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid); if(!m||!s)return renderModule(mid);
   if(sid==='stats')return renderStats(mid);
+  if(s.special==='todo')return renderTodo(mid);
   if(s.special==='schedule')return renderSchedule(mid);
   if(s.special==='body')return renderBody(mid,sid);
   if(s.special==='attach')return renderAttach(mid,sid);
@@ -2835,15 +2998,14 @@ function saveTTForm(){
 }
 /* 心情打卡弹窗 */
 function openMoodForm(date){
-  const moods=loadMood();
-  const ex=moods.find(m=>m.date===date);
   fmMeta={type:'mood',date};
   tempMoodFiles=[];
   $('#fmTitle').textContent='情绪打卡 · '+date;
-  $('#fmDesc').textContent=ex?'修改这一天的情绪':'记录这一天的情绪';
+  $('#fmDesc').textContent='同一天可记多条心情，按先后顺序排列';
   $('#fmFields').innerHTML=`
-    <label>心情</label><select data-f="0">${MOODS.map((m,i)=>`<option value="${i}" ${ex&&ex.mood===m[0]?'selected':''}>${m[1]} ${m[0]}</option>`).join('')}</select>
-    <label>心情短句（可选）</label><input data-f="1" type="text" placeholder="今天感觉…" value="${ex?esc(ex.note||''):''}">
+    <label>心情</label><select data-f="0">${MOODS.map((m,i)=>`<option value="${i}">${m[1]} ${m[0]}</option>`).join('')}</select>
+    <label>心情短句（可选）</label><input data-f="1" type="text" placeholder="今天感觉…" autocomplete="off">
+    <label>时间（可选，默认现在）</label><input data-f="2" type="time" value="${nowTime()}">
     <label>图片 / 文件（可选）</label>
     <label class="upbtn">📎 上传图片或文件<input id="md_file" type="file" multiple accept="image/*,.pdf,.doc,.docx,.txt,.xls,.xlsx" style="display:none"></label>
     <div class="attachgrid" id="md_preview"></div>`;
@@ -2853,11 +3015,10 @@ function saveMoodForm(){
   if(!fmMeta||fmMeta.type!=='mood')return;
   const idx=+fm.querySelector('[data-f="0"]').value;
   const note=fm.querySelector('[data-f="1"]').value.trim();
+  const time=(fm.querySelector('[data-f="2"]')?fm.querySelector('[data-f="2"]').value:'')||nowTime();
   const moods=loadMood();
-  const i=moods.findIndex(m=>m.date===fmMeta.date);
-  const oldFiles=(i>-1&&moods[i].files)?moods[i].files.slice():[];
-  const rec={date:fmMeta.date,mood:MOODS[idx][0],em:MOODS[idx][1],note,ts:Date.now(),files:oldFiles.concat(tempMoodFiles.slice())};
-  if(i>-1)moods[i]=rec;else moods.push(rec);
+  const rec={date:fmMeta.date,mood:MOODS[idx][0],em:MOODS[idx][1],note,ts:Date.now(),time,files:tempMoodFiles.slice()};
+  moods.push(rec);
   tempMoodFiles=[];
   saveMood(moods);closeForm();render();
 }
@@ -2910,6 +3071,10 @@ document.addEventListener('click',e=>{
     if(sched[date])sched[date]=sched[date].filter(i=>!(i.t===t&&(i.e||'')===(ed||'')));
     saveSched(sched);render();return;
   }
+    const tdDone=e.target.closest('[data-tododone]');if(tdDone){const tl=loadTodo();const it=tl.find(x=>String(x.id)===tdDone.dataset.tododone);if(it){it.done=it.done?0:1;saveTodo(tl);render();}return;}
+  const tdDel=e.target.closest('[data-tododel]');if(tdDel){saveTodo(loadTodo().filter(x=>String(x.id)!==tdDel.dataset.tododel));render();return;}
+  const tdEdit=e.target.closest('[data-todoedit]');if(tdEdit){openTodoForm(tdEdit.dataset.todoedit);return;}
+  const tdF=e.target.closest('[data-todofilter]');if(tdF){state.todoF=tdF.dataset.todofilter;render();return;}
   const addS=e.target.closest('[data-addsched]');
   if(addS){openSchedForm(addS.dataset.addsched);return;}
   const addP=e.target.closest('[data-addplan]');
@@ -2975,6 +3140,8 @@ document.addEventListener('click',e=>{
   if(mgdel){if(!confirm('删除这个目标？'))return;const m2=loadMonthGoals();if(m2[state.wmMonth]){m2[state.wmMonth].splice(+mgdel.dataset.mgdel,1);saveMonthGoals(m2);render();}return;}
   const mgdone=e.target.closest('[data-mgdone]');
   if(mgdone){const m2=loadMonthGoals();if(m2[state.wmMonth]&&m2[state.wmMonth][+mgdone.dataset.mgdone]){m2[state.wmMonth][+mgdone.dataset.mgdone].done=!m2[state.wmMonth][+mgdone.dataset.mgdone].done;saveMonthGoals(m2);render();}return;}
+  const flowedit=e.target.closest('[data-flowedit]');
+  if(flowedit){openFlowForm('money','flow',+flowedit.dataset.flowedit);return;}
   const delEl=e.target.closest('[data-del]');
   if(delEl){
     const p=delEl.dataset.del.split('-');const mid=p[0],sid=p[1],idx=+p[2];
@@ -3114,7 +3281,8 @@ document.addEventListener('click',e=>{
   const moodday=e.target.closest('[data-moodday]');
   if(moodday){openMoodForm(moodday.dataset.moodday);return;}
   const mooddel=e.target.closest('[data-mooddel]');
-  if(mooddel){const moods=loadMood();moods.splice(+mooddel.dataset.mooddel,1);saveMood(moods);render();return;}
+  if(mooddel){const moods=loadMood();moods.splice(+mooddel.dataset.mooddel,1);saveMood(moods);render();return;}   const moodadd=e.target.closest('[data-moodadd]');
+   if(moodadd){if(state.moodDay)openMoodForm(state.moodDay);return;}
   // 大图预览
   const lb=e.target.closest('[data-lb]');
   if(lb){showLB(e.target.src||e.target.currentSrc);return;}
@@ -3126,6 +3294,7 @@ $('#fmSave').addEventListener('click',()=>{
   else if(fmMeta&&fmMeta.type==='tt')saveTTForm();
   else if(fmMeta&&fmMeta.type==='tt_edit')saveTTForm();
   else if(fmMeta&&fmMeta.type==='mood')saveMoodForm();
+  else if(fmMeta&&fmMeta.type==='todo')saveTodoForm();
   else if(fmMeta&&fmMeta.type==='plan')savePlanForm();
   else if(fmMeta&&fmMeta.type==='hablog')saveHabitLogForm();
   else if(fmMeta&&fmMeta.type==='readq')saveReadForm('readq');
@@ -3148,6 +3317,7 @@ fm.addEventListener('click',e=>{if(e.target===fm)closeForm();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeForm();});
 /* 计划日期切换 */
 document.addEventListener('change',e=>{
+  if(e.target&&e.target.id==='moodDaySel'){state.moodDay=e.target.value||nowStr();render();}
   if(e.target&&e.target.id==='planDay'){
     state.sched=e.target.value||nowStr();
     render();

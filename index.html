@@ -170,6 +170,13 @@ tr:hover td{background:#FEF8FB}
 .notice{border-left:3px solid var(--pink);background:#FDF0F5;padding:12px 16px;border-radius:0 12px 12px 0;font-size:13px;color:var(--ink-dim);margin-top:14px;line-height:1.7}
 .empty{text-align:center;color:var(--ink-faint);padding:22px;font-size:14px}
 .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.wkctl{display:inline-flex;align-items:center;gap:4px;margin-left:10px;font-size:12px;color:#a0677a}
+.wkbtn{border:1px solid #e5c3d2;background:#fff;color:#c86a92;border-radius:6px;padding:1px 7px;cursor:pointer;font-size:12px;line-height:1.5}
+.wkbtn:hover{background:#fdeef4}
+.wknum{min-width:20px;text-align:center;color:#c86a92;cursor:pointer;border-bottom:1px dashed #e5c3d2}
+.tt-item.off{opacity:.45;filter:grayscale(.5)}
+.wkoff{display:inline-block;margin-left:6px;background:#eee;color:#9a9a9a;border-radius:4px;font-size:9px;padding:0 5px;vertical-align:middle}
+
 .addbtn{padding:9px 20px;border-radius:999px;background:var(--cc);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 4px 14px rgba(200,140,165,.25);transition:.2s}
 .addbtn:hover{transform:translateY(-2px)}
 .delbtn{color:var(--coral);font-size:13px;padding:4px 10px;border-radius:999px;border:1px solid #F0C8D0;transition:.2s}
@@ -206,6 +213,39 @@ tr:hover td{background:#FEF8FB}
 
 /* 待办事项 */
 .todocards{display:flex;flex-direction:column;gap:18px}
+
+/* 每日时间轴 */
+.tlnav{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:6px 0 18px}
+.tlnav input[type=date]{padding:8px 10px;border:1px solid var(--line);border-radius:12px;font-size:13px;color:var(--ink);background:#fff;outline:none}
+.tllist{display:flex;flex-direction:column;border-left:2px solid #F2DCE5;margin-top:8px}
+.tlslot{display:flex;min-height:46px;border-bottom:1px solid #F6E9EE}
+.tlt{width:46px;flex:none;font-family:var(--pixel);font-size:12px;color:var(--pink);padding-top:6px;text-align:right;padding-right:10px}
+.tlc{flex:1;padding:4px 6px;display:flex;flex-direction:column;gap:5px}
+.tlempty{}
+.tlev{display:flex;align-items:center;gap:7px;background:#FFFDFE;border:1px solid var(--line);border-left:4px solid;border-radius:10px;padding:6px 10px;font-size:13px}
+.tlev b{color:var(--ink);font-weight:600}
+.tldet{color:var(--ink-faint);font-size:11.5px}
+.tlkind{flex:none;font-size:10px;font-weight:700;background:#F3E7ED;color:#B98;border-radius:6px;padding:0 5px}
+.tlev.sched .tlkind{background:#FDE4E4;color:#E07}
+.tlev.course .tlkind{background:#DFF0E9;color:#4A8}
+.tltodos{display:flex;flex-direction:column;gap:8px}
+.tltodo{display:flex;align-items:center;gap:10px;background:#FFFDFE;border:1px solid var(--line);border-radius:12px;padding:9px 12px}
+.tltodo.done{opacity:.55}
+.tltodo.done .tdtxt{text-decoration:line-through}
+.tll-c{color:#4A8}.tll-s{color:#E07}
+
+/* 个人SOP */
+.subgrp{margin-bottom:20px}
+.subgrp>h3{font-family:var(--pixel);color:var(--pink);font-size:13px;margin:0 0 8px;letter-spacing:1px}
+.soplist{display:flex;flex-direction:column;gap:12px;margin-top:10px}
+.sopcard{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#FFFDFE}
+.sophead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.sophead>div:first-child b{color:var(--ink);font-size:15px}
+.sopacts{display:flex;gap:6px}
+.sopsteps{display:flex;flex-direction:column;gap:6px}
+.sopstep{display:flex;align-items:center;gap:8px;background:#FBF3F7;border-radius:10px;padding:6px 10px;font-size:13px}
+.sopno{flex:none;width:20px;height:20px;border-radius:50%;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.soptxt{flex:1;color:var(--ink)}
 .tdaddrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:6px}
 .tdaddrow input[type=text]{flex:1 1 200px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:14px;color:var(--ink);background:#fff;outline:none}
 .tdaddrow select,.tdaddrow input[type=date]{padding:9px 10px;border:1px solid var(--line);border-radius:12px;font-size:13px;color:var(--ink);background:#fff;outline:none}
@@ -492,6 +532,12 @@ tr:hover td{background:#FEF8FB}
 .monthview .md.done{background:#F0F7F2;border-color:#A9CDB8}
 .monthview .md.done .dn{color:#3E7D5A;font-weight:700}
 .monthview .md.blank{background:transparent;border:none;cursor:default}
+.monthview .md.sel{background:var(--pink);border-color:var(--pink)}
+.monthview .md.sel .dn{color:#fff}
+.monthview .md.sel .dv{color:#fff}
+.flowsearch{display:flex;gap:8px;margin:6px 0 12px;flex-wrap:wrap}
+.flowsearch input{flex:1;min-width:150px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-family:inherit;font-size:13px;background:#fff}
+.flowsearch select{border:1px solid var(--line);border-radius:10px;padding:7px 8px;font-family:inherit;font-size:12.5px;background:#fff}
 .monthview .md .dot{display:flex;gap:2px;flex-wrap:wrap;margin-top:2px}
 .monthview .md .dot span{width:6px;height:6px;border-radius:50%;display:inline-block}
 .yearview{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;font-size:13px}
@@ -850,6 +896,27 @@ body:not(.workbench) #petMenu{display:none}
 .fd-calctool{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;background:var(--bg2);border-radius:12px;padding:10px 12px;font-size:14px;color:var(--ink)}
 .fd-calctool input{border:1px solid var(--line2);border-radius:8px;padding:4px 6px;font-family:inherit}
 .fd-sel{font-weight:700}
+/* 记账快捷分类 */
+.fmqk{background:var(--bg2);border:1px solid var(--line2);border-radius:12px;padding:10px 12px;margin:2px 0 10px}
+.fmqk-t{font-size:12px;font-weight:700;color:var(--ink-dim);margin:4px 0 6px}
+.fmqk-b{display:flex;flex-wrap:wrap;gap:6px}
+.qk{border:1px solid var(--line2);background:var(--bg);border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--ink);cursor:pointer;font-family:inherit}
+.qk:hover{background:var(--cc,#F09A9A);color:#fff;border-color:transparent}
+.qk-inc{color:#3a8f6f;border-color:#cfe5d9}
+.qk-last{display:block;width:100%;margin-top:8px;border:1px dashed var(--cc,#F09A9A);background:transparent;border-radius:10px;padding:7px;font-size:12.5px;color:var(--ink);cursor:pointer;font-family:inherit}
+.qk-last:hover{background:var(--cc,#F09A9A);color:#fff}
+.dim{color:var(--ink-faint);font-size:12px}
+/* 首页常用 */
+.pins{margin:8px 0 4px}
+.pins-t{font-size:13px;font-weight:800;color:var(--ink);margin-bottom:10px;letter-spacing:.5px}
+.pins-b{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pincard{background:var(--bg2);border:1px solid var(--line2);border-radius:16px;padding:16px 14px;cursor:pointer;transition:.18s;box-shadow:0 4px 14px rgba(0,0,0,.04)}
+.pincard:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.pincard .pi{font-size:22px;line-height:1}
+.pincard .pn{font-weight:800;font-size:15px;margin-top:8px}
+.pincard .pd{font-size:12px;color:var(--ink-dim);margin-top:3px}
+.morewrap{margin-top:14px}
+.morecard{border-style:dashed;background:var(--bg2)}
 </style>
 </head>
 <body>
@@ -962,6 +1029,8 @@ const DATA=[
    {id:'classnotes',ic:'📚',name:'课堂笔记',desc:'按课程整理笔记，写文字、插图、插文件，云端同步',feat:['课程分组','文字笔记','图片/文件附件'],special:'classnotes'}
  ]},
  {id:'utility',ic:'◇',name:'实用功能',en:'UTILITY',desc:'日子、日程、习惯、备忘录、菜谱、网址收藏、番茄钟与密码',cc:'#9FB8C8',sub:[
+   {id:'sop',ic:'📋',name:'个人SOP',desc:'沉淀你的个人标准流程：每个步骤都能一键计入待办，按时推进',feat:['创建多个 SOP 流程','步骤清单管理','一键计入今日待办'],rows:[],special:'sop'},
+   {id:'timeline',ic:'⏳',name:'每日时间轴',desc:'课表 + 日程 + 待办整合到一条时间轴，可改任意日期、打勾、添加事项',feat:['课表/日程/待办整合','可回看与编辑前一天','待办直接打勾','一键添加事项'],rows:[],special:'timeline'},
    {id:'days',ic:'📅',name:'倒数日 / 正数日',desc:'选择目标日期，自动计算倒数或正数天数',feat:['日期选择器','倒数/正数自动计算','备注记录'],cols:['事项','日期','类型'],fields:['事项','日期','类型'],rows:[]},
    {id:'memorial',ic:'🎈',name:'重要日子',desc:'生日、纪念日、还款日…标准日期记录，到日子自动出现在今日提醒',feat:['类型分类','标准日期','自动提醒'],rows:[],special:'memorial'},
    {id:'schedule',ic:'🗓',name:'日程安排',desc:'时间轴 + 年/月视图，每项安排既有时间点也有时间段',feat:['时间轴模式','时间点+时间段','年月图视图','新增与删除'],rows:[],special:'schedule'},
@@ -1218,7 +1287,7 @@ async function handleGbDelete(val){
 
 
 /* ============ 导航状态 ============ */
-const state={module:null,sub:null,guest:false,sched:null,rtab:'books'};
+const state={module:null,sub:null,guest:false,sched:null,rtab:'books',ttWeek:5};
 const $=(s)=>document.querySelector(s);
 const app=$('#app'),view=$('#view'),topbar=$('#topbar'),results=$('#results'),search=$('#search');
 const splash=$('#splash'),fm=$('#formModal');
@@ -1264,25 +1333,44 @@ function donutChart(data){
   <div class="legend">${data.map(d=>`<span><i style="background:${d[2]}"></i>${d[0]} ${d[1]}%</span>`).join('')}</div>`;
 }
 /* ============ 渲染 ============ */
-function renderHome(){
+function renderPins(){
+  const pins=[
+    ['sub-money-flow','📒','记账','随手记一笔收支','#F09A9A'],
+    ['sub-utility-course','🗒','课表','本周课程一目了然','#9FB8C8'],
+    ['sub-growth-mood','🌈','心情','今天心情怎么样','#E88CA8'],
+    ['sub-todo-todo','☑','待办','今天要做的事','#E88CA8'],
+    ['sub-utility-schedule','🗓','日程','安排与计划','#9FB8C8'],
+    ['sub-utility-timeline','⏳','时间轴','课表+日程+待办','#F6DFA8']
+  ];
+  return `<div class="pins">
+    <div class="pins-t">✨ 我的常用</div>
+    <div class="pins-b">${pins.map(p=>`<div class="pincard" data-nav="${p[0]}" style="--cc:${p[3]}"><div class="pi">${p[1]}</div><div class="pn">${p[2]}</div><div class="pd">${p[4]}</div></div>`).join('')}</div>
+  </div>`;
+}
+function moduleCard(m){
+  return `<div class="card" data-nav="module-${m.id}" style="--cc:${m.cc}">
+    <span class="topline"></span>
+    <div class="body">
+      <div class="emo">${m.ic}</div>
+      <h3>${esc(m.name)}</h3>
+      <div class="en">${m.en}</div>
+      <div class="bd">${esc(m.desc)}</div>
+      <div class="badges">${m.sub.slice(0,4).map(s=>`<span class="badge">${esc(s.name)}</span>`).join('')}</div>
+    </div>
+    <div class="cnt">${countRows(m.id)} 条记录</div>
+  </div>`;
+}
+function renderMore(){
+  state.more=true;
   const gbCount=gbList().length;
   view.innerHTML=`
-    <nav class="crumbs"><span class="cur">Chelsea's room · 首页</span></nav>
-    <div class="deco">✦ Chelsea's room ✦</div>
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><span class="cur">全部功能</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">ALL · FEATURES</div><h1>🗂 全部功能</h1><p>所有模块都在这里了，常用功能已放在首页，按需使用即可。</p></div>
+    </div>
     ${renderQuickAccess()}
     <div class="grid">
-      ${DATA.map(m=>`
-        <div class="card" data-nav="module-${m.id}" style="--cc:${m.cc}">
-          <span class="topline"></span>
-          <div class="body">
-            <div class="emo">${m.ic}</div>
-            <h3>${esc(m.name)}</h3>
-            <div class="en">${m.en}</div>
-            <div class="bd">${esc(m.desc)}</div>
-            <div class="badges">${m.sub.slice(0,4).map(s=>`<span class="badge">${esc(s.name)}</span>`).join('')}</div>
-          </div>
-          <div class="cnt">${countRows(m.id)} 条记录</div>
-        </div>`).join('')}
+      ${DATA.map(m=>moduleCard(m)).join('')}
       <div class="card" data-nav="guest" style="--cc:#E88CA8">
         <span class="topline"></span>
         <div class="body">
@@ -1293,10 +1381,50 @@ function renderHome(){
           <div class="badges"><span class="badge">已收到 ${gbCount} 条</span><span class="badge">留言发送 ♡</span></div>
         </div>
       </div>
+    </div>`;
+}
+function renderHome(){
+  view.innerHTML=`
+    <nav class="crumbs"><span class="cur">Chelsea's room · 首页</span></nav>
+    <div class="deco">✦ Chelsea's room ✦</div>
+    ${renderPins()}
+    <div class="morewrap">
+      <div class="card morecard" data-nav="more">
+        <span class="topline"></span>
+        <div class="body">
+          <div class="emo">🗂</div>
+          <h3>更多功能</h3>
+          <div class="en">ALL FEATURES</div>
+          <div class="bd">记账之外的全部模块：健康、学习、成长、日程、习惯、物资、时间轴……点这里展开</div>
+          <div class="badges"><span class="badge">共 ${DATA.length} 大模块</span><span class="badge">展开全部</span></div>
+        </div>
+        <div class="cnt">点击进入全部功能</div>
+      </div>
     </div>
 `;
 }
 
+
+function subGridCard(m,s){
+  return `<div class="subcard" data-nav="sub-${m.id}-${s.id}" style="--cc:${m.cc}">
+    <div class="ic">${s.ic}</div><h4>${esc(s.name)}</h4>
+    <div class="de">${esc(s.desc)}</div>
+    <div class="go">进入 → ${s.special?'专属视图':`(${loadRows(m.id,s.id).length} 条)`}</div></div>`;
+}
+function renderSubgrid(m){
+  // 实用功能按类别分组，其它模块保持平铺
+  if(m.id!=='utility')return `<div class="subgrid">${m.sub.map(s=>subGridCard(m,s)).join('')}</div>`;
+  const groups=[
+    ['🕐 时间与计划',['timeline','schedule','days','memorial','reminders','course']],
+    ['⚡ 效率与习惯',['habit','pomodoro','sop']],
+    ['📚 备忘与资料',['memo','work','vault','recipe','bookmark']]
+  ];
+  return groups.map(g=>{
+    const subs=m.sub.filter(s=>g[1].includes(s.id));
+    if(!subs.length)return '';
+    return `<div class="subgrp"><h3>${g[0]}</h3><div class="subgrid">${subs.map(s=>subGridCard(m,s)).join('')}</div></div>`;
+  }).join('');
+}
 function renderModule(mid){
   const m=findModule(mid); if(!m)return renderHome();
   state.module=mid;state.sub=null;state.guest=false;state.sched=null;
@@ -1311,15 +1439,8 @@ function renderModule(mid){
       <div class="stat">${m.sub.length} 项子功能<br>${m.sub.map(s=>esc(s.name)).join(' · ')}</div>
     </div>
     <div class="deco">✦ ${esc(m.name)} ✦</div>
-    <div class="subgrid">
-      ${m.sub.map(s=>`
-        <div class="subcard" data-nav="sub-${m.id}-${s.id}" style="--cc:${m.cc}">
-          <div class="ic">${s.ic}</div>
-          <h4>${esc(s.name)}</h4>
-          <div class="de">${esc(s.desc)}</div>
-          <div class="go">进入 → ${s.special?'专属视图':`(${loadRows(m.id,s.id).length} 条)`}</div>
-        </div>`).join('')}
-    </div>`;
+    ${renderSubgrid(m)}
+    `;
 }
 
 /* 资金月年统计：基于真实收支数据 + 收支月历 */
@@ -1583,6 +1704,155 @@ function renderTodo(mid){
     document.getElementById('tdTxt').value='';render();
   });
 }
+
+/* ---------- 每日时间轴：课表 + 日程 + 待办整合 ---------- */
+function tlWkName(ds){const p=String(ds).split('-');return ['周日','周一','周二','周三','周四','周五','周六'][new Date(+p[0],+p[1]-1,+p[2]).getDay()];}
+function tlShift(n){const p=String(state.tlDay||nowStr()).split('-');const d=new Date(+p[0],+p[1]-1,+p[2]);d.setDate(d.getDate()+n);state.tlDay=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');render();}
+function tlMin(hhmm){const p=String(hhmm||'00:00').split(':');return (+p[0])*60+(+p[1]);}
+function tlCourseTime(c){const r=TT_ROWS.find(x=>x.t===c.time);if(!r||!r.tm)return null;const s=r.tm.split('-');return {st:tlMin(s[0]),en:s[1]?tlMin(s[1]):tlMin(s[0])+95};}
+function openTLForm(date){
+  fmMeta={type:'tl',date:date||state.tlDay||nowStr()};
+  $('#fmTitle').textContent='＋ 添加事项 · '+fmMeta.date;
+  $('#fmDesc').textContent='选类型：日程（带时间）或待办（打勾）';
+  $('#fmFields').innerHTML=`
+    <label>类型</label><select data-f="0"><option value="sched">日程（定时安排）</option><option value="todo">待办（可打勾）</option></select>
+    <label>事项</label><input data-f="1" type="text" placeholder="做什么？" autocomplete="off">
+    <label>开始时间（日程用）</label><input data-f="2" type="time" value="${nowTime()}">
+    <label>结束时间（可选）</label><input data-f="3" type="time">
+    <label>优先级</label><select data-f="4"><option value="normal">一般</option><option value="important">重要</option><option value="easy">轻松</option></select>`;
+  fm.classList.add('show');
+}
+function saveTLForm(){
+  if(!fmMeta||fmMeta.type!=='tl')return;
+  const kind=$('[data-f="0"]').value;
+  const txt=$('[data-f="1"]').value.trim();
+  if(!txt){closeForm();return;}
+  const date=fmMeta.date;
+  const pri=$('[data-f="4"]').value||'normal';
+  if(kind==='todo'){
+    const t=loadTodo();t.push({id:String(Date.now()),txt,pri,due:date,done:0,ts:Date.now()});saveTodo(t);
+  }else{
+    const t=$('[data-f="2"]').value||'';
+    const e=$('[data-f="3"]').value||'';
+    const sched=loadSched();if(!sched[date])sched[date]=[];sched[date].push({t:t||'--:--',e,x:txt,p:pri,ts:Date.now()});saveSched(sched);
+  }
+  closeForm();render();
+}
+
+/* ---------- 个人SOP：流程 + 步骤一键计入待办 ---------- */
+function loadSOP(){try{const r=localStorage.getItem(PREFIX+'sop');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
+function saveSOP(s){try{localStorage.setItem(PREFIX+'sop',JSON.stringify(s));}catch(e){}}
+function openSopForm(){
+  fmMeta={type:'sop'};
+  $('#fmTitle').textContent='新建个人SOP';
+  $('#fmDesc').textContent='写一个你常做的流程，步骤可以逐条计入待办';
+  $('#fmFields').innerHTML=`
+    <label>SOP 名称</label><input data-f="0" type="text" placeholder="例如：每周复盘 / 出门清单" autocomplete="off">
+    <label>一句话说明（可选）</label><input data-f="1" type="text" placeholder="这个流程用来做什么？" autocomplete="off">`;
+  fm.classList.add('show');
+}
+function saveSopForm(){
+  if(!fmMeta||fmMeta.type!=='sop')return;
+  const name=$('[data-f="0"]').value.trim();if(!name){closeForm();return;}
+  const desc=$('[data-f="1"]').value.trim();
+  const s=loadSOP();s.push({id:String(Date.now()),name,desc,steps:[],ts:Date.now()});saveSOP(s);
+  closeForm();render();
+}
+function renderUtilitySop(mid){
+  const m=findModule(mid);if(!m)return renderModule(mid);
+  const s=m.sub.find(x=>x.special==='sop');
+  state.module=mid;state.sub=s?s.id:null;state.guest=false;state.sched=null;
+  const sop=loadSOP();
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-utility">实用功能</button><span class="sep">/</span><span class="cur">个人SOP</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">UTILITY · SOP</div><h1>📋 个人SOP</h1><p>把你常做的流程沉淀下来，每个步骤都能一键变成今天的待办。</p></div>
+      <div class="stat">${sop.length} 个流程</div>
+    </div>
+    <div class="deco">✦ 我的标准流程 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph" style="margin:0"><span class="ic">📋</span> 流程清单</div>
+        <button class="addbtn" data-sopadd style="--cc:${m.cc}">＋ 新建SOP</button></div>
+        <div class="pd">点步骤右侧的「计入待办」→ 自动加进今天的待办，做完直接打勾。</div>
+        <div class="soplist">${sop.length?sop.map(sopItem).join(''):`<div class="empty">还没有 SOP，点「新建SOP」开始沉淀第一个流程吧</div>`}</div>
+      </div>
+    </div>`;
+}
+function sopItem(p){
+  return `<div class="sopcard">
+    <div class="sophead">
+      <div><b>${esc(p.name)}</b>${p.desc?`<div class="de">${esc(p.desc)}</div>`:''}</div>
+      <div class="sopacts"><button class="minibtn" data-sopstep="${p.id}">＋步骤</button><button class="minibtn danger" data-sopdel="${p.id}">删除</button></div>
+    </div>
+    <div class="sopsteps">${p.steps.length?p.steps.map((st,ix)=>`
+      <div class="sopstep"><span class="sopno">${ix+1}</span><span class="soptxt">${esc(st)}</span>
+        <button class="minibtn" data-sop2todo="${p.id}__${ix}" style="--cc:#E88CA8">计入待办</button>
+        <button class="minibtn danger" data-soprm="${p.id}__${ix}">×</button></div>`).join(''):`<span class="empty" style="display:block;padding:6px">还没有步骤，点「＋步骤」添加</span>`}
+    </div>
+  </div>`;
+}
+function sopAddStep(id){
+  const txt=prompt('输入这一步骤做什么：');
+  if(!txt||!txt.trim())return;
+  const s=loadSOP();const p=s.find(x=>x.id===id);if(p){p.steps.push(txt.trim());saveSOP(s);render();}
+}
+function sopStepToTodo(id,ix){
+  const p=loadSOP().find(x=>x.id===id);if(!p||!p.steps[ix])return;
+  const t=loadTodo();t.push({id:String(Date.now()),txt:p.steps[ix],pri:'normal',due:nowStr(),done:0,ts:Date.now()});saveTodo(t);
+  toast('已计入今日待办 ✿');render();
+}
+function renderTimeline(mid){
+  const m=findModule(mid);if(!m)return renderModule(mid);
+  const s=m.sub.find(x=>x.special==='timeline');
+  state.module=mid;state.sub=s?s.id:null;state.guest=false;state.sched=null;
+  if(!state.tlDay||!/^\d{4}-\d{2}-\d{2}$/.test(state.tlDay))state.tlDay=nowStr();
+  const today=nowStr();
+  const tt=loadTT(),sched=loadSched(),todo=loadTodo();
+  const dayName=tlWkName(state.tlDay);
+  const ev=[];
+  tt.forEach(c=>{if(c.day===dayName){const t=tlCourseTime(c);if(t)ev.push({kind:'course',st:t.st,en:t.en,title:c.name,sub:(c.time||'')+(c.loc?('·'+c.loc):''),color:c.color||'#9FB8C8',key:'c_'+c.name});}});
+  (sched[state.tlDay]||[]).forEach(it=>{const st=it.t&&it.t!=='--:--'?tlMin(it.t):0;ev.push({kind:'sched',st,en:it.e?tlMin(it.e):(st+60),title:it.x||it.n||'日程',sub:(it.t&&it.t!=='--:--'?(it.t+(it.e?('-'+it.e):'')):''),color:priColor(it.p||it.pri||'normal'),key:'s_'+it.ts});});
+  ev.sort((a,b)=>a.st-b.st||a.en-b.en);
+  const dayTodo=todo.filter(x=>x.due===state.tlDay);
+  const slots=[];for(let hh=7;hh<=22;hh++){const start=hh*60;slots.push({hh,items:ev.filter(e=>e.st>=start&&e.st<start+60)});}
+  function evHTML(e){
+    const lab=e.kind==='course'?'课':e.kind==='sched'?'程':'待';
+    return `<div class="tlev ${e.kind}" style="border-left-color:${e.color}"><span class="tlkind">${lab}</span><b>${esc(e.title)}</b>${e.sub?`<span class="tldet">${esc(e.sub)}</span>`:''}</div>`;
+  }
+  const slotHTML=slots.map(sl=>{
+    const tm=String(sl.hh).padStart(2,'0')+':00';
+    return `<div class="tlslot"><div class="tlt">${tm}</div><div class="tlc">${sl.items.length?sl.items.map(evHTML).join(''):'<span class="tlempty"></span>'}</div></div>`;
+  }).join('');
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-utility">实用功能</button><span class="sep">/</span><span class="cur">每日时间轴</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">UTILITY · TIMELINE</div><h1>⏳ 每日时间轴</h1><p>课表、日程、待办全在一根时间轴上，改日期、打勾、加事都在这 ✿</p></div>
+      <div class="stat">${dayName}</div>
+    </div>
+    <div class="deco">✦ 时间轴 · ${esc(state.tlDay)} ✦</div>
+    <div class="tlnav">
+      <button class="addbtn" data-tlshift="-1">◀ 前一天</button>
+      <input type="date" id="tlDaySel" value="${esc(state.tlDay)}">
+      <button class="addbtn" data-tlshift="1">后一天 ▶</button>
+      <button class="addbtn" data-tlshift="0" style="--cc:#E88CA8">今天</button>
+      <button class="addbtn" data-tladd style="--cc:${m.cc};margin-left:auto">＋ 添加事项</button>
+    </div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">☑</span> 当天待办</div>
+        <div class="pd">把待办写进这一天，做完就点打勾。</div>
+        <div class="tltodos">${dayTodo.length?dayTodo.map(x=>`<div class="tltodo ${x.done?'done':''}"><button class="tdbox ${x.done?'on':''}" data-tldone="${x.id}">${x.done?'✓':''}</button><div class="tdmain"><div class="tdtxt">${esc(x.txt)}</div><div class="tdmeta"><span class="tdpri ${priCls(x.pri)||'normal'}">${x.pri==='important'?'重要':x.pri==='easy'?'轻松':'一般'}</span></div></div><button class="minibtn danger" data-tldel="${x.id}">删除</button></div>`).join(''):`<div class="empty">这一天还没有待办，点右上角「添加事项」选待办即可</div>`}</div>
+      </div>
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">🕐</span> 时间轴</div>
+        <div class="pd">按小时排列：<b class="tll-c">课</b> 课表 · <b class="tll-s">程</b> 日程 · 待办在上方。</div>
+        <div class="tllist">${slotHTML}</div>
+      </div>
+    </div>`;
+  const ds=document.getElementById('tlDaySel');
+  if(ds)ds.addEventListener('change',()=>{state.tlDay=ds.value||nowStr();render();});
+}
 function renderSchedule(mid){
   const sched=loadSched();
   const today=nowStr();
@@ -1812,17 +2082,61 @@ const TT_ROWS=[
 const TT_COLORS=['#E88CA8','#F09A9A','#B7D8C8','#F6DFA8','#CDBBE6','#9FB8C8'];
 function loadTT(){try{const r=localStorage.getItem(PREFIX+'course');if(r!==null)return JSON.parse(r);}catch(e){}return [];}
 function saveTT(t){try{localStorage.setItem(PREFIX+'course',JSON.stringify(t));}catch(e){}}
-const SCHEDULE_INIT=[{"day": "周一", "period": "上午", "name": "大学英语读写(1)-B★", "time": "1-2节", "loc": "D317", "note": "滕超 · 3-17周", "color": "#E88CA8"}, {"day": "周一", "period": "上午", "name": "Python程序设计★", "time": "3-4节", "loc": "C108A", "note": "李冰 · 3-17周", "color": "#B7D8C8"}, {"day": "周一", "period": "下午", "name": "微积分(1)★", "time": "7-8节", "loc": "B304", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周一", "period": "晚上", "name": "微观经济学★", "time": "9-11节", "loc": "C102", "note": "甄伟 · 3-17周", "color": "#9FB8C8"}, {"day": "周一", "period": "晚上", "name": "大学生劳动教育★", "time": "12-13节", "loc": "C202", "note": "李竹 · 3-9周讲课/10-14周实践", "color": "#9FB8C8"}, {"day": "周二", "period": "上午", "name": "基础会计★", "time": "3-5节", "loc": "B210", "note": "朱忆琳 · 3-17周", "color": "#E88CA8"}, {"day": "周二", "period": "晚上", "name": "微积分(1)★", "time": "12-13节", "loc": "B406", "note": "刘红丽 · 3-17周", "color": "#F6DFA8"}, {"day": "周三", "period": "上午", "name": "大学英语听说(1)-B★", "time": "3-4节", "loc": "D210", "note": "蔡小燕 · 3-17周", "color": "#E88CA8"}, {"day": "周三", "period": "下午", "name": "Python程序设计○", "time": "7-8节", "loc": "E401", "note": "李冰 · 3-17周 实验", "color": "#B7D8C8"}, {"day": "周三", "period": "晚上", "name": "思想道德与法治★", "time": "9-11节", "loc": "B406", "note": "王亚丽 · 3-17周", "color": "#F09A9A"}, {"day": "周三", "period": "晚上", "name": "习近平新时代中国特色社会主义思想概论★", "time": "12-14节", "loc": "C402", "note": "朱家明 · 3-17周", "color": "#F09A9A"}, {"day": "周四", "period": "上午", "name": "中共党史★", "time": "3-4节", "loc": "A201", "note": "侯馨茹 · 10-17周", "color": "#F09A9A"}, {"day": "周四", "period": "下午", "name": "形势与政策(1)★", "time": "7-8节", "loc": "C401", "note": "高聪颖 · 10-13周", "color": "#CDBBE6"}, {"day": "周四", "period": "晚上", "name": "人工智能导论○", "time": "9-10节", "loc": "E305", "note": "章华 · 13-16周 实验", "color": "#B7D8C8"}, {"day": "周五", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 4-17周", "color": "#9FB8C8"}, {"day": "周五", "period": "下午", "name": "人工智能导论★", "time": "7-8节", "loc": "C402(单)/在线(双)", "note": "聂佳浩 · 5-15周单/6-16周双", "color": "#CDBBE6"}, {"day": "周日", "period": "上午", "name": "公共体育(1)★", "time": "3-4节", "loc": "下沙体育场馆", "note": "杨连芳 · 第1周", "color": "#9FB8C8"}];
+const SCHEDULE_INIT=[
+{"day":"周一","period":"上午","name":"大学英语读写(1)-B★","time":"1-2节","loc":"D317","note":"滕超 · 3-17周","wk":"3-17","color":"#E88CA8"},
+{"day":"周一","period":"上午","name":"Python程序设计★","time":"3-4节","loc":"C108A","note":"李冰 · 3-17周","wk":"3-17","color":"#B7D8C8"},
+{"day":"周一","period":"下午","name":"微积分(1)★","time":"7-8节","loc":"B304","note":"刘红丽 · 3-17周","wk":"3-17","color":"#F6DFA8"},
+{"day":"周一","period":"晚上","name":"微观经济学★","time":"9-11节","loc":"C102","note":"甄伟 · 3-17周","wk":"3-17","color":"#9FB8C8"},
+{"day":"周二","period":"上午","name":"基础会计★","time":"3-5节","loc":"B210","note":"朱忆琳 · 3-17周","wk":"3-17","color":"#E88CA8"},
+{"day":"周二","period":"晚上","name":"大学生劳动教育★/●","time":"12-13节","loc":"C202","note":"李竹 · 3-9讲课/10-14实践","wk":"3-14","color":"#9FB8C8"},
+{"day":"周三","period":"上午","name":"大学英语听说(1)-B★","time":"3-4节","loc":"D210","note":"蔡小燕 · 3-17周","wk":"3-17","color":"#E88CA8"},
+{"day":"周三","period":"下午","name":"Python程序设计○","time":"7-8节","loc":"E401","note":"李冰 · 3-17周 实验","wk":"3-17","color":"#B7D8C8"},
+{"day":"周三","period":"晚上","name":"思想道德与法治★","time":"9-11节","loc":"B406","note":"王亚丽 · 3-17周","wk":"3-17","color":"#F09A9A"},
+{"day":"周三","period":"晚上","name":"微积分(1)★","time":"12-13节","loc":"B406","note":"刘红丽 · 3-17周","wk":"3-17","color":"#F6DFA8"},
+{"day":"周四","period":"上午","name":"中共党史★","time":"3-4节","loc":"A201","note":"侯馨茹 · 10-17周","wk":"10-17","color":"#F09A9A"},
+{"day":"周四","period":"下午","name":"形势与政策(1)★","time":"7-8节","loc":"C401","note":"高聪颖 · 10-13周","wk":"10-13","color":"#CDBBE6"},
+{"day":"周四","period":"晚上","name":"人工智能导论○","time":"9-10节","loc":"E305","note":"章华 · 13-16周 实验","wk":"13-16","color":"#B7D8C8"},
+{"day":"周五","period":"上午","name":"公共体育(1)★","time":"3-4节","loc":"下沙体育场馆","note":"杨连芳 · 4-17周","wk":"4-17","color":"#9FB8C8"},
+{"day":"周五","period":"下午","name":"人工智能导论★","time":"7-8节","loc":"C402(单)/在线(双)","note":"聂佳浩 · 5-15单/6-16双","wk":"5-15单|6-16双","color":"#CDBBE6"},
+{"day":"周五","period":"晚上","name":"习近平新时代中国特色社会主义思想概论★","time":"12-14节","loc":"C402","note":"朱家明 · 3-17周","wk":"3-17","color":"#F09A9A"},
+{"day":"周日","period":"上午","name":"公共体育(1)★","time":"3-4节","loc":"下沙体育场馆","note":"杨连芳 · 第1周","wk":"1","color":"#9FB8C8"}
+];
 function ttInitIfNeeded(){
   try{
     const cur=loadTT();
-    if(!cur||cur.length===0){ saveTT(SCHEDULE_INIT); localStorage.setItem(PREFIX+'course_init','1'); return; }
+    const ver=localStorage.getItem(PREFIX+'course_ver');
+    const hasWk=cur&&cur.some(x=>x&&x.wk);
+    // 课表版本升级：无数据 / 无版本号 / 旧版（无周次）→ 用修正后的新课表整体覆盖（会自动镜像回云端），无需手动重置
+    if(!cur||cur.length===0||ver!=='4'||!hasWk){
+      saveTT(SCHEDULE_INIT);
+      localStorage.setItem(PREFIX+'course_ver','4');
+      localStorage.setItem(PREFIX+'course_init','1');
+      return;
+    }
     let dirty=false;
     SCHEDULE_INIT.forEach(c=>{ if(!cur.some(x=>x.day===c.day&&x.name===c.name)){cur.push(c);dirty=true;} });
     if(dirty)saveTT(cur);
+    localStorage.setItem(PREFIX+'course_ver','4');
     localStorage.setItem(PREFIX+'course_init','1');
   }catch(e){}
 }
+function wkActive(wk, week){
+  if(!wk) return true;
+  const segs=String(wk).split('|');
+  for(const seg of segs){
+    let m=seg.match(/^(\d+)-(\d+)(单|双)?$/);
+    if(m){
+      const a=+m[1],b=+m[2],p=m[3];
+      if(week<a||week>b) continue;
+      if(p==='单'&&week%2===0) continue;
+      if(p==='双'&&week%2===1) continue;
+      return true;
+    }
+    if(/^\d+$/.test(seg)&&week===+seg) return true;
+  }
+  return false;
+}
+function ttWeekUI(){ return `<span class="wkctl">第 <button class="wkbtn" data-wkdec>−</button> <b class="wknum" data-wkset>${state.ttWeek}</b> <button class="wkbtn" data-wkinc>＋</button> 周 <button class="wkbtn" data-wktoday>本周</button></span>`; }
 function renderCourse(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
   state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
@@ -1837,7 +2151,8 @@ function renderCourse(mid,sid){
     <div class="detail">
       <div class="panel" style="--cc:${m.cc}">
         <div class="toolbar"><div class="ph" style="margin:0"><span class="ic">🗒</span> 周课表</div>
-        <button class="addbtn" id="ttAdd" style="--cc:${m.cc}">＋ 添加课程</button></div>
+        <button class="addbtn" id="ttAdd" style="--cc:${m.cc}">＋ 添加课程</button>
+        <button class="addbtn" data-ttreinit style="--cc:#E88CA8">↻ 重置为新课表</button>${ttWeekUI()}</div>
         <table class="timetable">
           <thead><tr><th style="width:56px">时段</th>${TT_DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead>
           <tbody>
@@ -1847,13 +2162,13 @@ function renderCourse(mid,sid){
                 ${TT_DAYS.map(d=>{
                   const items=tt.filter(c=>c.day===d&&c.time===r.t);
                   return `<td data-ttcell="${d}__${r.t}" style="cursor:pointer;min-height:60px">
-                    ${items.map((c,i)=>`<div class="tt-item" style="--cc:${c.color}"><b>${esc(c.name)}</b>${c.loc?('<br>'+esc(c.loc)):''}${c.note?('<br><span style="font-size:10px;opacity:.85">'+esc(c.note)+'</span>'):''}<span class="del" data-ttdel="${d}__${r.t}__${i}">×</span></div>`).join('')}
+                    ${items.map((c,i)=>{const on=wkActive(c.wk,state.ttWeek);return `<div class="tt-item${on?'':' off'}" data-ttedit="${d}__${r.t}__${i}" style="--cc:${c.color}" title="点击编辑"><b>${esc(c.name)}</b>${on?'':'<span class="wkoff">停课</span>'}${c.loc?('<br>'+esc(c.loc)):''}${c.note?('<br><span style="font-size:10px;opacity:.85">'+esc(c.note)+'</span>'):''}<span class="del" data-ttdel="${d}__${r.t}__${i}">×</span></div>`;}).join('')}
                   </td>`;
                 }).join('')}
               </tr>`).join('')}
           </tbody>
         </table>
-        <div class="notice">💾 课表保存在本机浏览器中。</div>
+        <div class="notice">💾 当前第 ${state.ttWeek} 周：标「停课」的本周不上课，可点「本周」回到当前周。课表保存在本机浏览器。</div>
       </div>
     </div>`;
 }
@@ -2746,6 +3061,8 @@ function renderSub(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid); if(!m||!s)return renderModule(mid);
   if(sid==='stats')return renderStats(mid);
   if(s.special==='todo')return renderTodo(mid);
+  if(s.special==='timeline')return renderTimeline(mid);
+  if(s.special==='sop')return renderUtilitySop(mid);
   if(s.special==='schedule')return renderSchedule(mid);
   if(s.special==='body')return renderBody(mid,sid);
   if(s.special==='attach')return renderAttach(mid,sid);
@@ -2827,9 +3144,10 @@ function render(){
   if(state.module&&state.sub==='schedule'&&state.sched)return renderSchedule(state.module);
   if(state.module&&state.sub)return renderSub(state.module,state.sub);
   if(state.module)return renderModule(state.module);
+  if(state.more){renderMore();$('#backBtn').style.display='inline-flex';return;}
   if(document.body.classList.contains('workbench')){view.innerHTML=wbHomeHtml();$('#backBtn').style.display='none';return;}
   renderHome();
-  const home=!state.module&&!state.sub&&!state.guest;
+  const home=!state.module&&!state.sub&&!state.guest&&!state.more;
   $('#backBtn').style.display=home?'none':'inline-flex';
 }
 
@@ -2975,6 +3293,7 @@ function openTTForm(day,period){
     <label>时间</label><input data-f="3" type="text" placeholder="如 3-4节 或 08:00-09:40">
     <label>地点/教师</label><input data-f="4" type="text" placeholder="可选">
     <label>颜色</label><select data-f="5"><option value="0">蔷薇粉</option><option value="1">珊瑚</option><option value="2">薄荷</option><option value="3">杏黄</option><option value="4">雾紫</option><option value="5">雾蓝</option></select>
+    <label>周次（可选）</label><input data-f="7" type="text" placeholder="如 3-17 / 第1周 / 5-15单|6-16双">
     <label>备注（可选）</label><input data-f="6" type="text" placeholder="如 第3周起上课">`;
   fm.classList.add('show');
 }
@@ -2987,13 +3306,13 @@ function saveTTForm(){
     const tt=loadTT();
     const idx=tt.findIndex(c=>c===fmMeta.item);
     if(idx>-1){
-      tt[idx]={...tt[idx],day:gv(0),period:gv(1),name,time:gv(3),loc:gv(4),note:gv(6)||'',color:TT_COLORS[+gv(5)]||TT_COLORS[0]};
+      tt[idx]={...tt[idx],day:gv(0),period:gv(1),name,time:gv(3),loc:gv(4),wk:(gv(7)||'').trim()||tt[idx].wk||'',note:gv(6)||'',color:TT_COLORS[+gv(5)]||TT_COLORS[0]};
       saveTT(tt);
     }
     closeForm();render();return;
   }
   const tt=loadTT();
-  tt.push({day:gv(0),period:gv(1),name,time:gv(3),loc:gv(4),note:gv(6)||'',color:TT_COLORS[+gv(5)]||TT_COLORS[0],ts:Date.now()});
+  tt.push({day:gv(0),period:gv(1),name,time:gv(3),loc:gv(4),wk:(gv(7)||'').trim()||'',note:gv(6)||'',color:TT_COLORS[+gv(5)]||TT_COLORS[0],ts:Date.now()});
   saveTT(tt);closeForm();render();
 }
 /* 心情打卡弹窗 */
@@ -3075,6 +3394,21 @@ document.addEventListener('click',e=>{
   const tdDel=e.target.closest('[data-tododel]');if(tdDel){saveTodo(loadTodo().filter(x=>String(x.id)!==tdDel.dataset.tododel));render();return;}
   const tdEdit=e.target.closest('[data-todoedit]');if(tdEdit){openTodoForm(tdEdit.dataset.todoedit);return;}
   const tdF=e.target.closest('[data-todofilter]');if(tdF){state.todoF=tdF.dataset.todofilter;render();return;}
+    const tlShift2=e.target.closest('[data-tlshift]');if(tlShift2){tlShift(+tlShift2.dataset.tlshift);return;}
+  const tlAdd=e.target.closest('[data-tladd]');if(tlAdd){openTLForm(state.tlDay||nowStr());return;}
+  const tldone=e.target.closest('[data-tldone]');if(tldone){const tl=loadTodo();const it=tl.find(x=>String(x.id)===tldone.dataset.tldone);if(it){it.done=it.done?0:1;saveTodo(tl);render();}return;}
+  const tldel=e.target.closest('[data-tldel]');if(tldel){saveTodo(loadTodo().filter(x=>String(x.id)!==tldel.dataset.tldel));render();return;}
+    const ttRe=e.target.closest('[data-ttreinit]');if(ttRe){if(!confirm('确认将课表重置为新学期课表？旧课表会被覆盖。'))return;saveTT(JSON.parse(JSON.stringify(SCHEDULE_INIT)));render();toast('已重置为新学期课表');return;}
+    const sopAdd=e.target.closest('[data-sopadd]');if(sopAdd){openSopForm();return;}
+  const sopStep=e.target.closest('[data-sopstep]');if(sopStep){sopAddStep(sopStep.dataset.sopstep);return;}
+  const sop2t=e.target.closest('[data-sop2todo]');if(sop2t){const pr=sop2t.dataset.sop2todo.split('__');sopStepToTodo(pr[0],+pr[1]);return;}
+  const sopRm=e.target.closest('[data-soprm]');if(sopRm){const pr=sopRm.dataset.soprm.split('__');const s=loadSOP();const p=s.find(x=>x.id===pr[0]);if(p){p.steps.splice(+pr[1],1);saveSOP(s);render();}return;}
+  const sopDel=e.target.closest('[data-sopdel]');if(sopDel){if(!confirm('删除这个SOP？'))return;saveSOP(loadSOP().filter(x=>x.id!==sopDel.dataset.sopdel));render();return;}
+   const wkinc=e.target.closest('[data-wkinc]'); if(wkinc){state.ttWeek=Math.min(30,state.ttWeek+1);render();return;}
+   const wkdec=e.target.closest('[data-wkdec]'); if(wkdec){state.ttWeek=Math.max(1,state.ttWeek-1);render();return;}
+   const wkset=e.target.closest('[data-wkset]'); if(wkset){const w=prompt('当前教学周（1-30）',state.ttWeek);if(w&&+w>0&&+w<=30){state.ttWeek=+w;render();}return;}
+   const wktoday=e.target.closest('[data-wktoday]'); if(wktoday){state.ttWeek=5;render();return;}
+
   const addS=e.target.closest('[data-addsched]');
   if(addS){openSchedForm(addS.dataset.addsched);return;}
   const addP=e.target.closest('[data-addplan]');
@@ -3248,19 +3582,28 @@ document.addEventListener('click',e=>{
   // 课表
   const ttAdd=e.target.closest('#ttAdd');
   if(ttAdd){openTTForm();return;}
-  const ttcell=e.target.closest('[data-ttcell]');
-  if(ttcell){const [day,period]=ttcell.dataset.ttcell.split('__');openTTForm(day,period);return;}
-  // 课表修改：点击课程项时弹出编辑表单
-  const ttdel2=e.target.closest('[data-ttdel]');
-  if(ttdel2){
-    const [day,period,i]=ttdel2.dataset.ttdel.split('__');
+  // 课表删除：点 × 删除该课程
+  const ttdel=e.target.closest('[data-ttdel]');
+  if(ttdel){
+    const [day,time,i]=ttdel.dataset.ttdel.split('__');
     const tt=loadTT();
-    const dayItems=tt.filter(c=>c.day===day&&c.time===period);
-    const item=dayItems[+i];
+    const item=tt.filter(c=>c.day===day&&c.time===time)[+i];
+    const idx=tt.indexOf(item);
+    if(idx>-1&&confirm('删除这门课？')){
+      tt.splice(idx,1);saveTT(tt);render();
+    }
+    return;
+  }
+  // 课表编辑：点课程弹出编辑表单
+  const ttedit=e.target.closest('[data-ttedit]');
+  if(ttedit){
+    const [day,time,i]=ttedit.dataset.ttedit.split('__');
+    const tt=loadTT();
+    const item=tt.filter(c=>c.day===day&&c.time===time)[+i];
     if(item){
       fmMeta={type:'tt_edit',day,item};
       $('#fmTitle').textContent='✏ 编辑课程';
-      $('#fmDesc').textContent='修改课程信息';
+      $('#fmDesc').textContent='修改课程信息（周次如 3-17 / 第1周 / 单双周）';
       const dayIdx=TT_DAYS.indexOf(item.day);
       const periodIdx=TT_PERIODS.indexOf(item.period);
       $('#fmFields').innerHTML=`
@@ -3269,14 +3612,17 @@ document.addEventListener('click',e=>{
         <label>课程名</label><input data-f="2" type="text" value="${esc(item.name)}">
         <label>时间</label><input data-f="3" type="text" value="${esc(item.time||'')}">
         <label>地点/教师</label><input data-f="4" type="text" value="${esc(item.loc||'')}">
-        <label>备注</label><input data-f="6" type="text" value="${esc(item.note||'')}">
-        <label>颜色</label><select data-f="5">${TT_COLORS.map((c,idx)=>`<option value="${idx}" ${c===item.color?'selected':''}>${['蔷薇粉','珊瑚','薄荷','杏黄','雾紫','雾蓝'][idx]}</option>`).join('')}</select>`;
+        <label>周次</label><input data-f="7" type="text" value="${esc(item.wk||'')}" placeholder="如 3-17 / 第1周 / 5-15单|6-16双">
+        <label>颜色</label><select data-f="5">${TT_COLORS.map((c,idx)=>`<option value="${idx}" ${c===item.color?'selected':''}>${['蔷薇粉','珊瑚','薄荷','杏黄','雾紫','雾蓝'][idx]}</option>`).join('')}</select>
+        <label>备注</label><input data-f="6" type="text" value="${esc(item.note||'')}">`;
       fm.classList.add('show');
     }
     return;
   }
-  const ttdel=e.target.closest('[data-ttdel]');
-  if(ttdel){const [day,period,i]=ttdel.dataset.ttdel.split('__');const tt=loadTT();const idx=tt.findIndex(c=>c.day===day&&c.period===period&&tt.filter(x=>x.day===day&&x.period===period)[+i]===c);if(idx>-1){tt.splice(idx,1);saveTT(tt);render();}return;}
+  // 课表添加：点空格子添加课程
+  const ttcell=e.target.closest('[data-ttcell]');
+  if(ttcell){const [day,period]=ttcell.dataset.ttcell.split('__');openTTForm(day,period);return;}
+
   // 心情打卡 / 删除
   const moodday=e.target.closest('[data-moodday]');
   if(moodday){openMoodForm(moodday.dataset.moodday);return;}
@@ -3295,6 +3641,8 @@ $('#fmSave').addEventListener('click',()=>{
   else if(fmMeta&&fmMeta.type==='tt_edit')saveTTForm();
   else if(fmMeta&&fmMeta.type==='mood')saveMoodForm();
   else if(fmMeta&&fmMeta.type==='todo')saveTodoForm();
+  else if(fmMeta&&fmMeta.type==='tl')saveTLForm();
+  else if(fmMeta&&fmMeta.type==='sop')saveSopForm();
   else if(fmMeta&&fmMeta.type==='plan')savePlanForm();
   else if(fmMeta&&fmMeta.type==='hablog')saveHabitLogForm();
   else if(fmMeta&&fmMeta.type==='readq')saveReadForm('readq');
@@ -3569,14 +3917,16 @@ document.addEventListener('click',e=>{
 
 /* ============ 导航 ============ */
 function navigate(nav){
-  if(nav==='home'){state.module=null;state.sub=null;state.guest=false;state.sched=null;state.rtab='books';}
-  else if(nav==='guest'){state.guest=true;state.module=null;state.sub=null;state.sched=null;}
-  else if(nav.startsWith('module-')){state.module=nav.slice(7);state.sub=null;state.guest=false;state.sched=null;}
-  else if(nav.startsWith('sub-')){const p=nav.slice(4).split('-');state.module=p[0];state.sub=p[1];state.guest=false;state.sched=null;}
+  if(nav==='home'){state.more=false;state.module=null;state.sub=null;state.guest=false;state.sched=null;state.rtab='books';}
+  else if(nav==='more'){state.more=true;state.module=null;state.sub=null;state.guest=false;state.sched=null;}
+  else if(nav==='guest'){state.more=false;state.guest=true;state.module=null;state.sub=null;state.sched=null;}
+  else if(nav.startsWith('module-')){state.more=false;state.module=nav.slice(7);state.sub=null;state.guest=false;state.sched=null;}
+  else if(nav.startsWith('sub-')){state.more=false;const p=nav.slice(4).split('-');state.module=p[0];state.sub=p[1];state.guest=false;state.sched=null;}
   render();scrollTo(0,0);
 }
 function back(){
   if(state.guest){state.guest=false;render();}
+  else if(state.more){state.more=false;render();}
   else if(state.sched){state.sched=null;state.sub='schedule';render();}
   else if(state.sub){state.sub=null;render();}
   else if(state.module){state.module=null;render();}
@@ -5189,6 +5539,49 @@ function renderFlowEnhanced(mid, sid) {
   const prefix = state.flowMonth;
   const monthStat = flowMonthStat(dayMap, prefix);
   const monthInc = monthStat.inc, monthExp = monthStat.exp, monthCnt = monthStat.cnt;
+  /* 明细：带原始索引，按日期降序（最新在前） */
+  const rowsIndexed = rows.map((r, i) => ({ r, i })).sort((a, b) => String((b.r.vals || [])[2] || '').localeCompare(String((a.r.vals || [])[2] || '')));
+  /* 搜索过滤：按大分类 / 小分类 / 备注 */
+  const kw = (state.flowQ || '').trim().toLowerCase(), dim = state.flowQDim || 'all';
+  const shown = rowsIndexed.filter(({ r }) => {
+    const v = r.vals || []; const c = (v[0] || '').toLowerCase(), sub = (v[4] || '').toLowerCase(), rk = (v[5] || '').toLowerCase();
+    if (!kw) return true;
+    if (dim === 'cat') return c.includes(kw);
+    if (dim === 'sub') return sub.includes(kw);
+    if (dim === 'remark') return rk.includes(kw);
+    return (c + ' ' + sub + ' ' + rk).includes(kw);
+  });
+  /* 收支月历 */
+  const first = new Date(fy, fm - 1, 1).getDay();
+  const daysInMonth = new Date(fy, fm, 0).getDate();
+  const today = nowStr();
+  let cells = '';
+  ['一','二','三','四','五','六','日'].forEach(h => cells += `<div class="mh">${h}</div>`);
+  for (let i = 0; i < first; i++) cells += `<div class="md blank"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${fy}-${String(fm).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dm = dayMap[ds];
+    const tip = dm ? ((((dm.inc?'收入 ¥'+dm.inc.toFixed(2)+'  ':'')+(dm.exp?'支出 ¥'+dm.exp.toFixed(2):''))||'无记录')) : '无记录';
+    const on = state.flowDay === ds;
+    cells += `<div class="md ${ds===today?'today':''} ${on?'sel':''}" data-flowday="${ds}" title="${tip}">
+      <div class="dn">${d}</div>
+      ${dm&&dm.inc?`<div class="dv" style="color:var(--mint)">+${dm.inc.toFixed(0)}</div>`:''}
+      ${dm&&dm.exp?`<div class="dv" style="color:var(--coral)">-${dm.exp.toFixed(0)}</div>`:''}
+    </div>`;
+  }
+  const selDay = state.flowDay && state.flowDay.startsWith(prefix) ? state.flowDay : null;
+  const selItems = selDay ? (dayMap[selDay] ? dayMap[selDay].items : []) : [];
+  const dayDetailHTML = selDay ? `
+    <div style="margin-top:12px;padding:12px 14px;background:#FDF0F5;border:1px solid var(--line);border-radius:12px">
+      <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px">📅 ${selDay} 收支明细（${selItems.length} 笔）</div>
+      ${selItems.length?selItems.map(it=>`<div style="font-size:13px;padding:4px 0;border-bottom:1px dashed var(--line)">
+        <div style="display:flex;justify-content:space-between">
+          <span>${esc(it.cat)||'未分类'}${it.sub?`<span style="color:var(--ink-faint)"> · ${esc(it.sub)}</span>`:''}${it.remark?`<span style="color:var(--ink-faint)">（${esc(it.remark)}）</span>`:''}</span><span style="${it.type==='income'?'color:var(--mint)':'color:var(--coral)'}">${it.type==='income'?'+':'-'}¥${it.amount.toFixed(2)}</span>
+        </div></div>`).join('')
+        :'<div style="font-size:12.5px;color:var(--ink-faint)">该日暂无收支记录</div>'}
+      <button class="addbtn" data-flowdayadd style="margin-top:8px;font-size:12.5px;--cc:#F09A9A">＋ 记一笔到这天</button>
+      <button class="delbtn" data-flowdayclear style="margin-top:8px;margin-left:6px;font-size:12px">收起</button>
+    </div>` : '';
 
 
   view.innerHTML = `
@@ -5214,16 +5607,30 @@ function renderFlowEnhanced(mid, sid) {
           <div class="kpi"><div class="v">${(monthInc - monthExp) >= 0 ? '+' : ''}¥${(monthInc - monthExp).toFixed(2)}</div><div class="l">本月结余</div></div>
           <div class="kpi"><div class="v">${monthCnt}</div><div class="l">本月笔数</div></div>
         </div>
-        <div class="pd" style="margin-top:6px">想按月历查看每日收支？去「月年统计」吧，那里有完整的月历与图表。</div>
+      </div>
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="ph"><span class="ic">📅</span> ${fy}年${fm}月 收支月历</div>
+        <div class="pd">点某一天查看当天收支；也可以直接点「记一笔到这天」补记那天的账。</div>
+        <div class="monthview">${cells}</div>
+        <div class="flowlegend"><span><i style="background:var(--mint)"></i>收入</span><span><i style="background:var(--coral)"></i>支出</span></div>
+        ${dayDetailHTML}
       </div>
       <div class="panel" style="--cc:#F09A9A">
         <div class="toolbar"><div class="ph"><span class="ic">📒</span> 流水明细</div><button class="addbtn" data-add="${mid}-${sid}" style="--cc:#F09A9A">＋ 新增记录</button></div>
-        <div class="pd">数据自动保存在本机浏览器，刷新不丢失。</div>
+        <div class="flowsearch">
+          <input id="flowQ" value="${esc(state.flowQ||'')}" placeholder="搜索…（如 三餐 / 美团 / 地铁）">
+          <select id="flowQDim">
+            <option value="all" ${dim==='all'?'selected':''}>全部</option>
+            <option value="cat" ${dim==='cat'?'selected':''}>按大分类</option>
+            <option value="sub" ${dim==='sub'?'selected':''}>按小分类</option>
+            <option value="remark" ${dim==='remark'?'selected':''}>按备注</option>
+          </select>
+        </div>
         <table>
           <thead><tr><th style="width:5%">#</th><th>大分类</th><th>小分类</th><th>金额</th><th>日期</th><th>备注</th><th style="width:9%">操作</th></tr></thead>
           <tbody>
-            ${rows.length ? rows.map((r, i) => { const v = r.vals || []; return `
-              <tr><td style="color:var(--ink-faint)">${i + 1}</td><td>${esc(v[0] || '')}</td><td>${esc(v[4] || '') || '—'}</td><td>${esc(v[1] || '')}</td><td>${esc(v[2] || '')}</td><td>${esc(v[5] || '') || '—'}</td><td><button class="editbtn" data-flowedit="${i}">编辑</button> <button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>`; }).join('') : `<tr><td colspan="7"><div class="empty">暂无记录，点击「＋ 新增记录」添加第一条吧</div></td></tr>`}
+            ${shown.length ? shown.map((item, pos) => { const r = item.r, i = item.i; const v = r.vals || []; return `
+              <tr><td style="color:var(--ink-faint)">${pos + 1}</td><td>${esc(v[0] || '')}</td><td>${esc(v[4] || '') || '—'}</td><td>${esc(v[1] || '')}</td><td>${esc(v[2] || '')}</td><td>${esc(v[5] || '') || '—'}</td><td><button class="editbtn" data-flowedit="${i}">编辑</button> <button class="delbtn" data-del="${mid}-${sid}-${i}">删除</button></td></tr>`; }).join('') : `<tr><td colspan="7"><div class="empty">${rows.length ? '没有符合搜索的记录，换个关键词试试' : '暂无记录，点击「＋ 新增记录」添加第一条吧'}</div></td></tr>`}
           </tbody>
         </table>
         <div class="notice">💾 数据保存在本机浏览器中，换设备或清除浏览器数据会丢失。</div>
@@ -5232,14 +5639,24 @@ function renderFlowEnhanced(mid, sid) {
 
   document.querySelector('[data-flowprev]')?.addEventListener('click', () => {
     state.flowMonth = fm === 1 ? (fy - 1) + '-12' : fy + '-' + String(fm - 1).padStart(2, '0');
-    renderFlowEnhanced(mid, sid);
+    state.flowDay = null; renderFlowEnhanced(mid, sid);
   });
   document.querySelector('[data-flownext]')?.addEventListener('click', () => {
     state.flowMonth = fm === 12 ? (fy + 1) + '-01' : fy + '-' + String(fm + 1).padStart(2, '0');
-    renderFlowEnhanced(mid, sid);
+    state.flowDay = null; renderFlowEnhanced(mid, sid);
   });
   const addBtn = document.querySelector(`[data-add="${mid}-${sid}"]`);
   if (addBtn) addBtn.addEventListener('click', function(e) { if (e) e.stopPropagation(); openFlowForm(mid, sid); });
+  /* 月历：点日期看当天收支 */
+  document.querySelectorAll('[data-flowday]').forEach(el => el.addEventListener('click', () => { state.flowDay = el.dataset.flowday; renderFlowEnhanced(mid, sid); }));
+  const clearDay = document.querySelector('[data-flowdayclear]');
+  if (clearDay) clearDay.addEventListener('click', () => { state.flowDay = null; renderFlowEnhanced(mid, sid); });
+  const addDay = document.querySelector('[data-flowdayadd]');
+  if (addDay) addDay.addEventListener('click', () => openFlowForm(mid, sid));
+  /* 搜索：实时过滤（重渲染后恢复焦点，可连续输入） */
+  const q = document.getElementById('flowQ'), qd = document.getElementById('flowQDim');
+  if (q) q.addEventListener('input', () => { state.flowQ = q.value; renderFlowEnhanced(mid, sid); const el = document.getElementById('flowQ'); if (el) { el.focus(); try { el.setSelectionRange(el.value.length, el.value.length); } catch (e) {} } });
+  if (qd) qd.addEventListener('change', () => { state.flowQDim = qd.value; renderFlowEnhanced(mid, sid); });
 }
 /* ============ 体征测量：趋势 + 专门记录 ============ */
 function numOf(str){const m=String(str||'').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):0;}
@@ -5433,28 +5850,85 @@ function saveWishForm(){
 }
 
 /* 收支流水专用新增表单：类型 + 大分类 + 小分类 + 金额 + 日期 + 备注 */
+/* 收支分类映射：大支出 → 对应的小支出，选大分类后小分类只显示该大分类下对应的 */
+const FLOW_CATS={
+  expense:{
+    '餐饮':['三餐','外卖','零食','水果','奶茶饮料','食堂'],
+    '购物':['美妆护肤','服饰穿搭','数码电子','家居日用','生活用品'],
+    '交通':['地铁公交','打车','火车','共享单车'],
+    '居住':['水电燃气','网费话费','房租','家居维修'],
+    '娱乐':['电影演出','游戏充值','视频会员','旅行','音乐'],
+    '学习':['教材书籍','课程培训','打印','文具'],
+    '健康':['药品','体检','健身运动','门诊'],
+    '人情':['请客聚餐','礼物','红包'],
+    '其他支出':[]
+  },
+  income:{
+    '生活费':['父母转账','生活费'],
+    '工作收入':['工资','兼职','实习','稿费'],
+    '奖励':['奖学金','红包','礼金'],
+    '理财':['利息','基金收益'],
+    '退款报销':['退款','报销'],
+    '其他收入':[]
+  }
+};
 function openFlowForm(mid, sid, idx) {
   fmMeta = { type: 'flow', mid, sid, edit: idx };
   $('#fmTitle').textContent = '＋ 新增收支';
-  $('#fmDesc').textContent = '选大分类 + 小分类，填金额和日期，可加备注；月历与月年统计自动更新';
-  const ic = ['工资','奖金','理财','兼职','红包','礼金','稿费','报销','转移收入','其他收入'];
-  const ec = ['餐饮','交通','购物','娱乐','居住','日用','医疗','教育','水电','通讯','服饰','生活基础','品质消费','其他支出'];
-  const subOpts = ['三餐基础','快乐解馋','住房水电','水果','零食','日用品','交通出行','学习用品','化妆品','服饰','医疗健康','人情往来'];
+  $('#fmDesc').textContent = '点下面的常用组合一键填好，或手动选；填完金额回车即可保存';
+  const expCats=Object.keys(FLOW_CATS.expense), incCats=Object.keys(FLOW_CATS.income);
+  const allCats=expCats.concat(incCats);
+  const allSubs=[...new Set(Object.values(FLOW_CATS.expense).concat(Object.values(FLOW_CATS.income)).flat())];
+  /* 从真实流水统计常用组合 / 常用大分类（越常用排越前） */
+  const rows = loadRows('money','flow')||[];
+  const catCount={}, comboCount={};
+  rows.forEach(r=>{const v=r.vals||[];const c=v[0],s=v[4],t=v[3]==='income'?'income':'expense';
+    if(!c)return;
+    catCount[t+'\u0000'+c]=(catCount[t+'\u0000'+c]||0)+1;
+    if(s)comboCount[c+'\u0000'+s]=(comboCount[c+'\u0000'+s]||0)+1;});
+  const expCatsUsed=Object.entries(catCount).filter(([k])=>k.startsWith('expense\u0000')).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([k])=>k.split('\u0000')[1]);
+  const incCatsUsed=Object.entries(catCount).filter(([k])=>k.startsWith('income\u0000')).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([k])=>k.split('\u0000')[1]);
+  const combos=Object.entries(comboCount).sort((a,b)=>b[1]-a[1]).slice(0,9).map(([k])=>k.split('\u0000'));
+  const last=rows.length?rows[rows.length-1].vals:null;
   $('#fmFields').innerHTML = `
+    <div class="fmqk">
+      <div class="fmqk-t">常用组合（点一下分类就填好）</div>
+      <div class="fmqk-b">${combos.length?combos.map(([c,s])=>`<button type="button" class="qk" data-qk="${esc(c)}|${esc(s)}">${esc(c)}·${esc(s)}</button>`).join(''):'<span class="dim">记几笔后这里会自动列出你的常用分类</span>'}</div>
+      <div class="fmqk-t">常用大分类</div>
+      <div class="fmqk-b">${expCatsUsed.map(c=>`<button type="button" class="qk" data-qkcat="${esc(c)}">${esc(c)}</button>`).join('')}${incCatsUsed.map(c=>`<button type="button" class="qk qk-inc" data-qkcat="${esc(c)}" data-qktype="income">${esc(c)}</button>`).join('')}</div>
+      ${last?`<button type="button" class="qk-last" data-qklast>↩ 记上次：${esc(last[0]||'')}${last[4]?(' · '+esc(last[4])):''} ${esc(last[1]||'')}</button>`:''}
+    </div>
     <label>收支类型</label>
     <select data-f="0"><option value="expense">支出</option><option value="income">收入</option></select>
     <label>大分类</label>
-    <input data-f="1" type="text" placeholder="如 生活基础 / 餐饮" list="flowCatList" autocomplete="off">
-    <datalist id="flowCatList">${ic.map(c => `<option value="${c}">`).join('')}${ec.map(c => `<option value="${c}">`).join('')}</datalist>
-    <label>小分类（可选）</label>
-    <input data-f="2" type="text" placeholder="如 三餐基础 / 快乐解馋" list="flowSubList" autocomplete="off">
-    <datalist id="flowSubList">${subOpts.map(c => `<option value="${c}">`).join('')}</datalist>
+    <input data-f="1" type="text" placeholder="如 餐饮 / 购物 / 生活费" list="flowCatList" autocomplete="off">
+    <datalist id="flowCatList">${allCats.map(c=>`<option value="${c}">`).join('')}</datalist>
+    <label>小分类（自动对应所选大分类）</label>
+    <input data-f="2" type="text" placeholder="选大分类后这里只显示对应的小分类" list="flowSubList" autocomplete="off">
+    <datalist id="flowSubList">${allSubs.map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
     <label>金额（元）</label>
     <input data-f="3" type="number" min="0" step="0.01" placeholder="如 38.00">
     <label>日期</label>
-    <input data-f="4" type="date" value="${nowStr()}">
+    <input data-f="4" type="date" value="${state.flowDay||nowStr()}">
     <label>备注（可选）</label>
     <input data-f="5" type="text" placeholder="如 烧鸭饭 / 云岭茉莉" autocomplete="off">`;
+  const f0=fm.querySelector('[data-f="0"]'),f1=fm.querySelector('[data-f="1"]'),f2=fm.querySelector('[data-f="2"]'),f3=fm.querySelector('[data-f="3"]'),f4=fm.querySelector('[data-f="4"]');
+  const subDl=document.getElementById('flowSubList');
+  /* 大分类联动：只显示该大分类对应的小分类，并自动带出上次用过的该小分类 */
+  function syncSubs(){
+    if(!subDl)return;
+    const c=(f1.value||'').trim(), t=f0.value==='income'?'income':'expense';
+    const subs=(FLOW_CATS[t]&&FLOW_CATS[t][c])||allSubs;
+    subDl.innerHTML=subs.map(s=>`<option value="${esc(s)}">`).join('');
+    if(c&&!(f2.value||'').trim()){const hit=rows.slice().reverse().find(r=>(r.vals||[])[0]===c&&(r.vals||[])[4]);if(hit)f2.value=hit.vals[4];}
+  }
+  /* 快捷：组合 / 大分类 / 记上次 */
+  fm.querySelectorAll('[data-qk]').forEach(b=>{b.addEventListener('click',()=>{const [c,s]=b.dataset.qk.split('|');f0.value='expense';f1.value=c;f2.value=s;f3.focus();syncSubs();});});
+  fm.querySelectorAll('[data-qkcat]').forEach(b=>{b.addEventListener('click',()=>{if(b.dataset.qktype)f0.value=b.dataset.qktype;f1.value=b.dataset.qkcat;f3.focus();syncSubs();});});
+  const lb=fm.querySelector('[data-qklast]');
+  if(lb)lb.addEventListener('click',()=>{if(!last)return;f0.value=last[3]==='income'?'income':'expense';f1.value=last[0]||'';f2.value=last[4]||'';f4.value=last[2]||'';f3.value='';f3.focus();syncSubs();});
+  f1.addEventListener('input',syncSubs);
+  f0.addEventListener('change',syncSubs);
   if (idx !== undefined) {
     const r = (loadRows(mid,sid)||[])[idx];
     if (r) {
@@ -5468,6 +5942,7 @@ function openFlowForm(mid, sid, idx) {
       if(f[4])f[4].value=v[2]||'';
       if(f[5])f[5].value=v[5]||'';
       $('#fmTitle').textContent='✎ 编辑收支';
+      syncSubs();
     }
   }
   fm.classList.add('show');

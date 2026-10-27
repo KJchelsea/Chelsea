@@ -268,6 +268,7 @@ tr:hover td{background:#FEF8FB}
 .tdpri.normal{background:#FBE4EE;color:#D77AA8}
 .tddue{font-size:11.5px;color:var(--ink-faint)}
 .tddue.late{color:#E27171;font-weight:700}
+.tdplan{font-size:11.5px;color:#8A96B8}
 .tdops{display:flex;gap:6px;flex:none}
 .minibtn{padding:5px 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink-dim);font-size:12px;cursor:pointer}
 .minibtn:hover{background:var(--pink);color:#fff;border-color:var(--pink)}
@@ -538,6 +539,36 @@ tr:hover td{background:#FEF8FB}
 .flowsearch{display:flex;gap:8px;margin:6px 0 12px;flex-wrap:wrap}
 .flowsearch input{flex:1;min-width:150px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-family:inherit;font-size:13px;background:#fff}
 .flowsearch select{border:1px solid var(--line);border-radius:10px;padding:7px 8px;font-family:inherit;font-size:12.5px;background:#fff}
+.wheelwrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:6px 0}
+.wheelbox{position:relative;width:min(320px,82vw);aspect-ratio:1;margin:0 auto}
+.wheelbox canvas{width:100%;height:100%;display:block}
+.wheelpin{position:absolute;top:-8px;left:50%;transform:translateX(-50%);z-index:2;color:var(--ink);font-size:22px;text-shadow:0 1px 3px rgba(0,0,0,.15)}
+.wheelresult{font-size:15px;font-weight:700;color:var(--pink);min-height:22px;text-align:center}
+.wheelbtns{display:flex;justify-content:center;margin-top:6px}
+.wheeladd{display:flex;gap:8px;margin:6px 0 10px}
+.wheeladd input{flex:1;border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-family:inherit;font-size:13px}
+.wheelpreset{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.wheelpreset .qk{font-size:12.5px}
+.wheellist{display:flex;flex-direction:column;gap:6px}
+.wheelitem{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#fff;border:1px solid var(--line);border-radius:10px;font-size:13.5px}
+.wheelitem .delbtn{font-size:12px}
+.wheelpacks{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 8px}
+.wheelpill{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid var(--line);border-radius:16px;background:#fff;font-size:12.5px;color:var(--ink);cursor:pointer}
+.wheelpill.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+.wheelpill .wheelx{color:inherit;opacity:.6;font-weight:700;padding:0 2px}
+.wheelpill.on .wheelx{color:#fff}
+.wheelpill.wheelnew{color:var(--pink);border-style:dashed}
+.wheelname{display:flex;gap:8px;align-items:center;margin-bottom:6px}
+.wheelname input{flex:1;border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-family:inherit;font-size:13px}
+.budget-modal{position:fixed;inset:0;background:rgba(90,68,80,.35);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;transition:.2s}
+.budget-modal.show{opacity:1}
+.budget-card{background:#FDF2F5;border-radius:16px;padding:16px;width:100%;max-width:460px;max-height:86vh;display:flex;flex-direction:column;box-shadow:0 10px 30px rgba(120,60,80,.2)}
+.photogrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:8px}
+@media(min-width:700px){.photogrid{grid-template-columns:repeat(3,1fr)}}
+.photocard{position:relative;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;padding-bottom:34px}
+.photothumb{width:100%;aspect-ratio:1;background-size:cover;background-position:center}
+.photocap{font-size:12px;color:var(--ink-dim);padding:6px 8px}
+.photocard .delbtn{position:absolute;bottom:6px;right:6px;font-size:12px}
 .monthview .md .dot{display:flex;gap:2px;flex-wrap:wrap;margin-top:2px}
 .monthview .md .dot span{width:6px;height:6px;border-radius:50%;display:inline-block}
 .yearview{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;font-size:13px}
@@ -917,6 +948,108 @@ body:not(.workbench) #petMenu{display:none}
 .pincard .pd{font-size:12px;color:var(--ink-dim);margin-top:3px}
 .morewrap{margin-top:14px}
 .morecard{border-style:dashed;background:var(--bg2)}
+/* ===== Locker 储物柜模式（第三套界面）· 白色长柜 ===== */
+body.locker{background:#f2efe9;color:#3a3a40}
+body.locker #app{display:block;max-width:none;width:100%;padding:0;margin:0;height:100vh;overflow:hidden}
+body.locker #view{background:transparent;height:100vh;padding:0;overflow:hidden}
+.locker-page{min-height:100vh;position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfaf7 0%,#f1eee7 100%);color:#3a3a40;font-family:'Courier New',Courier,monospace}
+.locker-page::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(150,140,120,.10) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;opacity:.5}
+.locker-nav{position:absolute;top:14px;left:0;right:0;display:flex;justify-content:center;gap:14px;z-index:40;font-family:'Courier New',monospace;flex-wrap:wrap}
+.locker-nav a{color:#555a63;text-decoration:none;font-size:12.5px;letter-spacing:.14em;cursor:pointer;padding:7px 12px;border:1px solid transparent;transition:.2s;border-radius:8px;white-space:nowrap}
+.locker-nav a:hover{color:#222;border-color:rgba(0,0,0,.15);background:rgba(255,255,255,.6)}
+.locker-exit{position:absolute;top:14px;left:14px;z-index:60;color:#555a63;font-size:13px;cursor:pointer;padding:6px 12px;border:1px solid rgba(0,0,0,.15);border-radius:8px;background:rgba(255,255,255,.5);letter-spacing:.08em}
+.locker-exit:hover{color:#222;background:#fff}
+.locker-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;color:#9aa0a8;font-size:11.5px;letter-spacing:.12em;z-index:20;pointer-events:none}
+.locker-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;perspective:1200px}
+/* 主储物柜：白色长柜 */
+.lk-main{position:relative;width:272px;max-width:76vw;height:620px;transform-style:preserve-3d}
+.lk-locker{position:absolute;inset:0;transform-style:preserve-3d;animation:lkFloat 5s ease-in-out infinite}
+@keyframes lkFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.lk-top{position:absolute;left:-10px;right:-10px;top:-14px;height:20px;background:linear-gradient(180deg,#f0f6fc,#d3e3f2);border:2px solid #b9d0e6;border-radius:8px 8px 6px 6px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.lk-base{position:absolute;left:-10px;right:-10px;bottom:-12px;height:16px;background:linear-gradient(180deg,#e3edf7,#cddced);border:2px solid #b0c8df;border-radius:6px 6px 8px 8px}
+.lk-body{position:absolute;inset:6px 0 6px 0;background:linear-gradient(160deg,#eef5fc,#d7e6f4);border:2px solid #b9d0e6;border-radius:10px;box-shadow:inset 0 0 26px rgba(255,255,255,.4),0 14px 34px rgba(120,150,190,.18)}
+/* 柜门（可开合） */
+.lk-door{position:absolute;top:6px;bottom:6px;width:50%;background:linear-gradient(160deg,#ffffff,#ece9e2);border:2px solid #d8d4cb;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:8;transition:transform .7s cubic-bezier(.2,.7,.3,1.2);cursor:pointer}
+.lk-door.l{left:0;border-radius:9px 4px 4px 9px;transform:rotateY(-65deg);transform-origin:left}
+.lk-door.r{right:0;border-radius:4px 9px 9px 4px;transform:rotateY(65deg);transform-origin:right}
+.lk-door.open.l{transform:rotateY(-65deg)}
+.lk-door.open.r{transform:rotateY(65deg)}
+.lk-door .hand{position:absolute;top:42%;width:7px;height:30px;background:#e5b24b;border:2px solid #b98a2e;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.15)}
+.lk-door.l .hand{right:12px}
+.lk-door.r .hand{left:12px}
+.lk-door .sticker{position:absolute;font-size:16px;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(0,0,0,.12));transition:.2s}
+.lk-door .sticker:hover{transform:scale(1.15) rotate(-6deg)}
+.lk-door.l .sticker{right:16px;top:18px}
+.lk-door.r .sticker{left:16px;bottom:16px}
+/* 柜内格子与物件 */
+.lk-shelf{position:absolute;left:12px;right:12px;top:16px;height:86%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;z-index:3}
+.lk-slot{background:rgba(255,255,255,.7);border:2px solid #dcd8cf;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:.2s;box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 4px 10px rgba(0,0,0,.05)}
+.lk-slot .sfic{font-size:30px;margin-bottom:4px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.12))}
+.lk-slot .stx{font-size:12.5px;font-weight:700;color:#4a4a52;letter-spacing:.05em}
+.lk-slot:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.10)}
+.lk-slot.skills{background:linear-gradient(160deg,#fff,#fdf3e3)}
+.lk-slot.work{background:linear-gradient(160deg,#fff,#e7f3ef)}
+.lk-slot.note{background:linear-gradient(160deg,#fff,#eef0fb)}
+.lk-slot.about{background:linear-gradient(160deg,#fff,#fdeef2)}
+/* 柜底小物 */
+.lk-foot{position:absolute;left:12px;right:12px;bottom:6px;height:8%;display:flex;justify-content:space-around;align-items:center;font-size:22px;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.14))}
+/* 字谜板（简洁） */
+.lk-wordsearch{position:absolute;right:4px;top:6px;width:86px;background:rgba(255,255,255,.8);border:2px solid #d8d4cb;border-radius:10px;padding:6px;font-size:7px;color:#b09a6a;letter-spacing:1px;line-height:1.5;cursor:pointer;z-index:9;box-shadow:0 3px 8px rgba(0,0,0,.06)}
+.lk-wordsearch b{display:block;color:#7a7a82;font-size:8px;margin-bottom:2px;letter-spacing:.1em}
+.lk-wordsearch:hover{background:#fff}
+/* 子视图（白色简洁） */
+.lk-view{position:absolute;inset:0;z-index:30;padding:22px;overflow:auto;animation:lkFadeIn .3s ease;background:linear-gradient(180deg,#fbfaf7,#f1eee7)}
+@keyframes lkFadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.lk-back{display:inline-flex;align-items:center;gap:6px;color:#555a63;font-size:12px;cursor:pointer;padding:7px 13px;border:1px solid rgba(0,0,0,.14);border-radius:9px;background:rgba(255,255,255,.65);letter-spacing:.08em;margin-bottom:14px}
+.lk-back:hover{color:#222;background:#fff}
+.lk-view h2{font-size:18px;letter-spacing:.08em;color:#333;margin:0 0 4px}
+.lk-view .sub{font-size:11px;color:#9aa0a8;letter-spacing:.16em;margin-bottom:16px}
+/* 作品文件夹 */
+.lk-folders{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lk-folder{background:#fff;border:2px solid #e0dcd3;border-radius:16px;padding:20px 10px;text-align:center;cursor:pointer;transition:.2s;box-shadow:0 6px 16px rgba(0,0,0,.05)}
+.lk-folder:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.09)}
+.lk-folder .fi{font-size:38px;margin-bottom:8px}
+.lk-folder .fn{font-size:13px;font-weight:700;color:#333;letter-spacing:.04em}
+.lk-folder .fd{font-size:10.5px;color:#9aa0a8;margin-top:3px}
+.lk-folder.v{border-color:#f3c8b8}
+.lk-folder.d{border-color:#bfd9ef}
+.lk-folder.p{border-color:#bde0cf}
+.lk-folder.w{border-color:#d4c9f0}
+/* 作品卡片 */
+.lk-works{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.lk-wcard{border-radius:16px;overflow:hidden;border:2px solid #e0dcd3;background:#fff;cursor:pointer;transition:.2s;aspect-ratio:3/4;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;box-shadow:0 6px 14px rgba(0,0,0,.05)}
+.lk-wcard:hover{transform:scale(1.03)}
+.lk-wcard .wn{font-size:12px;font-weight:700;color:#333;letter-spacing:.05em}
+.lk-wcard .wd{font-size:10px;color:#9aa0a8;margin-top:3px}
+/* 技能卡 */
+.lk-skill{display:flex;gap:12px;padding:14px;border-radius:14px;background:#fff;border:1px solid #e0dcd3;margin-bottom:10px;box-shadow:0 4px 10px rgba(0,0,0,.04)}
+.lk-skill .no{font-size:18px;font-weight:800;color:#e5a14b;min-width:30px}
+.lk-skill .nm{font-size:14px;color:#333;font-weight:600;margin-bottom:2px}
+.lk-skill .ds{font-size:12px;color:#5a5a62;line-height:1.5}
+.lk-skill .tools{font-size:11px;color:#9aa0a8;margin-top:4px}
+/* 软木板打字机 */
+.lk-cork{position:relative;background:#d9c7a5;border:8px solid #b89b6e;border-radius:16px;padding:16px;box-shadow:inset 0 0 30px rgba(0,0,0,.18),0 12px 30px rgba(0,0,0,.14);min-height:240px;margin-bottom:14px}
+.lk-cork::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(90,70,40,.15) 1px,transparent 1px);background-size:8px 8px;border-radius:10px}
+.lk-note{position:absolute;width:92px;min-height:66px;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.2);padding:8px;font-size:10px;color:#555;border-radius:2px;transform:rotate(var(--r,0deg));z-index:2}
+.lk-typewriter{position:relative;margin:0 auto;width:200px;background:#3a3632;border-radius:12px;padding:16px 14px 22px;box-shadow:0 10px 26px rgba(0,0,0,.35)}
+.lk-typewriter .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
+.lk-typewriter .key{height:16px;background:#e8e4dd;border-radius:3px;border:1px solid #b9b3aa}
+.lk-typewriter .paper{position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:128px;height:62px;background:#f7f2e4;border-radius:4px;padding:8px;color:#333;font-size:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.lk-typewriter .paper .caret{display:inline-block;width:6px;height:12px;background:#c0392b;animation:lkCaret 1s steps(1) infinite}
+@keyframes lkCaret{0%,49%{opacity:1}50%,100%{opacity:0}}
+.lk-cork-input{width:100%;margin-top:14px;padding:10px;border-radius:9px;border:1px solid #d0ccc3;background:#fff;color:#333;font-size:13px}
+/* 字谜板展开 */
+.lk-words{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:280px;margin:0 auto}
+.lk-words div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #e0dcd3;border-radius:8px;font-size:15px;font-weight:700;color:#a08a5a;cursor:pointer;transition:.15s}
+.lk-words div.on{background:#e5a14b;color:#fff}
+.lk-words div:hover{background:#f7f3ea}
+/* 信息卡 */
+.lk-cardbox{background:#fff;border:1px solid #e0dcd3;border-radius:16px;padding:18px;box-shadow:0 6px 16px rgba(0,0,0,.05)}
+.lk-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #e5e1d8;font-size:13px}
+.lk-row b{color:#333;font-weight:600}
+.lk-row span{color:#6a6a72}
+.lk-tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:999px;background:#f3eef8;color:#8a7ab8;margin:4px 4px 0 0;border:1px solid #ddd6ee}
+
 </style>
 </head>
 <body>
@@ -961,6 +1094,7 @@ body:not(.workbench) #petMenu{display:none}
 <button id="lockBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="锁定房间">🔒 锁定</button>
 <button id="syncBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="手动同步到云端">☁️ 同步</button>
 <button id="wbToggleBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="切换 简洁 / 工作台横屏 界面">⊞ 工作台</button>
+<button id="lockerBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="切换 储物柜 Locker 界面">🗄 储物柜</button>
 </div>
 
 <div id="app">
@@ -1005,7 +1139,7 @@ const DATA=[
  ]},
  {id:'money',ic:'¥',name:'资金管理',en:'FINANCE',desc:'收支、预算、心愿账单与理财的一站式财务总账',cc:'#F09A9A',sub:[
    {id:'flow',ic:'📒',name:'收支流水',desc:'收入支出流水记录，大分类 + 小分类 + 备注，随查随记',feat:['极简 3 秒记账','大分类 / 小分类','备注留档','收支报表'],cols:['大分类','小分类','金额','备注','日期'],fields:['大分类','小分类','金额','备注','日期'],rows:[['餐饮','午餐','支出 ¥38.00','','今天'],['工资','月度','收入 ¥12,000','','昨天'],['交通','通勤','支出 ¥12.00','','昨天']]},
-   {id:'budget',ic:'📊',name:'预算规划',desc:'月度与分类预算，超支预警',feat:['月度预算','分类预算','超支预警'],cols:['类别','预算 / 已用','状态'],fields:['类别','预算 / 已用','状态'],rows:[['餐饮 预算','¥1,500 / 已用 62%','正常'],['购物 预算','¥800 / 已用 88%','偏高'],['总预算','¥6,000 / 已用 58%','正常']]},
+   {id:'budget',ic:'📊',name:'预算规划',desc:'按大分类定预算，实时和流水同步，超支预警',feat:['按大分类设预算','可选小分类预算','流水实时同步已用','超支预警'],cols:['类别','预算 / 已用','状态'],fields:['类别','预算 / 已用','状态'],rows:[['餐饮 预算','¥1,500 / 已用 62%','正常'],['购物 预算','¥800 / 已用 88%','偏高'],['总预算','¥6,000 / 已用 58%','正常']],special:'budget'},
    {id:'wish',ic:'🌟',name:'心愿账单',desc:'设定愿望目标，进度条与存钱打卡让存钱有期待',feat:['心愿目标与截止日','进度条与打卡','心愿图片解锁'],cols:['心愿','目标 / 已存','状态'],fields:['心愿','目标 / 已存','状态'],rows:[['日本旅行','¥20,000 / 已存 45%','进行中'],['新手机','¥6,000 / 已存 82%','即将达成'],['应急基金','¥10,000 / 已存 60%','进行中']]},
    {id:'invest',ic:'🏦',name:'理财与资产',desc:'资产负债与理财记录，资产动向一目了然',feat:['资产负债管理','理财记录','资产趋势'],cols:['项目','金额','涨跌'],fields:['项目','金额','涨跌'],rows:[['总资产','¥86,200','+2.1%'],['总负债','¥12,000','-'],['基金持仓','¥18,000','+1.4%']]},
    {id:'stats',ic:'📈',name:'月年统计',desc:'月度 / 年度收支趋势与分类占比的可视化统计',feat:['收支柱状图','分类扇形图','月/年切换','结余与储蓄率'],rows:[]}
@@ -1028,7 +1162,7 @@ const DATA=[
    {id:'weeks',ic:'🗓',name:'周月计划',desc:'每周 7 天逐日计划 + 每月目标，完成情况一目了然',feat:['周计划 7天视图','月计划目标','完成率统计'],rows:[],special:'weekmonth'},
    {id:'classnotes',ic:'📚',name:'课堂笔记',desc:'按课程整理笔记，写文字、插图、插文件，云端同步',feat:['课程分组','文字笔记','图片/文件附件'],special:'classnotes'}
  ]},
- {id:'utility',ic:'◇',name:'实用功能',en:'UTILITY',desc:'日子、日程、习惯、备忘录、菜谱、网址收藏、番茄钟与密码',cc:'#9FB8C8',sub:[
+ {id:'utility',ic:'◇',name:'实用功能',en:'UTILITY',desc:'日子、日程、习惯、备忘录、菜谱、网址收藏与账号密码',cc:'#9FB8C8',sub:[
    {id:'sop',ic:'📋',name:'个人SOP',desc:'沉淀你的个人标准流程：每个步骤都能一键计入待办，按时推进',feat:['创建多个 SOP 流程','步骤清单管理','一键计入今日待办'],rows:[],special:'sop'},
    {id:'timeline',ic:'⏳',name:'每日时间轴',desc:'课表 + 日程 + 待办整合到一条时间轴，可改任意日期、打勾、添加事项',feat:['课表/日程/待办整合','可回看与编辑前一天','待办直接打勾','一键添加事项'],rows:[],special:'timeline'},
    {id:'days',ic:'📅',name:'倒数日 / 正数日',desc:'选择目标日期，自动计算倒数或正数天数',feat:['日期选择器','倒数/正数自动计算','备注记录'],cols:['事项','日期','类型'],fields:['事项','日期','类型'],rows:[]},
@@ -1037,6 +1171,7 @@ const DATA=[
    {id:'habit',ic:'✔',name:'习惯打卡',desc:'连续打卡、热力图、成就卡片，每天打卡可带照片',feat:['连续打卡天数','日历热力图','打卡照片'],cols:['习惯','记录','状态'],fields:['习惯','记录','状态'],rows:[['早睡 23:00','连续 21 天','🔥'],['阅读 30min','连续 18 天','🔥'],['每日喝水 8杯','本周 5/7','良好']],special:'habit'},
    {id:'pomodoro',ic:'⏱',name:'番茄钟',desc:'专注计时与待办，量化每一段时间',feat:['专注计时','待办清单','专注统计'],cols:['任务','完成','状态'],fields:['任务','完成','状态'],rows:[['今日专注','6 个番茄 · 150min','达标'],['本周专注','28 个番茄','+12%'],['待办完成','8 / 10 项','良好']]},
    {id:'reminders',ic:'⏰',name:'今日提醒',desc:'每天自动汇总待办、该补的记录、习惯打卡与重要日子，提醒频率可调',feat:['自动汇总各模块','体征提醒可调','今日勾选'],rows:[],special:'reminders'},
+   {id:'wheel',ic:'🎡',name:'幸运转盘',desc:'选择困难救星：把纠结的选项都写进去，转一下随机选一个',feat:['自由添加选项','一键随机选择','预设主题快捷填入'],cols:['选项'],fields:['选项'],rows:[],special:'wheel'},
    {id:'vault',ic:'🔐',name:'账号密码管理',desc:'加密保险库，安全存储各类账号',feat:['主密码加密','自动填充','跨设备同步'],cols:['账号','状态','安全'],fields:['账号','状态','安全'],rows:[['邮箱','已保存','安全'],['网银','已保存','安全'],['社交账号','已保存 · 12 项','安全']]},
    {id:'course',ic:'🗒',name:'课表',desc:'周一至周日 × 上午/下午/晚上的课程表',feat:['周课表','课程颜色标签','新增与删除'],rows:[],special:'course'},
    {id:'memo',ic:'📝',name:'备忘录',desc:'想法、待办、灵感，随手记下不丢失',feat:['标题+内容','按日期保存','随时回顾'],rows:[],special:'memo'},
@@ -1054,6 +1189,12 @@ const DATA=[
    {id:'career',ic:'🎯',name:'职业规划',desc:'目标、里程碑与阶段复盘',feat:['职业目标','里程碑节点','阶段复盘'],cols:['目标','里程碑','状态'],fields:['目标','里程碑','状态'],rows:[['3 年晋升主管','里程碑 2/5','进行中'],['掌握核心技能','进度 60%','进行中'],['年度复盘 2026','待完成','Q4']]},
    {id:'goals',ic:'🎯',name:'年度大目标',desc:'九宫格 / 进度看板 / OKR / 时间轴 / 愿景板五种款式，都能编辑与同步',feat:['九宫格','进度看板','OKR拆解','时间轴','愿景板'],rows:[],special:'goals'},
    {id:'review',ic:'📜',name:'年度 / 月度回顾',desc:'自动沉淀的全量人生回顾',feat:['月度回顾','年度总结','人生章节'],cols:['回顾','生成状态','备注'],fields:['回顾','生成状态','备注'],rows:[['2026 年度回顾','自动生成','可查看'],['2026-09 月报','自动生成','可查看'],['人生章节 · 求学','整理完成','已归档']]}
+ ]},
+ {id:'photos',ic:'📷',name:'照片墙',en:'PHOTOS',desc:'把喜欢的照片都贴上来，回忆一眼可见',cc:'#F6CF9B',sub:[
+   {id:'wall',ic:'🖼',name:'照片墙',desc:'添加照片拼成一面墙，随时回看',feat:['添加照片','照片墙展示','随时删除'],rows:[],special:'photos'}
+ ]},
+ {id:'archive',ic:'🗄',name:'归档区',en:'ARCHIVE',desc:'暂时不用的功能收在这里，数据都在，随时可再启用',cc:'#CFC9D9',sub:[
+   {id:'stash',ic:'🗄',name:'归档功能',desc:'番茄钟、日程、课表、时间轴收在这里，数据不丢',feat:['番茄钟','日程安排','课表','每日时间轴'],rows:[],special:'archive'}
  ]}
 ];
 
@@ -1414,13 +1555,16 @@ function subGridCard(m,s){
 function renderSubgrid(m){
   // 实用功能按类别分组，其它模块保持平铺
   if(m.id!=='utility')return `<div class="subgrid">${m.sub.map(s=>subGridCard(m,s)).join('')}</div>`;
+  const hidden=['timeline','schedule','course','pomodoro'];
   const groups=[
-    ['🕐 时间与计划',['timeline','schedule','days','memorial','reminders','course']],
-    ['⚡ 效率与习惯',['habit','pomodoro','sop']],
-    ['📚 备忘与资料',['memo','work','vault','recipe','bookmark']]
+    ['📅 日期与提醒',['days','memorial','reminders']],
+    ['⚡ 习惯与效率',['habit','sop']],
+    ['🎡 决策小工具',['wheel']],
+    ['📚 记录与收藏',['memo','work','recipe','bookmark']],
+    ['🔐 账号与密码',['vault']]
   ];
   return groups.map(g=>{
-    const subs=m.sub.filter(s=>g[1].includes(s.id));
+    const subs=m.sub.filter(s=>g[1].includes(s.id)&&!hidden.includes(s.id));
     if(!subs.length)return '';
     return `<div class="subgrp"><h3>${g[0]}</h3><div class="subgrid">${subs.map(s=>subGridCard(m,s)).join('')}</div></div>`;
   }).join('');
@@ -1428,6 +1572,8 @@ function renderSubgrid(m){
 function renderModule(mid){
   const m=findModule(mid); if(!m)return renderHome();
   state.module=mid;state.sub=null;state.guest=false;state.sched=null;
+  const hidden=['timeline','schedule','course','pomodoro'];
+  const visible=m.id==='utility'?m.sub.filter(s=>!hidden.includes(s.id)):m.sub;
   view.innerHTML=`
     <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><span class="cur">${esc(m.name)}</span></nav>
     <div class="pagehead">
@@ -1436,7 +1582,7 @@ function renderModule(mid){
         <h1>${m.ic} ${esc(m.name)}</h1>
         <p>${esc(m.desc)}</p>
       </div>
-      <div class="stat">${m.sub.length} 项子功能<br>${m.sub.map(s=>esc(s.name)).join(' · ')}</div>
+      <div class="stat">${visible.length} 项子功能<br>${visible.map(s=>esc(s.name)).join(' · ')}</div>
     </div>
     <div class="deco">✦ ${esc(m.name)} ✦</div>
     ${renderSubgrid(m)}
@@ -1622,11 +1768,12 @@ function openTodoForm(id){
   const it=t.find(x=>String(x.id)===String(id));
   fmMeta={type:'todo',id:String(id)};
   $('#fmTitle').textContent=it?'✎ 编辑待办':'＋ 新增待办';
-  $('#fmDesc').textContent='事项 + 优先级 + 截止日期';
+  $('#fmDesc').textContent='事项 + 优先级 + 截止/计划时间（都可选）';
   $('#fmFields').innerHTML=`
     <label>事项</label><input data-f="0" type="text" value="${it?esc(it.txt):''}" placeholder="要做什么？" autocomplete="off">
     <label>优先级</label><select data-f="1"><option value="normal" ${it&&it.pri==='normal'?'selected':''}>一般</option><option value="important" ${it&&it.pri==='important'?'selected':''}>重要</option><option value="easy" ${it&&it.pri==='easy'?'selected':''}>轻松</option></select>
-    <label>截止日期（可选）</label><input data-f="2" type="date" value="${it?(it.due||''):''}">`;
+    <label>截止时间（最后期限，可选）</label><input data-f="2" type="date" value="${it?(it.due||''):''}">
+    <label>计划去做的时间（可选）</label><input data-f="3" type="datetime-local" value="${it?(it.plan||''):''}">`;
   fm.classList.add('show');
 }
 function saveTodoForm(){
@@ -1635,12 +1782,14 @@ function saveTodoForm(){
   if(!txt){closeForm();return;}
   const pri=$('[data-f="1"]').value||'normal';
   const due=$('[data-f="2"]').value||'';
+  const planEl=document.querySelector('[data-f="3"]');
+  const plan=planEl?(planEl.value||''):'';
   const t=loadTodo();
   if(fmMeta.id&&fmMeta.id!=='undefined'){
     const it=t.find(x=>String(x.id)===String(fmMeta.id));
-    if(it){it.txt=txt;it.pri=pri;it.due=due;}
+    if(it){it.txt=txt;it.pri=pri;it.due=due;it.plan=plan;}
   }else{
-    t.push({id:String(Date.now()),txt,pri,due,done:0,ts:Date.now()});
+    t.push({id:String(Date.now()),txt,pri,due,plan,done:0,ts:Date.now()});
   }
   saveTodo(t);closeForm();render();
 }
@@ -1666,7 +1815,7 @@ function renderTodo(mid){
       <button class="tdbox ${it.done?'on':''}" data-tododone="${it.id}">${it.done?'✓':''}</button>
       <div class="tdmain">
         <div class="tdtxt">${esc(it.txt)}</div>
-        <div class="tdmeta"><span class="tdpri ${priCls(it.pri)||'normal'}">${it.pri==='important'?'重要':it.pri==='easy'?'轻松':'一般'}</span>${it.due?`<span class="tddue ${overdue?'late':''}">${esc(it.due)}${overdue?' · 已到期':''}</span>`:''}</div>
+        <div class="tdmeta"><span class="tdpri ${priCls(it.pri)||'normal'}">${it.pri==='important'?'重要':it.pri==='easy'?'轻松':'一般'}</span>${it.due?`<span class="tddue ${overdue?'late':''}">截止 ${esc(it.due)}${overdue?' · 已到期':''}</span>`:''}${it.plan?`<span class="tdplan">计划 ${esc(String(it.plan).replace('T',' ').slice(0,16))}</span>`:''}</div>
       </div>
       <div class="tdops"><button class="minibtn" data-todoedit="${it.id}">编辑</button><button class="minibtn danger" data-tododel="${it.id}">删除</button></div>
     </div>`;
@@ -3057,6 +3206,398 @@ function renderGuest(){
     </div>`;
 }
 
+/* --- 幸运转盘：选择困难救星（多份转盘，可保存切换） --- */
+function loadWheelPacks(){try{const r=localStorage.getItem(PREFIX+'wheel_packs');if(r)return JSON.parse(r);}catch(e){}return [];}
+function saveWheelPacks(p){try{localStorage.setItem(PREFIX+'wheel_packs',JSON.stringify(p));}catch(e){}}
+function renderWheel(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);
+  if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  /* 多份转盘 */
+  let packs=loadWheelPacks();
+  if(!packs.length){
+    const old=loadRows(mid,sid).map(r=>(r.vals||[])[0]).filter(v=>v!==undefined&&v!==null&&String(v).trim()!=='').map(String);
+    if(old.length){packs=[{id:Date.now(),name:'我的转盘',opts:old}];saveWheelPacks(packs);}
+  }
+  if(!packs.length){packs=[{id:Date.now(),name:'我的转盘',opts:[]}];saveWheelPacks(packs);}
+  const curId=state.wheelPack&&packs.some(p=>p.id===state.wheelPack)?state.wheelPack:packs[0].id;
+  const cur=packs.find(p=>p.id===curId)||packs[0];
+  const opts=cur.opts;
+  let rot=0, spinning=false;
+  const pal=['#F3A6B8','#A7C7E7','#B8D9B0','#F5D27A','#C9A8E0','#F2B3A0','#A3D8D5','#E8B4D0','#D9C9A0','#A0C0E8'];
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-utility">实用功能</button><span class="sep">/</span><span class="cur">幸运转盘</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">UTILITY · WHEEL</div><h1>🎡 幸运转盘</h1><p>选择困难救星：可以建好几个转盘存起来，随时切出来转。</p></div>
+      <div class="stat">${opts.length} 个选项</div>
+    </div>
+    <div class="deco">✦ 命运转盘 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:#9FB8C8">
+        <div class="ph"><span class="ic">🎡</span> 我的转盘</div>
+        <div class="wheelpacks">
+          ${packs.map(p=>`<button type="button" class="wheelpill ${p.id===curId?'on':''}" data-wpack="${p.id}">${esc(p.name)}<span class="wheelx" data-wdelpack="${p.id}">×</span></button>`).join('')}
+          <button type="button" class="wheelpill wheelnew" data-wpacknew>＋ 新建</button>
+        </div>
+        <div class="wheelname">
+          <input id="wheelName" value="${esc(cur.name)}">
+          <button class="addbtn" id="wheelRename" style="--cc:#9FB8C8">改名</button>
+        </div>
+        <div class="wheelwrap">
+          <div class="wheelbox">
+            <div class="wheelpin">▼</div>
+            <canvas id="wheelCanvas" width="380" height="380"></canvas>
+          </div>
+          <div id="wheelResult" class="wheelresult">${opts.length<2?'再添加几个选项吧（至少 2 个才能转）':'点下面「🎯 开始转动」'}</div>
+        </div>
+        <div class="wheelbtns">
+          <button class="addbtn" id="wheelSpin" style="--cc:#9FB8C8">🎯 开始转动</button>
+        </div>
+      </div>
+      <div class="panel" style="--cc:#9FB8C8">
+        <div class="ph"><span class="ic">✏️</span> 选项管理 ·「${esc(cur.name)}」</div>
+        <div class="pd">每个选项一行，可随时增删；想换一批就先清空再加。</div>
+        <div class="wheeladd">
+          <input id="wheelOpt" placeholder="输入一个选项，如 麻辣烫 / 奶茶 / 宅家">
+          <button class="addbtn" id="wheelAdd" style="--cc:#9FB8C8">添加</button>
+        </div>
+        <div class="wheelpreset">
+          ${[['今天吃什么',['麻辣烫','火锅','烧烤','日料','汉堡','轻食','自己做']],['周末去哪儿',['逛街','看电影','爬山','宅家','图书馆','去杭州']],['要不要去',['去','不去','明天再说','问室友']],['奶茶喝什么',['珍珠奶茶','杨枝甘露','柠檬茶','咖啡','不喝']]].map(([t,list])=>`<button type="button" class="qk" data-preset="${esc(JSON.stringify(list))}">${esc(t)}</button>`).join('')}
+        </div>
+        <div class="wheellist">
+          ${opts.length?opts.map((o,i)=>`<div class="wheelitem"><span>${esc(o)}</span><button class="delbtn" data-wdel="${i}">删除</button></div>`).join(''):'<div class="empty">还没有选项，先添加几个吧</div>'}
+        </div>
+      </div>
+    </div>`;
+  const canvas=document.getElementById('wheelCanvas');
+  const ctx=canvas.getContext('2d');
+  function draw(){
+    const cx=190,cy=190,r=176;
+    ctx.clearRect(0,0,380,380);
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(rot);
+    const n=opts.length;
+    if(n>0){
+      const seg=2*Math.PI/n;
+      for(let i=0;i<n;i++){
+        ctx.beginPath();ctx.moveTo(0,0);
+        ctx.arc(0,0,r,-Math.PI/2+i*seg,-Math.PI/2+(i+1)*seg);ctx.closePath();
+        ctx.fillStyle=pal[i%pal.length];ctx.fill();
+        ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+        ctx.save();
+        ctx.rotate(-Math.PI/2+i*seg+seg/2);
+        ctx.fillStyle='#5A4450';ctx.font='bold 13px "PingFang SC","Microsoft YaHei",sans-serif';ctx.textAlign='right';
+        ctx.fillText(trimText(opts[i],r-20),r-14,4);
+        ctx.restore();
+      }
+    } else {
+      ctx.beginPath();ctx.arc(0,0,r,0,2*Math.PI);ctx.fillStyle='#F2EDEF';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+      ctx.fillStyle='#B99AA8';ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText('暂无选项',0,5);
+    }
+    ctx.restore();
+    ctx.beginPath();ctx.arc(cx,cy,r+9,0,2*Math.PI);ctx.fillStyle='#fff';ctx.fill();
+  }
+  function trimText(t,maxW){
+    t=String(t);const m=Math.max(1,Math.floor((maxW-6)/14));
+    return t.length>m?t.slice(0,m)+'…':t;
+  }
+  function spin(){
+    if(spinning)return;
+    const n=opts.length;
+    if(n<2){document.getElementById('wheelResult').textContent='至少需要 2 个选项才能转哦';return;}
+    spinning=true;
+    const target=Math.floor(Math.random()*n);
+    const seg=2*Math.PI/n;
+    const rotMod=((rot%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+    const wantMod=((-target*seg)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);
+    let delta=wantMod-rotMod;if(delta<0)delta+=2*Math.PI;
+    const spins=6+Math.floor(Math.random()*4);
+    const end=rot+spins*2*Math.PI+delta;
+    const start=rot,dur=3200,t0=performance.now();
+    const res=document.getElementById('wheelResult');
+    res.textContent='转盘中…';
+    function step(t){
+      const p=Math.min(1,(t-t0)/dur);
+      const e=1-Math.pow(1-p,3);
+      rot=start+(end-start)*e;
+      draw();
+      if(p<1)requestAnimationFrame(step);
+      else{spinning=false;res.textContent='🎉 就选它：'+opts[target];}
+    }
+    requestAnimationFrame(step);
+  }
+  draw();
+  /* 转盘切换 / 新建 / 删除 */
+  document.querySelectorAll('[data-wpack]').forEach(b=>{
+    b.addEventListener('click',e=>{ if(e.target.closest('[data-wdelpack]'))return; state.wheelPack=+b.dataset.wpack; renderWheel(mid,sid); });
+  });
+  document.querySelectorAll('[data-wdelpack]').forEach(x=>{
+    x.addEventListener('click',e=>{ e.stopPropagation(); const id=+x.dataset.wdelpack; let p=loadWheelPacks(); p=p.filter(q=>q.id!==id); if(!p.length)p=[{id:Date.now(),name:'我的转盘',opts:[]}]; saveWheelPacks(p); if(state.wheelPack===id)state.wheelPack=null; renderWheel(mid,sid); });
+  });
+  document.querySelector('[data-wpacknew]')?.addEventListener('click',()=>{
+    const p=loadWheelPacks(); const n=p.length+1; p.push({id:Date.now(),name:'转盘 '+n,opts:[]}); saveWheelPacks(p); state.wheelPack=p[p.length-1].id; renderWheel(mid,sid);
+  });
+  /* 改名 */
+  const nameIn=document.getElementById('wheelName');
+  document.getElementById('wheelRename').addEventListener('click',()=>{
+    const nm=(nameIn.value||'').trim(); if(!nm)return;
+    const p=loadWheelPacks(); const c=p.find(q=>q.id===curId); if(c){c.name=nm;saveWheelPacks(p);} renderWheel(mid,sid);
+  });
+  nameIn.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('wheelRename').click();});
+  /* 转动 */
+  document.getElementById('wheelSpin').addEventListener('click',spin);
+  /* 选项管理（当前转盘） */
+  const optIn=document.getElementById('wheelOpt');
+  document.getElementById('wheelAdd').addEventListener('click',()=>{
+    const v=(optIn.value||'').trim(); if(!v)return;
+    const p=loadWheelPacks(); const c=p.find(q=>q.id===curId); if(c&&c.opts.indexOf(v)<0)c.opts.push(v); saveWheelPacks(p); renderWheel(mid,sid);
+  });
+  optIn.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('wheelAdd').click();});
+  document.querySelectorAll('[data-wdel]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const p=loadWheelPacks(); const c=p.find(q=>q.id===curId); const i=+b.dataset.wdel; if(c&&i>=0&&i<c.opts.length)c.opts.splice(i,1); saveWheelPacks(p); renderWheel(mid,sid);
+    });
+  });
+  document.querySelectorAll('[data-preset]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      let list; try{list=JSON.parse(b.dataset.preset);}catch(e){return;}
+      const p=loadWheelPacks(); const c=p.find(q=>q.id===curId);
+      if(c)(list||[]).forEach(v=>{if(c.opts.indexOf(String(v))<0)c.opts.push(String(v));});
+      saveWheelPacks(p); renderWheel(mid,sid);
+    });
+  });
+}
+/* --- 预算规划：按大分类设预算，流水实时同步已用 --- */
+function loadBudget(){try{const r=localStorage.getItem(PREFIX+'money_budget');if(r)return JSON.parse(r);}catch(e){}return {month:nowStr().slice(0,7),items:{}};}
+function saveBudget(b){try{localStorage.setItem(PREFIX+'money_budget',JSON.stringify(b));}catch(e){}}
+function flowSpendByCat(rows,month){
+  const used={};
+  (rows||[]).forEach(r=>{
+    const c=flowClassify(r);
+    if(c.type!=='expense')return;
+    const dt=flowRowDate(r);
+    if(!dt.startsWith(month))return;
+    const sub=String((r.vals||[])[4]||'');
+    if(!used[c.cat])used[c.cat]={total:0,subs:{}};
+    used[c.cat].total+=c.amount;
+    if(sub){used[c.cat].subs[sub]=(used[c.cat].subs[sub]||0)+c.amount;}
+  });
+  return used;
+}
+function renderBudget(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const rows=loadRows('money','flow');
+  if(!state.budgetMonth){const n=new Date();state.budgetMonth=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');}
+  const month=state.budgetMonth;
+  const budget=loadBudget();
+  const used=flowSpendByCat(rows,month);
+  const items=budget.items||{};
+  const cats=Object.keys(FLOW_CATS.expense);
+  let totalLimit=0,totalUsed=0,totalSet=0;
+  cats.forEach(cat=>{const it=items[cat];const u=used[cat]?used[cat].total:0;totalUsed+=u;if(it&&it.limit){totalLimit+=it.limit;totalSet++;}});
+  const totalLeft=totalLimit-totalUsed;
+  function card(cat){
+    const it=items[cat]||{};
+    const u=used[cat]?used[cat].total:0;
+    const lim=it.limit;
+    const pct=lim?Math.min(100,u/lim*100):0;
+    const status=!lim?'未设置':(u>lim?'超支':(u>lim*0.8?'偏高':'正常'));
+    const statusColor=!lim?'#B99AA8':(u>lim?'#D05A7A':(u>lim*0.8?'#E8A63B':'#5FA98A'));
+    const subRows=it.subs?Object.entries(it.subs).map(([su,sl])=>{
+      const suu=(used[cat]&&used[cat].subs&&used[cat].subs[su])||0;
+      return `<div style="display:flex;justify-content:space-between;font-size:12px;padding:2px 0;color:var(--ink-dim)">
+        <span>${esc(su)}</span><span>预算 ¥${Number(sl).toFixed(0)} · 已用 ¥${suu.toFixed(2)}</span></div>`;
+    }).join(''):'';
+    return `
+      <div class="panel" style="--cc:#F09A9A">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div class="ph" style="margin:0"><span class="ic">📊</span> ${esc(cat)}</div>
+          <button class="editbtn" data-budgetcat="${esc(cat)}">设置</button>
+        </div>
+        ${lim?`<div class="pd">预算 ¥${Number(lim).toFixed(0)} · 已用 ¥${u.toFixed(2)} · 剩余 ¥${(lim-u).toFixed(2)}</div>`
+             :`<div class="pd" style="color:var(--ink-faint)">未设置预算 · 本月已花 ¥${u.toFixed(2)}</div>`}
+        ${lim?`<div style="height:8px;border-radius:6px;background:#F2EDEF;overflow:hidden;margin:4px 0">
+          <div style="height:100%;width:${pct.toFixed(0)}%;background:${statusColor};border-radius:6px"></div>
+        </div>`:''}
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <span style="font-size:12px;color:var(--ink-faint)">${lim?('已用 '+pct.toFixed(0)+'%'):'点击「设置」给这个分类定预算'}</span>
+          <span style="font-size:12px;font-weight:700;color:${statusColor}">${status}</span>
+        </div>
+        ${subRows?`<div style="margin-top:6px;padding-top:6px;border-top:1px dashed var(--line)">${subRows}</div>`:''}
+      </div>`;
+  }
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-money">资金管理</button><span class="sep">/</span><span class="cur">预算规划</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">FINANCE · BUDGET</div><h1>📊 预算规划</h1><p>按大分类定预算，实时和流水同步，超支会亮红提醒。</p></div>
+      <div class="stat">${totalSet}/${cats.length} 项已设</div>
+    </div>
+    <div class="deco">✦ 预算管家 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="toolbar">
+          <div class="ph"><span class="ic">💰</span> ${month} 总预算</div>
+          <div class="ic-monthnav">
+            <button class="prev-month" data-bprev>◀ 上月</button>
+            <span>${month}</span>
+            <button class="next-month" data-bnext>下月 ▶</button>
+          </div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">${totalLimit?'¥'+totalLimit.toFixed(0):'¥0'}</div><div class="l">总预算</div></div>
+          <div class="kpi"><div class="v" style="color:var(--coral)">¥${totalUsed.toFixed(2)}</div><div class="l">本月已用</div></div>
+          <div class="kpi"><div class="v" style="color:${totalLeft>=0?'var(--mint)':'#D05A7A'}">${totalLeft>=0?'+':''}¥${totalLeft.toFixed(2)}</div><div class="l">剩余</div></div>
+        </div>
+        ${totalLimit?`<div style="height:8px;border-radius:6px;background:#F2EDEF;overflow:hidden;margin-top:6px"><div style="height:100%;width:${Math.min(100,totalUsed/totalLimit*100).toFixed(0)}%;background:${totalUsed>totalLimit?'#D05A7A':'var(--coral)'};border-radius:6px"></div></div>`:''}
+        <div class="pd" style="margin-top:6px">已用数据自动来自「收支流水」，记一笔账这里就更新。</div>
+      </div>
+      ${cats.map(card).join('')}
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="pd" style="text-align:center">点各分类卡片右上角「设置」，或一键给全部大分类设预算：</div>
+        <div class="wheelbtns"><button class="addbtn" id="budgetOpen" style="--cc:#F09A9A">💰 设置 / 修改 ${month} 预算</button></div>
+      </div>
+    </div>`;
+  document.querySelector('[data-bprev]')?.addEventListener('click',()=>{const p=month.split('-');const y=+p[0],m=+p[1];state.budgetMonth=m===1?(y-1)+'-12':y+'-'+String(m-1).padStart(2,'0');renderBudget(mid,sid);});
+  document.querySelector('[data-bnext]')?.addEventListener('click',()=>{const p=month.split('-');const y=+p[0],m=+p[1];state.budgetMonth=m===12?(y+1)+'-01':y+'-'+String(m+1).padStart(2,'0');renderBudget(mid,sid);});
+  document.querySelectorAll('[data-budgetcat]').forEach(b=>b.addEventListener('click',()=>openBudgetForm(mid,sid,month)));
+  document.getElementById('budgetOpen').addEventListener('click',()=>openBudgetForm(mid,sid,month));
+}
+function openBudgetForm(mid,sid,month){
+  const budget=loadBudget();
+  const items=budget.items||{};
+  const overlay=document.createElement('div');
+  overlay.className='budget-modal';
+  overlay.innerHTML=`
+    <div class="budget-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <h3 style="margin:0;font-size:16px">💰 设置 ${month} 月预算</h3>
+        <button class="delbtn" data-budgetclose>×</button>
+      </div>
+      <div class="pd" style="font-size:12.5px;margin-bottom:8px">只填大分类金额即可；小分类金额可选，不填就归到大分类。</div>
+      <div style="max-height:60vh;overflow:auto;display:flex;flex-direction:column;gap:8px">
+        ${Object.entries(FLOW_CATS.expense).map(([cat,subs])=>{
+          const it=items[cat]||{};
+          return `
+          <div style="padding:10px;background:#fff;border:1px solid var(--line);border-radius:10px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-weight:700;font-size:13px;width:60px">${esc(cat)}</span>
+              <input data-bcat="${esc(cat)}" data-btype="limit" type="number" min="0" step="0.01" placeholder="大分类预算（元）" value="${it.limit!=null?it.limit:''}" style="flex:1;padding:7px;border:1px solid var(--line);border-radius:8px;font-size:13px">
+            </div>
+            ${subs.length?`<div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
+              ${subs.map(su=>`<div style="display:flex;align-items:center;gap:8px;padding-left:60px">
+                <span style="font-size:12px;color:var(--ink-faint);width:56px">${esc(su)}</span>
+                <input data-bcat="${esc(cat)}" data-bsub="${esc(su)}" data-btype="sub" type="number" min="0" step="0.01" placeholder="可选" value="${((it.subs||{})[su])!=null?(it.subs[su]):''}" style="flex:1;padding:6px;border:1px solid var(--line);border-radius:8px;font-size:12.5px">
+              </div>`).join('')}
+            </div>`:''}
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="addbtn" id="budgetSave" style="--cc:#F09A9A;flex:1">保存预算</button>
+        <button class="delbtn" data-budgetclose style="flex:1">取消</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(()=>overlay.classList.add('show'));
+  const close=()=>overlay.remove();
+  overlay.querySelectorAll('[data-budgetclose]').forEach(b=>b.addEventListener('click',close));
+  document.getElementById('budgetSave').addEventListener('click',()=>{
+    const it={};
+    overlay.querySelectorAll('[data-bcat]').forEach(inp=>{
+      const cat=inp.dataset.bcat;
+      if(!it[cat])it[cat]={limit:null,subs:{}};
+      if(inp.dataset.btype==='limit'){const v=parseFloat(inp.value);it[cat].limit=(!isNaN(v)&&v>0)?v:null;}
+      else{const su=inp.dataset.bsub;const v=parseFloat(inp.value);if(!isNaN(v)&&v>0)it[cat].subs[su]=v;else delete it[cat].subs[su];}
+    });
+    Object.keys(it).forEach(cat=>{if(!it[cat].limit&&Object.keys(it[cat].subs).length===0)delete it[cat];else if(!it[cat].limit)delete it[cat].limit;});
+    const b=loadBudget();b.month=month;b.items=it;saveBudget(b);
+    close();renderBudget(mid,sid);
+  });
+}
+/* --- 照片墙：独立模块，添加照片拼成一面墙 --- */
+function renderPhotoWall(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const rows=loadRows(mid,sid);
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-photos">照片墙</button><span class="sep">/</span><span class="cur">照片墙</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">PHOTOS</div><h1>📷 照片墙</h1><p>把喜欢的照片都贴上来，回忆一眼可见 ✿</p></div>
+      <div class="stat">${rows.length} 张</div>
+    </div>
+    <div class="deco">✦ 回忆墙 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph"><span class="ic">🖼</span> 我的照片</div><button class="addbtn" id="photoAdd" style="--cc:${m.cc}">＋ 添加照片</button></div>
+        <div class="pd">照片只保存在本地浏览器，请勿删除浏览器数据；一次别加太多太大的照片。</div>
+        <div class="photogrid">
+          ${rows.length?rows.slice().reverse().map((r,i)=>{
+            const idx=rows.length-1-i;
+            const v=r.vals||[];
+            return `<div class="photocard">
+              <div class="photothumb" style="background-image:url('${esc(v[0]||'')}')"></div>
+              ${v[1]?`<div class="photocap">${esc(v[1])}</div>`:''}
+              <button class="delbtn" data-photodel="${idx}">删除</button>
+            </div>`;
+          }).join(''):'<div class="empty">还没有照片，点「添加照片」贴一张吧 ✿</div>'}
+        </div>
+      </div>
+    </div>`;
+  const addBtn=document.getElementById('photoAdd');
+  addBtn.addEventListener('click',()=>{
+    const inp=document.createElement('input');
+    inp.type='file';inp.accept='image/*';
+    inp.onchange=()=>{
+      const f=inp.files[0];if(!f)return;
+      if(f.size>2.4*1024*1024){if(typeof toast==='function')toast('图片太大，请选 2MB 以内的');return;}
+      const reader=new FileReader();
+      reader.onload=()=>{
+        const rows2=loadRows(mid,sid);
+        rows2.push({ts:Date.now(),vals:[reader.result,'',nowStr()]});
+        saveRows(mid,sid,rows2);renderPhotoWall(mid,sid);
+      };
+      reader.readAsDataURL(f);
+    };
+    inp.click();
+  });
+  document.querySelectorAll('[data-photodel]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const rows2=loadRows(mid,sid);const i=+b.dataset.photodel;if(i>=0&&i<rows2.length)rows2.splice(i,1);saveRows(mid,sid,rows2);renderPhotoWall(mid,sid);
+    });
+  });
+}
+/* --- 归档区：暂不用的功能收在这里，数据保留 --- */
+function renderArchive(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const entries=[
+    {id:'timeline',ic:'⏳',name:'每日时间轴',desc:'课表 + 日程 + 待办整合的时间轴'},
+    {id:'schedule',ic:'🗓',name:'日程安排',desc:'时间轴 + 年月视图的日程管理'},
+    {id:'course',ic:'🗒',name:'课表',desc:'周一至周日的课程表'},
+    {id:'pomodoro',ic:'⏱',name:'番茄钟',desc:'专注计时与待办'}
+  ];
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-archive">归档区</button><span class="sep">/</span><span class="cur">归档功能</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">ARCHIVE</div><h1>🗄 归档区</h1><p>这些功能你暂时不用，数据都替你存着，随时点开就能继续用。</p></div>
+      <div class="stat">${entries.length} 项暂存</div>
+    </div>
+    <div class="deco">✦ 归档仓库 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="ph"><span class="ic">🗄</span> 暂存功能</div>
+        <div class="pd">数据都在，点卡片即可进入使用；不会丢失。</div>
+        <div class="subgrid">
+          ${entries.map(e=>`<div class="subcard" data-arc="${e.id}" style="--cc:${m.cc}">
+            <div class="ic">${e.ic}</div><h4>${esc(e.name)}</h4>
+            <div class="de">${esc(e.desc)}</div>
+            <div class="go">进入 →</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>`;
+  document.querySelectorAll('[data-arc]').forEach(c=>c.addEventListener('click',()=>{renderSub('utility',c.dataset.arc);}));
+}
 function renderSub(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid); if(!m||!s)return renderModule(mid);
   if(sid==='stats')return renderStats(mid);
@@ -3086,6 +3627,10 @@ function renderSub(mid,sid){
   if(mid==='money'&&sid==='wish')return renderWishEnhanced(mid,sid);
   if(sid==='period')return renderPeriod(mid,sid);
   if(s.special==='weekmonth')return renderWeekMonth(mid,sid);
+  if(s.special==='wheel')return renderWheel(mid,sid);
+  if(s.special==='budget')return renderBudget(mid,sid);
+  if(s.special==='photos')return renderPhotoWall(mid,sid);
+  if(s.special==='archive')return renderArchive(mid,sid);
   if(s.special==='bookmark')return renderBookmark(mid,sid);
   if(s.special==='memorial')return renderMemorial(mid,sid);
   if(s.special==='reminders')return renderReminders(mid,sid);
@@ -3145,6 +3690,7 @@ function render(){
   if(state.module&&state.sub)return renderSub(state.module,state.sub);
   if(state.module)return renderModule(state.module);
   if(state.more){renderMore();$('#backBtn').style.display='inline-flex';return;}
+  if(document.body.classList.contains('locker')){view.innerHTML=lockerHomeHtml();$('#backBtn').style.display='none';return;}
   if(document.body.classList.contains('workbench')){view.innerHTML=wbHomeHtml();$('#backBtn').style.display='none';return;}
   renderHome();
   const home=!state.module&&!state.sub&&!state.guest&&!state.more;
@@ -3381,6 +3927,15 @@ function doSearch(q){
 
 /* ============ 事件 ============ */
 document.addEventListener('click',e=>{
+  if(e.target.id==='lockerBtn'){toggleLocker();return;}
+  if(document.body.classList.contains('locker')){
+    const lk=e.target.closest('[data-lk]');if(lk){lkShow(lk.dataset.lk);return;}
+    const door=e.target.closest('[data-lkdoor]');if(door){toggleLockerDoor();return;}
+    const bk=e.target.closest('[data-lkback]');if(bk){lkShow(bk.dataset.lkback||'main');return;}
+    const w=e.target.closest('[data-w]');if(w){w.classList.toggle('on');return;}
+    if(e.target.closest('[data-lkexit]')){toggleLocker(false);return;}
+    return;
+  }
   const sday=e.target.closest('[data-sday]');
   if(sday){state.sched=sday.dataset.sday;renderSchedule('utility');return;}
   const sdel=e.target.closest('[data-sdel]');
@@ -7870,6 +8425,152 @@ function updateWbState(){
   }else if(state.module&&!state.sub){
     const home=side.querySelector('.wb-home');if(home)home.classList.remove('active');
   }
+}
+/* ===== Locker 储物柜模式（第三套界面）· 卡通储物柜风 ===== */
+let lockerOn=false;
+function lockerStarsHtml(){
+  const stars=[];
+  for(let i=0;i<42;i++){
+    const x=Math.random()*100,y=Math.random()*100,s=Math.random()*2+1,d=(Math.random()*4+2).toFixed(1);
+    stars.push(`<span class="lk-star" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;width:${s}px;height:${s}px;--d:${d}s;animation-delay:${(Math.random()*4).toFixed(1)}s"></span>`);
+  }
+  return stars.join('');
+}
+function lkSceneHtml(view){
+  if(view==='main')return lkMainHtml();
+  if(view==='work')return lkViewWrap('作品展示','SELECTED WORK','<div class="lk-folders">'+lkFolderHtml()+'</div>');
+  if(view.indexOf('work-')===0)return lkWorkHtml(view.slice(5));
+  if(view==='note')return lkViewWrap('打字机便签','TYPEWRITER LETTER',lkNoteHtml());
+  if(view==='skills')return lkViewWrap('个人技能','SKILLS',lkSkillsHtml());
+  if(view==='about')return lkViewWrap('基本信息','BASIC INFORMATION',lkAboutHtml());
+  if(view==='contact')return lkViewWrap('联系我','CONTACT',lkContactHtml());
+  if(view==='words')return lkViewWrap('字谜小游戏','FIND A WORD · SURPRISE',lkWordsHtml());
+  return lkMainHtml();
+}
+function lkViewWrap(title,sub,inner){return `<div class="lk-view"><button class="lk-back" data-lkback>← 返回储物柜</button><h2>${title}</h2><div class="sub">${sub}</div>${inner}</div>`;}
+function lkMainHtml(){
+  return `<div class="lk-main">
+    <div class="lk-locker">
+      <div class="lk-top"></div><div class="lk-base"></div>
+      <div class="lk-body"></div>
+      <div class="lk-door l open" data-lkdoor><div class="hand"></div><div class="sticker" data-lk="words">⭐</div></div>
+      <div class="lk-door r open" data-lkdoor><div class="hand"></div><div class="sticker" data-lk="about">✿</div></div>
+      <div class="lk-shelf">
+        <div class="lk-slot skills" data-lk="skills"><span class="sfic">📚</span><span class="stx">个人技能</span></div>
+        <div class="lk-slot work" data-lk="work"><span class="sfic">🗂</span><span class="stx">作品展示</span></div>
+        <div class="lk-slot note" data-lk="note"><span class="sfic">⌨️</span><span class="stx">打字机</span></div>
+        <div class="lk-slot about" data-lk="about"><span class="sfic">🧾</span><span class="stx">基本信息</span></div>
+      </div>
+      <div class="lk-foot"><span>📚</span><span>💻</span><span>🖌</span></div>
+    </div>
+    <div class="lk-wordsearch" data-lk="words"><b>FIND-A-WORD</b>K C S J O P O D N X</div>
+  </div>`;
+}
+function lkFolderHtml(){
+  return `
+   <div class="lk-folder v" data-lk="work-video"><div class="fi">🎬</div><div class="fn">VIDEO</div><div class="fd">影像作品</div></div>
+   <div class="lk-folder d" data-lk="work-design"><div class="fi">🎨</div><div class="fn">DESIGN</div><div class="fd">视觉类设计</div></div>
+   <div class="lk-folder p" data-lk="work-photo"><div class="fi">📷</div><div class="fn">PHOTOGRAPH</div><div class="fd">摄影作品</div></div>
+   <div class="lk-folder w" data-lk="work-web"><div class="fi">🌐</div><div class="fn">WEBSITE &amp; WRITING</div><div class="fd">文字 / 网站作品</div></div>`;
+}
+function lkWorkHtml(f){
+  const data={
+    video:[['🎬','生活记录短片','随手拍的片段，攒成回忆']],
+    design:[['🎨','星露谷风格值日表','把值日表做成游戏风'],['📄','班级竞选 PPT','粉色星露谷风演示']],
+    photo:[['🌅','照片墙精选','喜欢的照片都贴在这里']],
+    web:[['🌐','个人工作台网站',"粉色 Chelsea's room"],['💳','记账系统','收支流水·预算·分类'],['📖','日记本','每天记录一点点']]
+  };
+  const items=(data[f]||[]).map(x=>`<div class="lk-wcard"><div class="wn">${x[0]} ${x[1]}</div><div class="wd">${x[2]}</div></div>`).join('');
+  const names={video:'影像作品',design:'视觉类设计',photo:'摄影作品',web:'网站 & 文字作品'};
+  return `<div class="lk-view"><button class="lk-back" data-lkback="work">← BACK TO FOLDERS</button><h2>${names[f]||f}</h2><div class="sub">SELECTED WORK</div><div class="lk-works">${items}</div></div>`;
+}
+function lkSkillsHtml(){
+  return `
+   <div class="lk-skill"><div class="no">01</div><div><div class="nm">财务与数据分析</div><div class="ds">记账、预算管理，整理并分析数据。</div><div class="tools">Excel · VLOOKUP · 数据透视表 · SQL</div></div></div>
+   <div class="lk-skill"><div class="no">02</div><div><div class="nm">AI 工具应用</div><div class="ds">用 AI 做网站、写文案、辅助学习。</div><div class="tools">豆包 · 即梦 · Cursor</div></div></div>
+   <div class="lk-skill"><div class="no">03</div><div><div class="nm">视觉与设计</div><div class="ds">PPT、海报、排版，粉色系审美坚持者。</div><div class="tools">PPT · 排版 · 审美</div></div></div>`;
+}
+function lkAboutHtml(){
+  return `<div class="lk-cardbox">
+   <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px"><div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#f5a6c8,#7cc8f2);display:flex;align-items:center;justify-content:center;font-size:26px">👧</div><div><div style="color:#fff;font-size:15px;font-weight:700">丁子慧</div><div style="color:#9aa0d8;font-size:11px">in my creative era · 2026</div></div></div>
+   <div class="lk-row"><b>专业</b><span>财务管理</span></div>
+   <div class="lk-row"><b>学校</b><span>浙江财经大学</span></div>
+   <div class="lk-row"><b>社团</b><span>会计学会 · 策划部</span></div>
+   <div class="lk-row"><b>爱好</b><span>唱歌 · 英语 · 阅读</span></div>
+   <div style="margin-top:12px"><span class="lk-tag">#记账</span><span class="lk-tag">#自律</span><span class="lk-tag">#Vibe Coding</span><span class="lk-tag">#粉色系</span></div></div>`;
+}
+function lkContactHtml(){
+  return `<div class="lk-cardbox">
+   <div class="lk-row"><b>微信</b><span>悄悄告诉我</span></div>
+   <div class="lk-row"><b>邮箱</b><span>悄悄告诉我</span></div>
+   <div style="margin-top:12px;text-align:center;color:#9aa0d8;font-size:12px">这个储物柜的主人是丁子慧 ✿</div></div>`;
+}
+function lkNoteHtml(){
+  const note=loadLockerNote();
+  return `<div class="lk-cork">
+     <div class="lk-note" style="top:14px;left:8px;--r:-3deg">☀ 今天也要加油</div>
+     <div class="lk-note" style="top:38px;right:10px;--r:2deg">🎵 听一首好歌</div>
+     <div class="lk-note" style="bottom:40px;left:14px;--r:4deg">📚 读书打卡</div>
+     <div style="position:relative;z-index:3;padding-top:22px">
+       <div class="lk-typewriter">
+         <div class="paper">${esc(note)||'NO. 015 — TYPEWRITER LETTER'}<span class="caret"></span></div>
+         <div class="keys">${Array(12).fill(0).map(()=>'<div class="key"></div>').join('')}</div>
+       </div>
+     </div>
+   </div>
+   <input class="lk-cork-input" id="lkNoteInput" placeholder="在这里输入一段想法… 回车保存">
+   <div style="text-align:center;margin-top:8px;color:#9aa0d8;font-size:11px">按下回车，把想法钉到纸上</div>`;
+}
+function lkWordsHtml(){
+  const grid='KCSJOPODNX'.split('').map(c=>`<div data-w="${c}">${c}</div>`).join('');
+  return `<div class="lk-words">${grid}</div><div style="text-align:center;color:#9aa0d8;font-size:11px;margin-top:10px">找到隐藏的词，点一下字母标记 ✨</div>`;
+}
+function loadLockerNote(){try{return localStorage.getItem('lifeArchive_locker_note')||'';}catch(e){return '';}}
+function saveLockerNote(t){try{localStorage.setItem('lifeArchive_locker_note',t);}catch(e){}}
+function lkShow(view){
+  state.lockerView=view;
+  const stage=document.querySelector('.locker-stage');
+  if(!stage)return;
+  stage.innerHTML=lkSceneHtml(view);
+  const inp=stage.querySelector('#lkNoteInput');
+  if(inp)inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'&&inp.value.trim()){
+      saveLockerNote(inp.value.trim());
+      const paper=stage.querySelector('.paper');if(paper)paper.innerHTML=esc(loadLockerNote())+'<span class="caret"></span>';
+      inp.value='';
+    }
+  });
+}
+function toggleLockerDoor(){
+  const doors=document.querySelectorAll('.lk-door');
+  if(!doors.length)return;
+  const anyOpen=[...doors].some(d=>d.classList.contains('open'));
+  doors.forEach(d=>{if(anyOpen)d.classList.remove('open');else d.classList.add('open');});
+}
+function lockerHomeHtml(){
+  if(!state.lockerView)state.lockerView='main';
+  return `<div class="locker-page">
+    <div class="locker-exit" data-lkexit>✕ 离开储物柜</div>
+    <nav class="locker-nav">
+      <a data-lk="about">ABOUT</a><a data-lk="skills">SKILLS</a><a data-lk="work">SELECTED WORK</a><a data-lk="note">NOTE</a><a data-lk="contact">CONTACT</a>
+    </nav>
+    <div class="locker-stage">${lkSceneHtml(state.lockerView)}</div>
+    <div class="locker-hint">CLICK A STICKER · PORTFOLIO '26</div>
+  </div>`;
+}
+function toggleLocker(force){
+  const turnOn=force===true?true:force===false?false:!lockerOn;
+  const ols=document.getElementById('wside'),olr=document.getElementById('wrbar'),obn=document.getElementById('wbbanner');
+  if(turnOn){
+    document.body.classList.add('locker');
+    document.body.classList.remove('workbench');
+    if(ols)ols.remove();if(olr)olr.remove();if(obn)obn.remove();
+    render();
+  }else{
+    document.body.classList.remove('locker');
+    render();
+  }
+  lockerOn=turnOn;
 }
 function toggleWorkbench(force){
   const app=document.getElementById('app');

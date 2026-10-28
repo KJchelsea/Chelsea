@@ -948,107 +948,6 @@ body:not(.workbench) #petMenu{display:none}
 .pincard .pd{font-size:12px;color:var(--ink-dim);margin-top:3px}
 .morewrap{margin-top:14px}
 .morecard{border-style:dashed;background:var(--bg2)}
-/* ===== Locker 储物柜模式（第三套界面）· 白色长柜 ===== */
-body.locker{background:#f2efe9;color:#3a3a40}
-body.locker #app{display:block;max-width:none;width:100%;padding:0;margin:0;height:100vh;overflow:hidden}
-body.locker #view{background:transparent;height:100vh;padding:0;overflow:hidden}
-.locker-page{min-height:100vh;position:relative;overflow:hidden;background:linear-gradient(180deg,#fbfaf7 0%,#f1eee7 100%);color:#3a3a40;font-family:'Courier New',Courier,monospace}
-.locker-page::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(150,140,120,.10) 1px,transparent 1px);background-size:30px 30px;pointer-events:none;opacity:.5}
-.locker-nav{position:absolute;top:14px;left:0;right:0;display:flex;justify-content:center;gap:14px;z-index:40;font-family:'Courier New',monospace;flex-wrap:wrap}
-.locker-nav a{color:#555a63;text-decoration:none;font-size:12.5px;letter-spacing:.14em;cursor:pointer;padding:7px 12px;border:1px solid transparent;transition:.2s;border-radius:8px;white-space:nowrap}
-.locker-nav a:hover{color:#222;border-color:rgba(0,0,0,.15);background:rgba(255,255,255,.6)}
-.locker-exit{position:absolute;top:14px;left:14px;z-index:60;color:#555a63;font-size:13px;cursor:pointer;padding:6px 12px;border:1px solid rgba(0,0,0,.15);border-radius:8px;background:rgba(255,255,255,.5);letter-spacing:.08em}
-.locker-exit:hover{color:#222;background:#fff}
-.locker-hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;color:#9aa0a8;font-size:11.5px;letter-spacing:.12em;z-index:20;pointer-events:none}
-.locker-stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;perspective:1200px}
-/* 主储物柜：白色长柜 */
-.lk-main{position:relative;width:272px;max-width:76vw;height:620px;transform-style:preserve-3d}
-.lk-locker{position:absolute;inset:0;transform-style:preserve-3d;animation:lkFloat 5s ease-in-out infinite}
-@keyframes lkFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-.lk-top{position:absolute;left:-10px;right:-10px;top:-14px;height:20px;background:linear-gradient(180deg,#f0f6fc,#d3e3f2);border:2px solid #b9d0e6;border-radius:8px 8px 6px 6px;box-shadow:0 4px 10px rgba(0,0,0,.08)}
-.lk-base{position:absolute;left:-10px;right:-10px;bottom:-12px;height:16px;background:linear-gradient(180deg,#e3edf7,#cddced);border:2px solid #b0c8df;border-radius:6px 6px 8px 8px}
-.lk-body{position:absolute;inset:6px 0 6px 0;background:linear-gradient(160deg,#eef5fc,#d7e6f4);border:2px solid #b9d0e6;border-radius:10px;box-shadow:inset 0 0 26px rgba(255,255,255,.4),0 14px 34px rgba(120,150,190,.18)}
-/* 柜门（可开合） */
-.lk-door{position:absolute;top:6px;bottom:6px;width:50%;background:linear-gradient(160deg,#ffffff,#ece9e2);border:2px solid #d8d4cb;box-shadow:0 8px 20px rgba(0,0,0,.12);z-index:8;transition:transform .7s cubic-bezier(.2,.7,.3,1.2);cursor:pointer}
-.lk-door.l{left:0;border-radius:9px 4px 4px 9px;transform:rotateY(-65deg);transform-origin:left}
-.lk-door.r{right:0;border-radius:4px 9px 9px 4px;transform:rotateY(65deg);transform-origin:right}
-.lk-door.open.l{transform:rotateY(-65deg)}
-.lk-door.open.r{transform:rotateY(65deg)}
-.lk-door .hand{position:absolute;top:42%;width:7px;height:30px;background:#e5b24b;border:2px solid #b98a2e;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,.15)}
-.lk-door.l .hand{right:12px}
-.lk-door.r .hand{left:12px}
-.lk-door .sticker{position:absolute;font-size:16px;cursor:pointer;filter:drop-shadow(0 2px 3px rgba(0,0,0,.12));transition:.2s}
-.lk-door .sticker:hover{transform:scale(1.15) rotate(-6deg)}
-.lk-door.l .sticker{right:16px;top:18px}
-.lk-door.r .sticker{left:16px;bottom:16px}
-/* 柜内格子与物件 */
-.lk-shelf{position:absolute;left:12px;right:12px;top:16px;height:86%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;z-index:3}
-.lk-slot{background:rgba(255,255,255,.7);border:2px solid #dcd8cf;border-radius:10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:.2s;box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 4px 10px rgba(0,0,0,.05)}
-.lk-slot .sfic{font-size:30px;margin-bottom:4px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.12))}
-.lk-slot .stx{font-size:12.5px;font-weight:700;color:#4a4a52;letter-spacing:.05em}
-.lk-slot:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(0,0,0,.10)}
-.lk-slot.skills{background:linear-gradient(160deg,#fff,#fdf3e3)}
-.lk-slot.work{background:linear-gradient(160deg,#fff,#e7f3ef)}
-.lk-slot.note{background:linear-gradient(160deg,#fff,#eef0fb)}
-.lk-slot.about{background:linear-gradient(160deg,#fff,#fdeef2)}
-/* 柜底小物 */
-.lk-foot{position:absolute;left:12px;right:12px;bottom:6px;height:8%;display:flex;justify-content:space-around;align-items:center;font-size:22px;z-index:3;filter:drop-shadow(0 3px 4px rgba(0,0,0,.14))}
-/* 字谜板（简洁） */
-.lk-wordsearch{position:absolute;right:4px;top:6px;width:86px;background:rgba(255,255,255,.8);border:2px solid #d8d4cb;border-radius:10px;padding:6px;font-size:7px;color:#b09a6a;letter-spacing:1px;line-height:1.5;cursor:pointer;z-index:9;box-shadow:0 3px 8px rgba(0,0,0,.06)}
-.lk-wordsearch b{display:block;color:#7a7a82;font-size:8px;margin-bottom:2px;letter-spacing:.1em}
-.lk-wordsearch:hover{background:#fff}
-/* 子视图（白色简洁） */
-.lk-view{position:absolute;inset:0;z-index:30;padding:22px;overflow:auto;animation:lkFadeIn .3s ease;background:linear-gradient(180deg,#fbfaf7,#f1eee7)}
-@keyframes lkFadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-.lk-back{display:inline-flex;align-items:center;gap:6px;color:#555a63;font-size:12px;cursor:pointer;padding:7px 13px;border:1px solid rgba(0,0,0,.14);border-radius:9px;background:rgba(255,255,255,.65);letter-spacing:.08em;margin-bottom:14px}
-.lk-back:hover{color:#222;background:#fff}
-.lk-view h2{font-size:18px;letter-spacing:.08em;color:#333;margin:0 0 4px}
-.lk-view .sub{font-size:11px;color:#9aa0a8;letter-spacing:.16em;margin-bottom:16px}
-/* 作品文件夹 */
-.lk-folders{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.lk-folder{background:#fff;border:2px solid #e0dcd3;border-radius:16px;padding:20px 10px;text-align:center;cursor:pointer;transition:.2s;box-shadow:0 6px 16px rgba(0,0,0,.05)}
-.lk-folder:hover{transform:translateY(-4px);box-shadow:0 10px 22px rgba(0,0,0,.09)}
-.lk-folder .fi{font-size:38px;margin-bottom:8px}
-.lk-folder .fn{font-size:13px;font-weight:700;color:#333;letter-spacing:.04em}
-.lk-folder .fd{font-size:10.5px;color:#9aa0a8;margin-top:3px}
-.lk-folder.v{border-color:#f3c8b8}
-.lk-folder.d{border-color:#bfd9ef}
-.lk-folder.p{border-color:#bde0cf}
-.lk-folder.w{border-color:#d4c9f0}
-/* 作品卡片 */
-.lk-works{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.lk-wcard{border-radius:16px;overflow:hidden;border:2px solid #e0dcd3;background:#fff;cursor:pointer;transition:.2s;aspect-ratio:3/4;display:flex;flex-direction:column;justify-content:flex-end;padding:12px;box-shadow:0 6px 14px rgba(0,0,0,.05)}
-.lk-wcard:hover{transform:scale(1.03)}
-.lk-wcard .wn{font-size:12px;font-weight:700;color:#333;letter-spacing:.05em}
-.lk-wcard .wd{font-size:10px;color:#9aa0a8;margin-top:3px}
-/* 技能卡 */
-.lk-skill{display:flex;gap:12px;padding:14px;border-radius:14px;background:#fff;border:1px solid #e0dcd3;margin-bottom:10px;box-shadow:0 4px 10px rgba(0,0,0,.04)}
-.lk-skill .no{font-size:18px;font-weight:800;color:#e5a14b;min-width:30px}
-.lk-skill .nm{font-size:14px;color:#333;font-weight:600;margin-bottom:2px}
-.lk-skill .ds{font-size:12px;color:#5a5a62;line-height:1.5}
-.lk-skill .tools{font-size:11px;color:#9aa0a8;margin-top:4px}
-/* 软木板打字机 */
-.lk-cork{position:relative;background:#d9c7a5;border:8px solid #b89b6e;border-radius:16px;padding:16px;box-shadow:inset 0 0 30px rgba(0,0,0,.18),0 12px 30px rgba(0,0,0,.14);min-height:240px;margin-bottom:14px}
-.lk-cork::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(90,70,40,.15) 1px,transparent 1px);background-size:8px 8px;border-radius:10px}
-.lk-note{position:absolute;width:92px;min-height:66px;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.2);padding:8px;font-size:10px;color:#555;border-radius:2px;transform:rotate(var(--r,0deg));z-index:2}
-.lk-typewriter{position:relative;margin:0 auto;width:200px;background:#3a3632;border-radius:12px;padding:16px 14px 22px;box-shadow:0 10px 26px rgba(0,0,0,.35)}
-.lk-typewriter .keys{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
-.lk-typewriter .key{height:16px;background:#e8e4dd;border-radius:3px;border:1px solid #b9b3aa}
-.lk-typewriter .paper{position:absolute;top:-42px;left:50%;transform:translateX(-50%);width:128px;height:62px;background:#f7f2e4;border-radius:4px;padding:8px;color:#333;font-size:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.3)}
-.lk-typewriter .paper .caret{display:inline-block;width:6px;height:12px;background:#c0392b;animation:lkCaret 1s steps(1) infinite}
-@keyframes lkCaret{0%,49%{opacity:1}50%,100%{opacity:0}}
-.lk-cork-input{width:100%;margin-top:14px;padding:10px;border-radius:9px;border:1px solid #d0ccc3;background:#fff;color:#333;font-size:13px}
-/* 字谜板展开 */
-.lk-words{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;max-width:280px;margin:0 auto}
-.lk-words div{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid #e0dcd3;border-radius:8px;font-size:15px;font-weight:700;color:#a08a5a;cursor:pointer;transition:.15s}
-.lk-words div.on{background:#e5a14b;color:#fff}
-.lk-words div:hover{background:#f7f3ea}
-/* 信息卡 */
-.lk-cardbox{background:#fff;border:1px solid #e0dcd3;border-radius:16px;padding:18px;box-shadow:0 6px 16px rgba(0,0,0,.05)}
-.lk-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed #e5e1d8;font-size:13px}
-.lk-row b{color:#333;font-weight:600}
-.lk-row span{color:#6a6a72}
-.lk-tag{display:inline-block;font-size:11px;padding:3px 9px;border-radius:999px;background:#f3eef8;color:#8a7ab8;margin:4px 4px 0 0;border:1px solid #ddd6ee}
 
 </style>
 </head>
@@ -1094,7 +993,6 @@ body.locker #view{background:transparent;height:100vh;padding:0;overflow:hidden}
 <button id="lockBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="锁定房间">🔒 锁定</button>
 <button id="syncBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="手动同步到云端">☁️ 同步</button>
 <button id="wbToggleBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="切换 简洁 / 工作台横屏 界面">⊞ 工作台</button>
-<button id="lockerBtn" style="padding:6px 14px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink-dim);font-size:13px;transition:.2s" title="切换 储物柜 Locker 界面">🗄 储物柜</button>
 </div>
 
 <div id="app">
@@ -1200,16 +1098,9 @@ const DATA=[
 
 /* ============ 本地存储 ============ */
 const PREFIX='lifeArchive_';
-/* 首次打开新版本：清空旧版本遗留的演示数据/旧数据（一次性） */
+/* 首次打开新版本：版本标记（已取消自动清空，避免误删用户在云端有备份的真实数据） */
 (function(){
-  try{
-    if(!localStorage.getItem(PREFIX+'v2_cleared')){
-      const keys=[];
-      for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf(PREFIX)===0)keys.push(k);}
-      keys.forEach(k=>localStorage.removeItem(k));
-      localStorage.setItem(PREFIX+'v2_cleared','1');
-    }
-  }catch(e){}
+  try{localStorage.setItem(PREFIX+'v2_cleared','1');}catch(e){}
 })();
 function storeKey(mid,sid){return PREFIX+mid+'_'+sid}
 function findModule(id){return DATA.find(m=>m.id===id)}
@@ -3690,7 +3581,6 @@ function render(){
   if(state.module&&state.sub)return renderSub(state.module,state.sub);
   if(state.module)return renderModule(state.module);
   if(state.more){renderMore();$('#backBtn').style.display='inline-flex';return;}
-  if(document.body.classList.contains('locker')){view.innerHTML=lockerHomeHtml();$('#backBtn').style.display='none';return;}
   if(document.body.classList.contains('workbench')){view.innerHTML=wbHomeHtml();$('#backBtn').style.display='none';return;}
   renderHome();
   const home=!state.module&&!state.sub&&!state.guest&&!state.more;
@@ -3927,15 +3817,6 @@ function doSearch(q){
 
 /* ============ 事件 ============ */
 document.addEventListener('click',e=>{
-  if(e.target.id==='lockerBtn'){toggleLocker();return;}
-  if(document.body.classList.contains('locker')){
-    const lk=e.target.closest('[data-lk]');if(lk){lkShow(lk.dataset.lk);return;}
-    const door=e.target.closest('[data-lkdoor]');if(door){toggleLockerDoor();return;}
-    const bk=e.target.closest('[data-lkback]');if(bk){lkShow(bk.dataset.lkback||'main');return;}
-    const w=e.target.closest('[data-w]');if(w){w.classList.toggle('on');return;}
-    if(e.target.closest('[data-lkexit]')){toggleLocker(false);return;}
-    return;
-  }
   const sday=e.target.closest('[data-sday]');
   if(sday){state.sched=sday.dataset.sday;renderSchedule('utility');return;}
   const sdel=e.target.closest('[data-sdel]');
@@ -8425,152 +8306,6 @@ function updateWbState(){
   }else if(state.module&&!state.sub){
     const home=side.querySelector('.wb-home');if(home)home.classList.remove('active');
   }
-}
-/* ===== Locker 储物柜模式（第三套界面）· 卡通储物柜风 ===== */
-let lockerOn=false;
-function lockerStarsHtml(){
-  const stars=[];
-  for(let i=0;i<42;i++){
-    const x=Math.random()*100,y=Math.random()*100,s=Math.random()*2+1,d=(Math.random()*4+2).toFixed(1);
-    stars.push(`<span class="lk-star" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;width:${s}px;height:${s}px;--d:${d}s;animation-delay:${(Math.random()*4).toFixed(1)}s"></span>`);
-  }
-  return stars.join('');
-}
-function lkSceneHtml(view){
-  if(view==='main')return lkMainHtml();
-  if(view==='work')return lkViewWrap('作品展示','SELECTED WORK','<div class="lk-folders">'+lkFolderHtml()+'</div>');
-  if(view.indexOf('work-')===0)return lkWorkHtml(view.slice(5));
-  if(view==='note')return lkViewWrap('打字机便签','TYPEWRITER LETTER',lkNoteHtml());
-  if(view==='skills')return lkViewWrap('个人技能','SKILLS',lkSkillsHtml());
-  if(view==='about')return lkViewWrap('基本信息','BASIC INFORMATION',lkAboutHtml());
-  if(view==='contact')return lkViewWrap('联系我','CONTACT',lkContactHtml());
-  if(view==='words')return lkViewWrap('字谜小游戏','FIND A WORD · SURPRISE',lkWordsHtml());
-  return lkMainHtml();
-}
-function lkViewWrap(title,sub,inner){return `<div class="lk-view"><button class="lk-back" data-lkback>← 返回储物柜</button><h2>${title}</h2><div class="sub">${sub}</div>${inner}</div>`;}
-function lkMainHtml(){
-  return `<div class="lk-main">
-    <div class="lk-locker">
-      <div class="lk-top"></div><div class="lk-base"></div>
-      <div class="lk-body"></div>
-      <div class="lk-door l open" data-lkdoor><div class="hand"></div><div class="sticker" data-lk="words">⭐</div></div>
-      <div class="lk-door r open" data-lkdoor><div class="hand"></div><div class="sticker" data-lk="about">✿</div></div>
-      <div class="lk-shelf">
-        <div class="lk-slot skills" data-lk="skills"><span class="sfic">📚</span><span class="stx">个人技能</span></div>
-        <div class="lk-slot work" data-lk="work"><span class="sfic">🗂</span><span class="stx">作品展示</span></div>
-        <div class="lk-slot note" data-lk="note"><span class="sfic">⌨️</span><span class="stx">打字机</span></div>
-        <div class="lk-slot about" data-lk="about"><span class="sfic">🧾</span><span class="stx">基本信息</span></div>
-      </div>
-      <div class="lk-foot"><span>📚</span><span>💻</span><span>🖌</span></div>
-    </div>
-    <div class="lk-wordsearch" data-lk="words"><b>FIND-A-WORD</b>K C S J O P O D N X</div>
-  </div>`;
-}
-function lkFolderHtml(){
-  return `
-   <div class="lk-folder v" data-lk="work-video"><div class="fi">🎬</div><div class="fn">VIDEO</div><div class="fd">影像作品</div></div>
-   <div class="lk-folder d" data-lk="work-design"><div class="fi">🎨</div><div class="fn">DESIGN</div><div class="fd">视觉类设计</div></div>
-   <div class="lk-folder p" data-lk="work-photo"><div class="fi">📷</div><div class="fn">PHOTOGRAPH</div><div class="fd">摄影作品</div></div>
-   <div class="lk-folder w" data-lk="work-web"><div class="fi">🌐</div><div class="fn">WEBSITE &amp; WRITING</div><div class="fd">文字 / 网站作品</div></div>`;
-}
-function lkWorkHtml(f){
-  const data={
-    video:[['🎬','生活记录短片','随手拍的片段，攒成回忆']],
-    design:[['🎨','星露谷风格值日表','把值日表做成游戏风'],['📄','班级竞选 PPT','粉色星露谷风演示']],
-    photo:[['🌅','照片墙精选','喜欢的照片都贴在这里']],
-    web:[['🌐','个人工作台网站',"粉色 Chelsea's room"],['💳','记账系统','收支流水·预算·分类'],['📖','日记本','每天记录一点点']]
-  };
-  const items=(data[f]||[]).map(x=>`<div class="lk-wcard"><div class="wn">${x[0]} ${x[1]}</div><div class="wd">${x[2]}</div></div>`).join('');
-  const names={video:'影像作品',design:'视觉类设计',photo:'摄影作品',web:'网站 & 文字作品'};
-  return `<div class="lk-view"><button class="lk-back" data-lkback="work">← BACK TO FOLDERS</button><h2>${names[f]||f}</h2><div class="sub">SELECTED WORK</div><div class="lk-works">${items}</div></div>`;
-}
-function lkSkillsHtml(){
-  return `
-   <div class="lk-skill"><div class="no">01</div><div><div class="nm">财务与数据分析</div><div class="ds">记账、预算管理，整理并分析数据。</div><div class="tools">Excel · VLOOKUP · 数据透视表 · SQL</div></div></div>
-   <div class="lk-skill"><div class="no">02</div><div><div class="nm">AI 工具应用</div><div class="ds">用 AI 做网站、写文案、辅助学习。</div><div class="tools">豆包 · 即梦 · Cursor</div></div></div>
-   <div class="lk-skill"><div class="no">03</div><div><div class="nm">视觉与设计</div><div class="ds">PPT、海报、排版，粉色系审美坚持者。</div><div class="tools">PPT · 排版 · 审美</div></div></div>`;
-}
-function lkAboutHtml(){
-  return `<div class="lk-cardbox">
-   <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px"><div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#f5a6c8,#7cc8f2);display:flex;align-items:center;justify-content:center;font-size:26px">👧</div><div><div style="color:#fff;font-size:15px;font-weight:700">丁子慧</div><div style="color:#9aa0d8;font-size:11px">in my creative era · 2026</div></div></div>
-   <div class="lk-row"><b>专业</b><span>财务管理</span></div>
-   <div class="lk-row"><b>学校</b><span>浙江财经大学</span></div>
-   <div class="lk-row"><b>社团</b><span>会计学会 · 策划部</span></div>
-   <div class="lk-row"><b>爱好</b><span>唱歌 · 英语 · 阅读</span></div>
-   <div style="margin-top:12px"><span class="lk-tag">#记账</span><span class="lk-tag">#自律</span><span class="lk-tag">#Vibe Coding</span><span class="lk-tag">#粉色系</span></div></div>`;
-}
-function lkContactHtml(){
-  return `<div class="lk-cardbox">
-   <div class="lk-row"><b>微信</b><span>悄悄告诉我</span></div>
-   <div class="lk-row"><b>邮箱</b><span>悄悄告诉我</span></div>
-   <div style="margin-top:12px;text-align:center;color:#9aa0d8;font-size:12px">这个储物柜的主人是丁子慧 ✿</div></div>`;
-}
-function lkNoteHtml(){
-  const note=loadLockerNote();
-  return `<div class="lk-cork">
-     <div class="lk-note" style="top:14px;left:8px;--r:-3deg">☀ 今天也要加油</div>
-     <div class="lk-note" style="top:38px;right:10px;--r:2deg">🎵 听一首好歌</div>
-     <div class="lk-note" style="bottom:40px;left:14px;--r:4deg">📚 读书打卡</div>
-     <div style="position:relative;z-index:3;padding-top:22px">
-       <div class="lk-typewriter">
-         <div class="paper">${esc(note)||'NO. 015 — TYPEWRITER LETTER'}<span class="caret"></span></div>
-         <div class="keys">${Array(12).fill(0).map(()=>'<div class="key"></div>').join('')}</div>
-       </div>
-     </div>
-   </div>
-   <input class="lk-cork-input" id="lkNoteInput" placeholder="在这里输入一段想法… 回车保存">
-   <div style="text-align:center;margin-top:8px;color:#9aa0d8;font-size:11px">按下回车，把想法钉到纸上</div>`;
-}
-function lkWordsHtml(){
-  const grid='KCSJOPODNX'.split('').map(c=>`<div data-w="${c}">${c}</div>`).join('');
-  return `<div class="lk-words">${grid}</div><div style="text-align:center;color:#9aa0d8;font-size:11px;margin-top:10px">找到隐藏的词，点一下字母标记 ✨</div>`;
-}
-function loadLockerNote(){try{return localStorage.getItem('lifeArchive_locker_note')||'';}catch(e){return '';}}
-function saveLockerNote(t){try{localStorage.setItem('lifeArchive_locker_note',t);}catch(e){}}
-function lkShow(view){
-  state.lockerView=view;
-  const stage=document.querySelector('.locker-stage');
-  if(!stage)return;
-  stage.innerHTML=lkSceneHtml(view);
-  const inp=stage.querySelector('#lkNoteInput');
-  if(inp)inp.addEventListener('keydown',e=>{
-    if(e.key==='Enter'&&inp.value.trim()){
-      saveLockerNote(inp.value.trim());
-      const paper=stage.querySelector('.paper');if(paper)paper.innerHTML=esc(loadLockerNote())+'<span class="caret"></span>';
-      inp.value='';
-    }
-  });
-}
-function toggleLockerDoor(){
-  const doors=document.querySelectorAll('.lk-door');
-  if(!doors.length)return;
-  const anyOpen=[...doors].some(d=>d.classList.contains('open'));
-  doors.forEach(d=>{if(anyOpen)d.classList.remove('open');else d.classList.add('open');});
-}
-function lockerHomeHtml(){
-  if(!state.lockerView)state.lockerView='main';
-  return `<div class="locker-page">
-    <div class="locker-exit" data-lkexit>✕ 离开储物柜</div>
-    <nav class="locker-nav">
-      <a data-lk="about">ABOUT</a><a data-lk="skills">SKILLS</a><a data-lk="work">SELECTED WORK</a><a data-lk="note">NOTE</a><a data-lk="contact">CONTACT</a>
-    </nav>
-    <div class="locker-stage">${lkSceneHtml(state.lockerView)}</div>
-    <div class="locker-hint">CLICK A STICKER · PORTFOLIO '26</div>
-  </div>`;
-}
-function toggleLocker(force){
-  const turnOn=force===true?true:force===false?false:!lockerOn;
-  const ols=document.getElementById('wside'),olr=document.getElementById('wrbar'),obn=document.getElementById('wbbanner');
-  if(turnOn){
-    document.body.classList.add('locker');
-    document.body.classList.remove('workbench');
-    if(ols)ols.remove();if(olr)olr.remove();if(obn)obn.remove();
-    render();
-  }else{
-    document.body.classList.remove('locker');
-    render();
-  }
-  lockerOn=turnOn;
 }
 function toggleWorkbench(force){
   const app=document.getElementById('app');

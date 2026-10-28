@@ -1276,8 +1276,10 @@ async function ownerSyncStart(pass){
   await kvPullAll();
   flowInitIfNeeded();
   ttInitIfNeeded();
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.indexOf(PREFIX)===0)kvUpsert(k,localStorage.getItem(k));}
-  toast('☁️ 已连接云端，全部数据开始同步');
+  /* 修复(2026-10-28)：不再无条件把本地全量推上云端覆盖。云端为权威，
+     只有用户新写入（Storage.setItem 挂钩）时才增量上传，杜绝本地旧数据反向覆盖云端。 */
+  if(typeof render==='function'){try{render();}catch(e){}}
+  toast('☁️ 已连接云端，以云端为准同步开始');
 }
 function ownerSyncStop(){sbOk=false;_encKey=null;}
 /* ---- 留言板：拉取 / 发送 / 删除（删除需密码） ---- */
@@ -1539,12 +1541,27 @@ function renderStats(mid){
   const catData=Object.keys(catAgg).map((c,i)=>[c,Math.round(catAgg[c]/catTotal*100),CAT_COLORS[i%CAT_COLORS.length]]);
   const donutHTML=catData.length?donutChart(catData):'<div class="empty">本月暂无支出，记一笔吧</div>';
 
-  /* 本月支出：大分类 → 小分类 细分 */
+  /* 本月支出：大分类 → 小分类 → 具体流水明细（点击小分类可展开） */
   const subAgg={};
-  Object.keys(dayMap).forEach(d=>{if(d.startsWith(prefix)){dayMap[d].items.forEach(it=>{if(it.type!=='expense')return;if(!subAgg[it.cat])subAgg[it.cat]={total:0,subs:{}};subAgg[it.cat].total+=it.amount;const sk=it.sub||'未分小类';subAgg[it.cat].subs[sk]=(subAgg[it.cat].subs[sk]||0)+it.amount;});}});
+  Object.keys(dayMap).forEach(d=>{if(d.startsWith(prefix)){dayMap[d].items.forEach(it=>{if(it.type!=='expense')return;
+    if(!subAgg[it.cat])subAgg[it.cat]={total:0,subs:{}};
+    subAgg[it.cat].total+=it.amount;
+    const sk=it.sub||'未分小类';
+    if(!subAgg[it.cat].subs[sk])subAgg[it.cat].subs[sk]={total:0,items:[]};
+    subAgg[it.cat].subs[sk].total+=it.amount;
+    subAgg[it.cat].subs[sk].items.push({rm:it.remark||'',dt:it.date||d,am:it.amount});
+  });}});
   const catDetailHTML=Object.keys(subAgg).length?Object.keys(subAgg).map(cat=>{
     const cg=subAgg[cat];
-    const subs=Object.keys(cg.subs).map(sk=>`<div style="display:flex;justify-content:space-between;font-size:12.5px;padding:3px 0 3px 14px;border-bottom:1px dashed var(--line)"><span>${esc(sk)}</span><span style="color:var(--coral)">¥${cg.subs[sk].toFixed(2)}</span></div>`).join('');
+    const subs=Object.keys(cg.subs).map(sk=>{
+      const s=cg.subs[sk];
+      const uid=encodeURIComponent(cat)+'_'+encodeURIComponent(sk);
+      const items=s.items.map(it=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--ink-dim)"><span>${it.rm?esc(it.rm):'<span style="color:var(--ink-faint)">（无备注）</span>'}<span style="color:var(--ink-faint)"> · ${String(it.dt).slice(5)}</span></span><span style="color:var(--coral)">¥${it.am.toFixed(2)}</span></div>`).join('');
+      return `<div class="subrow" data-cat="${uid}">
+        <div class="subtoggle" data-cat="${uid}" style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;padding:4px 0 4px 14px;border-bottom:1px dashed var(--line);cursor:pointer"><span>${esc(sk)} <span class="subcnt" style="color:var(--ink-faint);font-size:11px">▸ ${s.items.length} 笔</span></span><span style="color:var(--coral)">¥${s.total.toFixed(2)}</span></div>
+        <div class="subdetail" id="d_${uid}" style="display:none;background:#FBF2F7;border-radius:8px;margin:4px 0 6px 14px;padding:6px 12px">${items}</div>
+      </div>`;
+    }).join('');
     return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)"><span>${esc(cat)}</span><span style="color:var(--coral)">¥${cg.total.toFixed(2)}</span></div>${subs}</div>`;
   }).join(''):'<div class="empty">本月暂无支出，记一笔吧</div>';
 
@@ -1647,6 +1664,18 @@ function renderStats(mid){
   document.querySelectorAll('[data-stday]').forEach(cell=>cell.addEventListener('click',()=>{
     state.statsDay=cell.dataset.stday;renderStats(mid);
   }));
+  view.removeEventListener('click',statsCatToggle);
+  view.addEventListener('click',statsCatToggle);
+}
+function statsCatToggle(e){
+  const t=e.target&&e.target.closest?e.target.closest('.subtoggle'):null;
+  if(!t)return;
+  const uid=t.dataset.cat;const d=document.getElementById('d_'+uid);
+  if(!d)return;
+  const open=d.style.display==='none';
+  d.style.display=open?'block':'none';
+  const cnt=t.querySelector('.subcnt');
+  if(cnt)cnt.textContent=(open?'▾ ':'▸ ')+cnt.textContent.replace(/^[▸▾]\s*/,'');
 }
 
 /* 日程安排：时间点 + 时间段 */
@@ -6289,14 +6318,13 @@ function saveWishForm(){
 /* 收支分类映射：大支出 → 对应的小支出，选大分类后小分类只显示该大分类下对应的 */
 const FLOW_CATS={
   expense:{
-    '餐饮':['三餐','外卖','零食','水果','奶茶饮料','食堂'],
-    '购物':['美妆护肤','服饰穿搭','数码电子','家居日用','生活用品'],
-    '交通':['地铁公交','打车','火车','共享单车'],
-    '居住':['水电燃气','网费话费','房租','家居维修'],
-    '娱乐':['电影演出','游戏充值','视频会员','旅行','音乐'],
-    '学习':['教材书籍','课程培训','打印','文具'],
-    '健康':['药品','体检','健身运动','门诊'],
-    '人情':['请客聚餐','礼物','红包'],
+    '学习办公':['数码','资料','文具'],
+    '精致女孩':['服装','鞋子','帽子','饰品','护肤品','美容','头发'],
+    '食物餐饮':['外卖食堂','零食甜品','水果','自备饮品','外购饮品'],
+    '生活住宿':['日常用品','清洁','房租','水电'],
+    '行车交通':['地铁','打车','单车','公交'],
+    '事务办理':['省钱工具','其他'],
+    '人情往来':['礼金','礼物','请客'],
     '其他支出':[]
   },
   income:{

@@ -1370,11 +1370,7 @@ function donutChart(data){
 function renderPins(){
   const pins=[
     ['sub-money-flow','📒','记账','随手记一笔收支','#F09A9A'],
-    ['sub-utility-course','🗒','课表','本周课程一目了然','#9FB8C8'],
-    ['sub-growth-mood','🌈','心情','今天心情怎么样','#E88CA8'],
-    ['sub-todo-todo','☑','待办','今天要做的事','#E88CA8'],
-    ['sub-utility-schedule','🗓','日程','安排与计划','#9FB8C8'],
-    ['sub-utility-timeline','⏳','时间轴','课表+日程+待办','#F6DFA8']
+    ['sub-todo-todo','☑','待办','今天要做的事','#E88CA8']
   ];
   return `<div class="pins">
     <div class="pins-t">✨ 我的常用</div>
@@ -1578,6 +1574,34 @@ function renderStats(mid){
     yearCells+=`<div class="ym"><b>${i}月</b><div class="bar"><i style="width:${Math.min(100,tot/yTotal*100)}%"></i></div><div style="font-size:11px;color:var(--ink-faint);margin-top:4px">收${st.inc.toFixed(0)}/支${st.exp.toFixed(0)}</div></div>`;
   }
 
+  /* 年度支出分类占比 + 年度分类明细（点击小分类展开具体花费） */
+  const yCatAgg={}, ySubAgg={};
+  Object.keys(dayMap).forEach(d=>{if(d.startsWith(String(fy))){dayMap[d].items.forEach(it=>{
+    if(it.type!=='expense')return;
+    yCatAgg[it.cat]=(yCatAgg[it.cat]||0)+it.amount;
+    if(!ySubAgg[it.cat])ySubAgg[it.cat]={total:0,subs:{}};
+    ySubAgg[it.cat].total+=it.amount;
+    const sk=it.sub||'未分小类';
+    if(!ySubAgg[it.cat].subs[sk])ySubAgg[it.cat].subs[sk]={total:0,items:[]};
+    ySubAgg[it.cat].subs[sk].total+=it.amount;
+    ySubAgg[it.cat].subs[sk].items.push({rm:it.remark||'',dt:it.date||d,am:it.amount});
+  });}});
+  const yCatTotal=Object.values(yCatAgg).reduce((a,b)=>a+b,0)||1;
+  const yDonutHTML=Object.keys(yCatAgg).length?donutChart(Object.keys(yCatAgg).map((c,i)=>[c,Math.round(yCatAgg[c]/yCatTotal*100),CAT_COLORS[i%CAT_COLORS.length]])):'<div class="empty">年度暂无支出</div>';
+  const yCatDetailHTML=Object.keys(ySubAgg).length?Object.keys(ySubAgg).map(cat=>{
+    const cg=ySubAgg[cat];
+    const subs=Object.keys(cg.subs).map(sk=>{
+      const s=cg.subs[sk];
+      const uid='yd_'+encodeURIComponent(cat)+'_'+encodeURIComponent(sk);
+      const items=s.items.map(it=>`<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;color:var(--ink-dim)"><span>${it.rm?esc(it.rm):'<span style="color:var(--ink-faint)">（无备注）</span>'}<span style="color:var(--ink-faint)"> · ${String(it.dt).slice(5)}</span></span><span style="color:var(--coral)">¥${it.am.toFixed(2)}</span></div>`).join('');
+      return `<div class="subrow" data-cat="${uid}">
+        <div class="subtoggle" data-cat="${uid}" style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;padding:4px 0 4px 14px;border-bottom:1px dashed var(--line);cursor:pointer"><span>${esc(sk)} <span class="subcnt" style="color:var(--ink-faint);font-size:11px">▸ ${s.items.length} 笔</span></span><span style="color:var(--coral)">¥${s.total.toFixed(2)}</span></div>
+        <div class="subdetail" id="d_${uid}" style="display:none;background:#FBF2F7;border-radius:8px;margin:4px 0 6px 14px;padding:6px 12px">${items}</div>
+      </div>`;
+    }).join('');
+    return `<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between;font-weight:700;font-size:13px;padding:5px 0;border-bottom:1px solid var(--line)"><span>${esc(cat)}</span><span style="color:var(--coral)">¥${cg.total.toFixed(2)}</span></div>${subs}</div>`;
+  }).join(''):'<div class="empty">年度暂无支出</div>';
+
   /* 收支月度表（每日明细+累计） */
   let rtRunning=0, rtRows='';
   for(let d=1; d<=daysInMonth; d++){
@@ -1647,6 +1671,20 @@ function renderStats(mid){
           <div class="kpi"><div class="v">${ySave>=0?'+':''}¥${ySave.toFixed(2)}</div><div class="l">年结余</div></div>
           <div class="kpi"><div class="v">${saveRate}%</div><div class="l">储蓄率</div></div>
         </div>
+      </div>
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="ph"><span class="ic">🥧</span> ${fy} 年度支出分类占比</div>
+        <div class="pd">全年支出按大分类的占比（环形图）。</div>
+        ${yDonutHTML}
+      </div>
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="ph"><span class="ic">🧾</span> ${fy} 年度支出分类明细（点小分类展开具体花费）</div>
+        <div class="pd">全年大分类 → 小分类，点一下小分类展开看每一笔花在哪、什么时候。</div>
+        ${yCatDetailHTML}
+      </div>
+      <div class="panel" style="--cc:#F09A9A">
+        <div class="ph"><span class="ic">📅</span> ${fy} 月度收支分布</div>
+        <div class="pd">${fy} 年每个月收支汇总与分布。</div>
         <div class="yeargrid">${yearCells}</div>
         <button class="qa" data-nav="module-money">← 返回资金管理</button>
       </div>

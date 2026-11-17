@@ -1060,6 +1060,11 @@ const DATA=[
    {id:'weeks',ic:'🗓',name:'周月计划',desc:'每周 7 天逐日计划 + 每月目标，完成情况一目了然',feat:['周计划 7天视图','月计划目标','完成率统计'],rows:[],special:'weekmonth'},
    {id:'classnotes',ic:'📚',name:'课堂笔记',desc:'按课程整理笔记，写文字、插图、插文件，云端同步',feat:['课程分组','文字笔记','图片/文件附件'],special:'classnotes'}
  ]},
+ {id:'university',ic:'🎓',name:'大学',en:'UNIVERSITY',desc:'综测、二课堂、三课堂加分项全记录，按类累计加分并附证明',cc:'#8FC1D4',sub:[
+   {id:'comprehensive',ic:'🏅',name:'综测统计',desc:'智育/体育/德育/劳育/其他五类加分项，可附加分证明与日期',feat:['五大类加分细则','证明材料上传','按类累计总分'],rows:[],special:'points',cats:['智育','体育','德育','劳育','其他']},
+   {id:'second',ic:'🏃',name:'二课堂分',desc:'二课堂加分项，类别可自行设置，可附证明并统计总分',feat:['自定义加分类别','加分项记录','证明上传'],rows:[],special:'points',catsEditable:true,cats:['志愿服务','社会实践','文体活动','学术科技','其他']},
+   {id:'third',ic:'🌏',name:'三课堂分',desc:'三课堂加分项，类别可自行设置，可附证明并统计总分',feat:['自定义加分类别','加分项记录','证明上传'],rows:[],special:'points',catsEditable:true,cats:['社会服务','专业实践','创新创业','其他']}
+ ]},
  {id:'utility',ic:'◇',name:'实用功能',en:'UTILITY',desc:'日子、日程、习惯、备忘录、菜谱、网址收藏与账号密码',cc:'#9FB8C8',sub:[
    {id:'sop',ic:'📋',name:'个人SOP',desc:'沉淀你的个人标准流程：每个步骤都能一键计入待办，按时推进',feat:['创建多个 SOP 流程','步骤清单管理','一键计入今日待办'],rows:[],special:'sop'},
    {id:'timeline',ic:'⏳',name:'每日时间轴',desc:'课表 + 日程 + 待办整合到一条时间轴，可改任意日期、打勾、添加事项',feat:['课表/日程/待办整合','可回看与编辑前一天','待办直接打勾','一键添加事项'],rows:[],special:'timeline'},
@@ -3472,6 +3477,129 @@ function openBudgetForm(mid,sid,month){
     close();renderBudget(mid,sid);
   });
 }
+/* --- 大学加分项：综测/二课堂/三课堂，按类统计 + 证明 --- */
+function compressImg(file,maxSide,cb){
+  const fr=new FileReader();
+  fr.onload=()=>{
+    const img=new Image();
+    img.onload=()=>{
+      let w=img.width,h=img.height;
+      const sc=Math.min(1,maxSide/Math.max(w,h));w=Math.round(w*sc);h=Math.round(h*sc);
+      const cv=document.createElement('canvas');cv.width=w;cv.height=h;
+      cv.getContext('2d').drawImage(img,0,0,w,h);
+      cb(cv.toDataURL('image/jpeg',0.72));
+    };
+    img.onerror=()=>cb('');
+    img.src=fr.result;
+  };
+  fr.onerror=()=>cb('');
+  fr.readAsDataURL(file);
+}
+function fmtScore(x){x=Number(x)||0;return x%1===0?String(x):x.toFixed(1);}
+function loadUniCats(sid,def){
+  try{const r=localStorage.getItem(PREFIX+'uni_cats_'+sid);if(r){const a=JSON.parse(r);if(Array.isArray(a))return a;}}catch(e){}
+  return (def||[]).slice();
+}
+function saveUniCats(sid,arr){try{localStorage.setItem(PREFIX+'uni_cats_'+sid,JSON.stringify(arr));}catch(e){}}
+let _uniProof=null;
+let _uniCatsOpen=false;
+function renderUniPoints(mid,sid){
+  const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
+  state.module=mid;state.sub=sid;state.guest=false;state.sched=null;
+  const rows=loadRows(mid,sid);
+  const baseCats=(s.cats&&s.cats.length)?s.cats:['智育','体育','德育','劳育','其他'];
+  const cats=s.catsEditable?loadUniCats(sid,baseCats):baseCats;
+  const extra=[];rows.forEach(r=>{const c=(r.vals||[])[3];if(c&&!cats.includes(c)&&!extra.includes(c))extra.push(c);});
+  const allCats=cats.concat(extra);
+  const byCat={};allCats.forEach(c=>byCat[c]=0);
+  rows.forEach(r=>{const v=r.vals||[];let c=v[3];if(!c)c=allCats[allCats.length-1]||'其他';byCat[c]=(byCat[c]||0)+Number(v[1]||0);});
+  const total=Object.values(byCat).reduce((a,b)=>a+b,0);
+  const CATC=['#E88CA8','#F09A9A','#B7D8C8','#F6DFA8','#CDBBE6','#9FB8C8','#F2A0C0','#A8C8E8'];
+  const statCards=allCats.map((c,i)=>`<div class="kpi" style="--cc:${CATC[i%CATC.length]}"><div class="v">${fmtScore(byCat[c]||0)}</div><div class="l">${esc(c)}分</div></div>`).join('');
+  const groups=allCats.map((c,i)=>{
+    const items=rows.filter(r=>{const v=r.vals||[];let cc=v[3]||allCats[allCats.length-1];return cc===c;}).slice().reverse();
+    if(!items.length)return '';
+    const body=items.map(it=>{
+      const v=it.vals||[];const idx=rows.indexOf(it);
+      const proof=v[4]?`<a href="${esc(v[4])}" target="_blank" style="display:inline-block;width:42px;height:42px;border-radius:6px;border:1px solid var(--line);background:#fff center/cover no-repeat url('${esc(v[4])}')"></a>`:'<span style="width:42px;height:42px;border-radius:6px;background:#FBF2F7;border:1px dashed var(--line);display:inline-block;flex:0 0 auto"></span>';
+      return `<div style="display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line)">
+        ${proof}
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:13px;color:var(--ink)">${esc(v[0])||'未命名'} <span style="color:var(--coral);font-weight:700">+${fmtScore(v[1])}分</span></div>
+          <div style="font-size:11.5px;color:var(--ink-faint);margin-top:2px">${esc(v[2]||'')}${v[5]?' · '+esc(v[5]):''}${v[4]?' · <span style="color:var(--ink-dim)">有证明</span>':''}</div>
+        </div>
+        <button class="delbtn" data-unidel="${idx}" style="font-size:11px">删除</button>
+      </div>`;
+    }).join('');
+    return `<div class="panel" style="--cc:${CATC[i%CATC.length]}">
+      <div class="toolbar"><div class="ph" style="margin:0"><span class="ic">📌</span> ${esc(c)}（${items.length} 项 · 合计 ${fmtScore(byCat[c])} 分）</div></div>
+      ${body}
+    </div>`;
+  }).join('');
+  view.innerHTML=`
+    <nav class="crumbs"><button data-nav="home">Back to Room</button><span class="sep">/</span><button data-nav="module-university">大学</button><span class="sep">/</span><span class="cur">${esc(s.name)}</span></nav>
+    <div class="pagehead">
+      <div><div class="colnum">UNIVERSITY · ${esc(s.name)}</div><h1>${s.ic||'🎓'} ${esc(s.name)}</h1><p>${esc(s.desc||'')}</p></div>
+      <div class="stat">累计加分<br><b style="color:var(--coral);font-size:22px">${fmtScore(total)}</b> 分</div>
+    </div>
+    <div class="deco">✦ 加分记录 ✦</div>
+    <div class="detail">
+      <div class="panel" style="--cc:${m.cc}">
+        <div class="toolbar"><div class="ph" style="margin:0"><span class="ic">📊</span> 分类加分总览</div><div style="display:flex;gap:8px">${s.catsEditable?'<button class="delbtn" id="uniCatsBtn" style="font-size:12px">⚙ 编辑分类</button>':''}<button class="addbtn" id="uniAdd" style="--cc:${m.cc}">＋ 新增加分项</button></div></div>
+        ${s.catsEditable?`<div id="uniCatsBox" style="display:${_uniCatsOpen?'block':'none'};margin-top:10px;padding:10px 12px;background:#FBF2F7;border:1px solid var(--line);border-radius:10px">
+          <div style="font-size:12px;color:var(--ink-dim);margin-bottom:6px">自定义分类（记一笔时可选；删掉的类别历史记录仍保留）</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px">${cats.map(c=>`<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:#fff;border:1px solid var(--line);border-radius:20px;font-size:12.5px">${esc(c)}<button class="unidcad" data-cat="${esc(c)}" style="border:none;background:none;color:var(--coral);cursor:pointer;font-size:14px;line-height:1">×</button></span>`).join('')||'<span style="color:var(--ink-faint);font-size:12px">还没有分类，先加一个吧</span>'}</div>
+          <div style="display:flex;gap:6px;margin-top:8px"><input id="uniCatNew" type="text" placeholder="新分类名，如 志愿服务" style="flex:1;padding:7px;border:1px solid var(--line);border-radius:8px"><button class="addbtn" id="uniCatAdd" style="--cc:${m.cc};font-size:12px">添加</button></div>
+        </div>`:''}
+        <div class="kpis">${statCards}</div>
+        <div id="uniForm" style="display:none;margin-top:12px;padding:12px 14px;background:#FBF2F7;border:1px solid var(--line);border-radius:12px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div><label style="font-size:12px;color:var(--ink-dim)">加分细则名称</label><input id="uniName" type="text" placeholder="如 全国大学生英语竞赛一等奖" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:8px"></div>
+            <div><label style="font-size:12px;color:var(--ink-dim)">加分分值</label><input id="uniScore" type="number" step="0.1" placeholder="如 3" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:8px"></div>
+            <div><label style="font-size:12px;color:var(--ink-dim)">所属类别</label><select id="uniCate" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:8px">${cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('')}</select></div>
+            <div><label style="font-size:12px;color:var(--ink-dim)">时间</label><input id="uniDate" type="date" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:8px"></div>
+            <div style="grid-column:1/3"><label style="font-size:12px;color:var(--ink-dim)">证明材料（图片）</label><input id="uniProof" type="file" accept="image/*" style="width:100%"><div id="uniProofTip" style="font-size:11px;color:var(--ink-faint);margin-top:3px">可选，图片会自动压缩，建议 1MB 以内</div></div>
+            <div style="grid-column:1/3"><label style="font-size:12px;color:var(--ink-dim)">备注（可选）</label><input id="uniNote" type="text" placeholder="如 已提交学院审核" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:8px"></div>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:8px"><button class="addbtn" id="uniSave" style="--cc:${m.cc}">保存</button><button class="delbtn" id="uniCancel">取消</button></div>
+        </div>
+      </div>
+      ${groups||'<div class="panel"><div class="empty">还没有加分记录，点「＋ 新增加分项」记一条吧</div></div>'}
+    </div>`;
+  const addBtn=document.getElementById('uniAdd'),form=document.getElementById('uniForm');
+  _uniProof=null;
+  if(addBtn)addBtn.onclick=()=>{form.style.display='block';};
+  const cancelBtn=document.getElementById('uniCancel');
+  if(cancelBtn)cancelBtn.onclick=()=>{form.style.display='none';};
+  const proofInp=document.getElementById('uniProof');
+  if(proofInp)proofInp.onchange=e=>{
+    const f=e.target.files&&e.target.files[0];if(!f)return;
+    if(f.size>6*1024*1024){toast('图片太大，请选 6MB 以内');return;}
+    compressImg(f,900,url=>{_uniProof=url;const tip=document.getElementById('uniProofTip');if(tip)tip.textContent=url?'已选好证明图片 ✓':'读取失败，请换一张';});
+  };
+  const saveBtn=document.getElementById('uniSave');
+  if(saveBtn)saveBtn.onclick=()=>{
+    const name=(document.getElementById('uniName').value||'').trim();
+    const score=Number(document.getElementById('uniScore').value||0);
+    const cate=document.getElementById('uniCate').value;
+    const date=document.getElementById('uniDate').value||nowStr();
+    const note=(document.getElementById('uniNote').value||'').trim();
+    if(!name){toast('请填写加分细则名称');return;}
+    if(!cate){toast('请先在「编辑分类」里添加一个分类');return;}
+    const rows2=loadRows(mid,sid);
+    rows2.push({ts:Date.now(),vals:[name,String(score),date,cate,_uniProof||'',note]});
+    saveRows(mid,sid,rows2);toast('已保存 ✓');renderUniPoints(mid,sid);
+  };
+  const catsBtn=document.getElementById('uniCatsBtn'),catsBox=document.getElementById('uniCatsBox');
+  if(catsBtn&&catsBox)catsBtn.onclick=()=>{_uniCatsOpen=(catsBox.style.display==='none');catsBox.style.display=_uniCatsOpen?'block':'none';};
+  const catAdd=document.getElementById('uniCatAdd');
+  if(catAdd)catAdd.onclick=()=>{const nv=(document.getElementById('uniCatNew').value||'').trim();if(!nv){toast('请输入分类名');return;}const arr=loadUniCats(sid,baseCats);if(arr.includes(nv)){toast('这个分类已经有了');return;}arr.push(nv);saveUniCats(sid,arr);renderUniPoints(mid,sid);};
+  view.querySelectorAll('.unidcad').forEach(b=>b.onclick=()=>{const arr=loadUniCats(sid,baseCats).filter(x=>x!==b.dataset.cat);saveUniCats(sid,arr);renderUniPoints(mid,sid);});
+  view.querySelectorAll('[data-unidel]').forEach(b=>b.onclick=()=>{
+    if(!confirm('删除这条加分记录？'))return;
+    const idx=Number(b.dataset.unidel);const rows2=loadRows(mid,sid);rows2.splice(idx,1);saveRows(mid,sid,rows2);renderUniPoints(mid,sid);
+  });
+}
 /* --- 照片墙：独立模块，添加照片拼成一面墙 --- */
 function renderPhotoWall(mid,sid){
   const m=findModule(mid),s=findSub(mid,sid);if(!m||!s)return renderModule(mid);
@@ -3587,6 +3715,7 @@ function renderSub(mid,sid){
   if(s.special==='weekmonth')return renderWeekMonth(mid,sid);
   if(s.special==='wheel')return renderWheel(mid,sid);
   if(s.special==='budget')return renderBudget(mid,sid);
+  if(s.special==='points')return renderUniPoints(mid,sid);
   if(s.special==='photos')return renderPhotoWall(mid,sid);
   if(s.special==='archive')return renderArchive(mid,sid);
   if(s.special==='bookmark')return renderBookmark(mid,sid);
